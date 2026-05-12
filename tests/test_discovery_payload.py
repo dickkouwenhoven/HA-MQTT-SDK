@@ -1,6 +1,6 @@
-from sdk.builders.discovery_payload import build_discovery_payload
-from sdk.models.entity import Entity
-from sdk.config.domains import HADomain
+from ha-mqtt-sdk.builders.discovery_payload import build_discovery_payload
+from ha-mqtt-sdk.models.entity import Entity
+from ha-mqtt-sdk.config.domains import HADomain
 
 def test_basic_payload():
 	entity = Entity(
