@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ha-mqtt-sdk"
+version = "0.1.0"
+description = "Professional Home Assistant MQTT SDK for discovery, topics, and device management"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+
+authors = [
+	{ name = "Your Name", email = "your@email.com" }
+]
+
+keywords = [
+	"homeassistant",
+	"mqtt",
+	"iot",
+	"sdk",
+	"automation"
+]
+
+classifiers = [
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Developers",
+	"Topic :: Home Automation",
+	"License :: OSI Approved :: MIT License",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.9",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11"
+]
+
+dependencies = [
+	"paho-mqtt>=1.6.1"
+]
+
+[project.optional-dependencies]
+dev = [
+	"pytest",
+	"pytest-cov"
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/ha-mqtt-sdk"
+Repository = "https://github.com/yourusername/ha-mqtt-sdk"
+Issues = "https://github.com/yourusername/ha-mqtt-sdk/issues"
+
+# -------------------------
+# Packaging config
+# -------------------------
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sdk*"]
+
+[tool.setuptools]
+include-package-data = true
+
+# -------------------------
+# Optional dev tools
+# -------------------------
+
+[tool.pytest.ini_options]
+pythonpath=["."]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.coverage.run]
+source = ["sdk"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
