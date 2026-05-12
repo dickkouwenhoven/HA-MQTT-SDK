@@ -17,9 +17,9 @@ pip install ha-mqtt-sdk
 
 Usage:
 
-from sdk.models.entity import make_entity
-from sdk.config.domains import HADomain
-from sdk.mqtt.mqtt_client import MQTTClient
+from ha-mqtt-sdk.models.entity import make_entity
+from ha-mqtt-sdk.config.domains import HADomain
+from ha-mqtt-sdk.mqtt.mqtt_client import MQTTClient
 
 # Creation of an Entity
 sensor = make_entity(HADomain.SENSOR, "Temperature Sensor", state_topic="sensor/temp")
@@ -30,14 +30,14 @@ client.publish_discovery("homeassistant/sensor/temp/config", sensor)
 
 Projectstructure:
 
-ha_mqtt_sdk/
+HA-MQTT-SDK/
 ├── README.md
 ├── .gitignore
 ├── .env.example
 ├── setup.py
 ├── pyproject.toml
 ├── requirements.txt
-├── sdk/
+├── ha-mqtt-sdk/
 │   ├── __init__.py
 │   ├── config/
 │   │   ├── __init__.py
