@@ -1,6 +1,6 @@
 import pytest
-import sdk.models.entity import Entity
-import sdk.config.domains import HADomain
+import ha-mqtt-sdk.models.entity import Entity
+import ha-mqtt-sdk.config.domains import HADomain
 
 def test_valid_entity():
 	entity = Entity(
