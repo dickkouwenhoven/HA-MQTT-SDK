@@ -1,4 +1,4 @@
-from sdk.builders.topic_manager import (
+from ha-mqtt-sdk.builders.topic_manager import (
 	build_state_topic,
 	build_command_topic,
 	build_discovery_topic,
