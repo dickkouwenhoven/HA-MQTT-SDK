@@ -2,9 +2,9 @@
 Basic example showing how to use the HASDK.
 """
 
-from sdk.core.entity_manager import EntityManager
-from sdk.config.domains import HADomain
-from sdk.config.mqtt import MQTTSettings
+from ha-mqtt-sdk.core.entity_manager import EntityManager
+from ha-mqtt-sdk.config.domains import HADomain
+from ha-mqtt-sdk.config.mqtt import MQTTSettings
 
 
 class SimpleMQTT:
