@@ -2,7 +2,7 @@
 
 # 📄 **ROOT README.md (BELANGRIJK)**
 
-Hier een professionele versie 👇
+Here a professional version 👇
 
 ```markdown
 # Home Assistant MQTT SDK
@@ -29,9 +29,9 @@ pip install hasdk
 
 # Quick Start
 
-from sdk.core.entity_manager import EntityManager
-from sdk.config.domains import HADomain
-from sdk.config.mqtt import MQTTSettings
+from ha-mqtt-sdk.core.entity_manager import EntityManager
+from ha-mqtt-sdk.config.domains import HADomain
+from ha-mqtt-sdk.config.mqtt import MQTTSettings
 
 mqtt = MyMQTTClient()
 manager = EntityManager(
