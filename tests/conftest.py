@@ -1,0 +1,32 @@
+import pytest
+
+class MockMQTTClient:
+	def __init__(self):
+		self.published = []
+		self.subscribed = []
+		self.callback = None
+
+	def publish(
+		self,
+		topic,
+		payload,
+		retain = False,
+	):
+		self.published.append((topic, payload, retain))
+
+	def subscribe(
+		self,
+		topic,
+	):
+		self.subscribed.append(topic)
+
+	def set_message_callback(
+		self,
+		callback,
+	):
+		self.callback = callback
+
+	@pytest.fixture
+	def mqtt_client():
+		return MockMQTTClient()
+
