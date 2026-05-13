@@ -9,7 +9,7 @@ Purpose:
 This module is INTERNAL and should not be used directly by SDK users.
 
 Used by:
-- sdk.models.entity.make_entity
+- ha_mqtt_sdk.models.entity.make_entity
 """
 
 from typing import Dict, Any
