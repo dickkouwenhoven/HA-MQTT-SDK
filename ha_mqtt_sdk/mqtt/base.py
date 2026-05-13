@@ -5,7 +5,7 @@ This defines the contract for all MQTT client implementations.
 Both sync and async clients must adhere to this interface.
 
 Used by:
-- sdk/core/sdk.py (HASDK)
+- ha_mqtt_sdk/core/sdk.py (HASDK)
 """
 
 from abc import ABC, abstractmethod
