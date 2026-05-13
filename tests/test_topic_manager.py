@@ -28,7 +28,7 @@ def test_availability_topic():
                 "id1",
                 "homeassistant",
         )
-	assert topic.endswith("/availability"
+	assert topic.endswith("/availability")
 
 def test_discovery_topic():
 	topic = build_discovery_topic(
