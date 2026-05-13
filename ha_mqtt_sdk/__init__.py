@@ -10,7 +10,7 @@ Responsibilities:
 - Maintain SDK-level metadata
 
 Usage:
-    from sdk import mqtt_client, models, config
+    from ha_mqtt_sdk import mqtt_client, models, config
 """
 
 from .utils.logger import get_logger
