@@ -13,13 +13,13 @@ Python SDK voor Home Assistant MQTT integration.
 **Installation:**
 
 ```bash
-pip install ha-mqtt-sdk
+pip install ha_mqtt_sdk
 
 Usage:
 
-from ha-mqtt-sdk.models.entity import make_entity
-from ha-mqtt-sdk.config.domains import HADomain
-from ha-mqtt-sdk.mqtt.mqtt_client import MQTTClient
+from ha_mqtt_sdk.models.entity import make_entity
+from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk.mqtt.mqtt_client import MQTTClient
 
 # Creation of an Entity
 sensor = make_entity(HADomain.SENSOR, "Temperature Sensor", state_topic="sensor/temp")
@@ -37,7 +37,7 @@ HA-MQTT-SDK/
 ├── setup.py
 ├── pyproject.toml
 ├── requirements.txt
-├── ha-mqtt-sdk/
+├── ha_mqtt_sdk/
 │   ├── __init__.py
 │   ├── config/
 │   │   ├── __init__.py
