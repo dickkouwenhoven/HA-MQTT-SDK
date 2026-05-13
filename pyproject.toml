@@ -35,7 +35,8 @@ classifiers = [
 ]
 
 dependencies = [
-	"paho-mqtt>=1.6.1"
+	"paho-mqtt>=1.6.1",
+	"aiomqtt>=2.0"
 ]
 
 [project.optional-dependencies]
