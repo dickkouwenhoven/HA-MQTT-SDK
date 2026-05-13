@@ -20,7 +20,7 @@ def test_command_topic():
                 "id1",
                 "homeassistant",
         )
-        assert topic == "homeassistant/switch/id1/set"
+	assert topic == "homeassistant/switch/id1/set"
 
 def test_availability_topic():
 	topic = build_availibity_topic(
