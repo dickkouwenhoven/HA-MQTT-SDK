@@ -14,7 +14,7 @@ Design principles:
 - Builders only transform, never decide
 
 Used by:
-- sdk/core/sdk.py
+- ha_mqtt_sdk/core/sdk.py
 """
 
 from .entity_factory import create_entity as _create_entity
