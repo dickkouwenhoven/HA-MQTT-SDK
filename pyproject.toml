@@ -3,7 +3,7 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ha-mqtt-sdk"
+name = "ha_mqtt_sdk"
 version = "0.1.0"
 description = "Home Assistant MQTT SDK for discovery, topics, and device management"
 readme = "README.md"
@@ -55,7 +55,7 @@ Issues = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["sdk*"]
+include = ["ha_mqtt_sdk*"]
 
 [tool.setuptools]
 include-package-data = true
@@ -75,7 +75,7 @@ line-length = 88
 profile = "black"
 
 [tool.coverage.run]
-source = ["sdk"]
+source = ["ha_mqtt_sdk"]
 branch = true
 
 [tool.coverage.report]
