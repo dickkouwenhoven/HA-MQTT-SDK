@@ -8,15 +8,15 @@ Test script for Home Assistant MQTT SDK
 
 import unittest
 from unittest.mock import patch, MagicMock
-from ha-mqtt-sdk.config.domains import HADomain
-from ha-mqtt-sdk.core.entity_manager import EntityManager
-from ha-mqtt-sdk.config.domains import HADomain
-from ha-mqtt-sdk.config.mqtt import MQTTSettings
-from ha-mqtt-sdk.models.entity import make_entity
-from ha-mqtt-sdk.mqtt.topic_manager import build_discovery_topic
-from ha-mqtt-sdk.mqtt.discovery_payload import build_discovery_payload
-from ha-mqtt-sdk.mqtt.mqtt_client import MQTTClient
-from ha-mqtt-sdk.utils.logger import get_logger
+from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk.core.entity_manager import EntityManager
+from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk.config.mqtt import MQTTSettings
+from ha_mqtt_sdk.models.entity import make_entity
+from ha_mqtt_sdk.mqtt.topic_manager import build_discovery_topic
+from ha_mqtt_sdk.mqtt.discovery_payload import build_discovery_payload
+from ha_mqtt_sdk.mqtt.mqtt_client import MQTTClient
+from ha_mqtt_sdk.utils.logger import get_logger
 
 LOGGER = get_logger("test_sdk")
 
