@@ -4,7 +4,7 @@ MQTT related SDK configureren.
 Single source of truth for MQTT topic structure.
 """
 
-..exceptions import ConfigurationError
+from ..exceptions import ConfigurationError
 
 class MQTTSettings:
 	def __init__(
