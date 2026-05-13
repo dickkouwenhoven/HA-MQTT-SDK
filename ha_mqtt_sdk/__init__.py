@@ -21,7 +21,7 @@ LOGGER = get_logger(__name__)
 # Top-level imports for SDK users
 from .core.sdk import HASDK
 from .models.entity import Entity
-from .models.device import DeviceInfo
+from .models.device_info import DeviceInfo
 from .config.domains import HADomain
 
 __all__ = [
