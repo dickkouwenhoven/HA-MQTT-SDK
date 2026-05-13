@@ -115,7 +115,7 @@ class EntityManager:
 		command_callback: Optional handler for commands
 		"""
 
-		if not isinstance(entity: Entity):
+		if not isinstance(entity, Entity):
 			raise CoreError("Invalid entity")
 
 		prefix = self._settings.discovery_prefix
@@ -188,7 +188,7 @@ class EntityManager:
 		state: State value (string, number, or JSON serializable)
 		"""
 
-		if not isinstance(entity: Entity):
+		if not isinstance(entity, Entity):
 			raise CoreError("Invalid entity")
 
 		if not entity.state_topic:
