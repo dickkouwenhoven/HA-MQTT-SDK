@@ -8,8 +8,8 @@ Responsibilities:
 - Validate against Home Assistant schema definitions
 
 Used by:
-- sdk/core/entity_manager.py
-- sdk/builders/discovery_payload.py
+- ha_mqtt_sdk/core/entity_manager.py
+- ha_mqtt_sdk/builders/discovery_payload.py
 """
 
 from typing import Optional, Dict, Any
