@@ -11,6 +11,7 @@ class HADomain(str, Enum):
 	ALARM_CONTROL_PANEL = "alarm_control_panel"
 	BINARY_SENSOR = "binary_sensor"
 	BUTTON = "button"
+	CLIMATE = "climate"
 	COVER = "cover"
 	DEVICE_TRACKER = "device_tracker"
 	DEVICE_TRIGGER = "device_trigger"
