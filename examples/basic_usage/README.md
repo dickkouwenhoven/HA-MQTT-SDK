@@ -29,9 +29,9 @@ pip install hasdk
 
 # Quick Start
 
-from ha-mqtt-sdk.core.entity_manager import EntityManager
-from ha-mqtt-sdk.config.domains import HADomain
-from ha-mqtt-sdk.config.mqtt import MQTTSettings
+from ha_mqtt_sdk.core.entity_manager import EntityManager
+from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk.config.mqtt import MQTTSettings
 
 mqtt = MyMQTTClient()
 manager = EntityManager(
