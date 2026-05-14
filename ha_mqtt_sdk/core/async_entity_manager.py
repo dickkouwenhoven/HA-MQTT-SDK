@@ -23,7 +23,7 @@ from ..exceptions  import CoreError, MQTTError
 
 _logger = get_logger(__name__)
 
-class AsyncEntityManager():
+class AsyncEntityManager:
 	def __init__(self, mqtt_client, mqtt_settings: MQTTSettings):
 
 		if not mqtt_client:
