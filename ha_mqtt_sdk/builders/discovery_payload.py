@@ -93,17 +93,23 @@ def build_discovery_payload(
 	payload: Dict[str, Any] = {
 		"name": entity.name,
 		"unique_id": entity.unique_id,
-		"state_topic": entity.state_topic
-			or build_state_topic(
+		"state_topic": build_state_topic(
 				entity.domain, 
 				entity.unique_id, 
 				prefix,
 			),
 	}
 
-	# Command topic (only if supported / provided)
-	if entity.command_topic:
-		payload["command_topic"] = entity.command_topic
+	command_topic = build_command_topic(
+		entity.domain,
+		entity.unique_id,
+		prefix,
+	)
+	payload = {
+		"name": entity.name,
+		"unique_id": entity_id,
+		"command_topic": command_topic,
+	}
 
 	# Device block
 	device_block = _build_device_block(entity)
