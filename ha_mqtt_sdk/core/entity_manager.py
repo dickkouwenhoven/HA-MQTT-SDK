@@ -163,7 +163,12 @@ class EntityManager:
 		# -------------------------
 
 		if entity.command_topic:
-			self._mqtt.subscribe(entity.command_topic)
+			topic = build_command_topic(
+				entity.domain,
+				entity.unique_id,
+				self._settings.discovery_prefix,
+			)
+			self._mqtt.subscribe(topic)
 
 			_logger.debug(
 				"Subscribed to command topic: %s",
@@ -172,7 +177,7 @@ class EntityManager:
 
 			# Register callback if provided
 			if command_callback:
-				self._command_callbacks[entity.command_topic] = command_callback
+				self._command_callbacks[topic] = command_callback
 
 
 	def update_state(
