@@ -107,7 +107,7 @@ def build_discovery_payload(
 	)
 	payload = {
 		"name": entity.name,
-		"unique_id": entity_id,
+		"unique_id": entity.unique_id,
 		"command_topic": command_topic,
 	}
 
