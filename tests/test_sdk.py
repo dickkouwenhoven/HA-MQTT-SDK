@@ -147,7 +147,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 	def test_full_flow(self):
 	
 		manager = EntityManager(
-			mqtt_client,
+			self.mqtt_client,
 			MQTTSettings(
 				discovery_prefix = "homeassistant"
 			)
