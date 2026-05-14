@@ -44,9 +44,6 @@ COMMON_REQUIRED = {
 }
 
 COMMON_OPTIONAL = {
-	"state_topic",
-	"command_topic",
-	"availability_topic",
 	"payload_available",
 	"payload_not_available",
 	"device",
