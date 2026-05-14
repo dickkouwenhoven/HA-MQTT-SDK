@@ -82,12 +82,6 @@ class Entity:
 		if not isinstance(self.unique_id, str) or not self.unique_id.strip():
 			raise EntityError("unique_id must be a non-empty string")
 
-		if self.state_topic and not isinstance(self.state_topic, str):
-			raise EntityError("state_topic must be a string")
-
-		if self.command_topic and not isinstance(self.command_topic, str):
-			raise EntityError("command_topic must be a string")
-
 		if self.extra and not isinstance(self.extra, dict):
 			raise EntityError("extra must be a dictionary")
 
@@ -104,12 +98,6 @@ class Entity:
 			"name",
 			"unique_id",
 		}
-
-		if self.state_topic:
-			payload_keys.add("state_topic")
-
-		if self.command_topic:
-			payload_keys.add("command_topic")
 
 		if self.device_info:
 			payload_keys.add("device")
