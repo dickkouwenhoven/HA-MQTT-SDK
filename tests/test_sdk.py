@@ -57,7 +57,6 @@ class TestHomeAssistantSDK(unittest.TestCase):
     		domain=HADomain.SENSOR,
     		name="Temperature Sensor",
     		unique_id="temp_sensor_1",
-    		state_topic="sensor/temp",
 		)
 
 		entity.validate()
@@ -82,8 +81,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		entity = Entity(
 			domain=HADomain.LIGHT,
 			name="Living Room Light",
-			unique_id="livingroom_light_1",
-			command_topic="home/livingroom/light/set",
+			unique_id="livingroom_light_1",			
 		)
 		
 		payload = build_discovery_payload(
@@ -129,7 +127,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		
 		self.mqtt_client._client.publish.assert_called_once()
 		
-		args, kwargs = self.mqtt_client.client.publish.call_args
+		args, kwargs = self.mqtt_client._client.publish.call_args
 		
 		self.assertEqual(args[0], topic)
 		self.assertIn("Test Sensor", args[1])
