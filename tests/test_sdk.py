@@ -12,7 +12,7 @@ from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.core.entity_manager import EntityManager
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
-from ha_mqtt_sdk.models.entity import make_entity
+from ha_mqtt_sdk.entity import Entity
 from ha_mqtt_sdk.mqtt.topic_manager import build_discovery_topic
 from ha_mqtt_sdk.mqtt.discovery_payload import build_discovery_payload
 from ha_mqtt_sdk.mqtt.mqtt_client import MQTTClient
@@ -29,16 +29,27 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		LOGGER.info("Setup complete")
 
 	def test_entity_creation_valid(self):
-		entity = make_entity(HADomain.SENSOR, "Temperature Sensor", state_topic="sensor/temp")
+		entity = Entity(
+    		domain=HADomain.SENSOR,
+    		name="Temperature Sensor",
+    		unique_id="temp_1",
+    		state_topic="sensor/temp",
+		)
+		
 		self.assertIn("unique_id", entity)
-		self.assertEqual(entity["name"], "Temperature Sensor")
-		self.assertEqual(entity["state_topic"], "sensor/temp")
+		self.assertEqual(entity.name, "Temperature Sensor")
+		self.assertEqual(entity.state_topic, "sensor/temp")
 
 	def test_entity_creation_missing_required(self):
 		with self.assertRaises(ValueError):
 			# Missing required field for SENSOR
-			make_entity(HADomain.SENSOR, "")
-
+			entity = Entity(
+				domain=HADomain.SENSOR,
+				name="",
+				unique_id="temp_1",
+			)
+			entity.validate()
+	
 	def test_discovery_payload(self):
 		payload = build_discovery_payload(HADomain.LIGHT, "Living Room Light",
 			command_topic="home/livingroom/light/set")
