@@ -3,7 +3,7 @@ entity_factory.py
 
 Share entity creation for both EntityManager and AsyncEntityManager.
 
-Resposibilities:
+Responsibilities:
 - Validate inputs
 - Build topics
 - Construct and return an Entity instance
