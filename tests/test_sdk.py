@@ -13,8 +13,8 @@ from ha_mqtt_sdk.core.entity_manager import EntityManager
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.models.entity import Entity
-from ha_mqtt_sdk.mqtt.topic_manager import build_discovery_topic
-from ha_mqtt_sdk.mqtt.discovery_payload import build_discovery_payload
+from ha_mqtt_sdk.builders.topic_manager import build_discovery_topic
+from ha_mqtt_sdk.builders.discovery_payload import build_discovery_payload
 from ha_mqtt_sdk.mqtt.mqtt_client import MQTTClient
 from ha_mqtt_sdk.utils.logger import get_logger
 
