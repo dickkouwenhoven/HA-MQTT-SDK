@@ -130,7 +130,7 @@ class EntityManager:
 			prefix,
 		)
 
-		payload = build_discovery_payload(entity)
+		payload = build_discovery_payload(entity, self._settings.discovery_prefix)
 
 		self._mqtt.publish(
 			topic = discovery_topic,
@@ -195,7 +195,7 @@ class EntityManager:
 		topic = build_state_topic(
 			entity.domain,
 			entity.unique_id,
-			prefix,
+			self._settings.discovery_prefix,
 		)
 		
 		self._mqtt.publish(
