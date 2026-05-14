@@ -86,27 +86,27 @@ SCHEMAS: Dict[HADomain, ComponentSchema] = {
 	# ---------------------------
 	HADomain.SENSOR: _schema(
 		HADomain.SENSOR,
-		COMMON_REQUIRED | {"state_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.BINARY_SENSOR: _schema(
 		HADomain.BINARY_SENSOR,
-		COMMON_REQUIRED | {"state_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.NUMBER: _schema(
 		HADomain.NUMBER,
-		COMMON_REQUIRED | {"state_topic", "command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.TEXT: _schema(
 		HADomain.TEXT,
-		COMMON_REQUIRED | {"state_topic", "command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.SELECT: _schema(
 		HADomain.SELECT,
-		COMMON_REQUIRED | {"state_topic", "command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	# ---------------------------
@@ -114,57 +114,57 @@ SCHEMAS: Dict[HADomain, ComponentSchema] = {
 	# ---------------------------
 	HADomain.SWITCH: _schema(
 		HADomain.SWITCH,
-		COMMON_REQUIRED | {"state_topic", "command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.LIGHT: _schema(
 		HADomain.LIGHT,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.FAN: _schema(
 		HADomain.FAN,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.COVER: _schema(
 		HADomain.COVER,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.LOCK: _schema(
 		HADomain.LOCK,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.VALVE: _schema(
 		HADomain.VALVE,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.WATER_HEATER: _schema(
 		HADomain.WATER_HEATER,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.CLIMATE: _schema(
 		HADomain.CLIMATE,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.HUMIDIFIER: _schema(
 		HADomain.HUMIDIFIER,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.VACUUM: _schema(
 		HADomain.VACUUM,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.LAWN_MOWER: _schema(
 		HADomain.LAWN_MOWER,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	# ---------------------------
@@ -172,17 +172,17 @@ SCHEMAS: Dict[HADomain, ComponentSchema] = {
 	# ---------------------------
 	HADomain.BUTTON: _schema(
 		HADomain.BUTTON,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.EVENT: _schema(
 		HADomain.EVENT,
-		COMMON_REQUIRED | {"state_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.DEVICE_TRIGGER: _schema(
 		HADomain.DEVICE_TRIGGER,
-		{"automation_type", "topic", "type"},
+		{"automation_type", "type"},
 	),
 
 	# ---------------------------
@@ -190,26 +190,26 @@ SCHEMAS: Dict[HADomain, ComponentSchema] = {
 	# ---------------------------
 	HADomain.ALARM_CONTROL_PANEL: _schema(
 		HADomain.ALARM_CONTROL_PANEL,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.SIREN: _schema(
 		HADomain.SIREN,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.UPDATE: _schema(
 		HADomain.UPDATE,
-		COMMON_REQUIRED | {"state_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.SCENE: _schema(
 		HADomain.SCENE,
-		COMMON_REQUIRED | {"command_topic"},
+		COMMON_REQUIRED,
 	),
 
 	HADomain.DEVICE_TRACKER: _schema(
 		HADomain.DEVICE_TRACKER,
-		COMMON_REQUIRED | {"state_topic"},
+		COMMON_REQUIRED,
 	),
 }
