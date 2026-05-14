@@ -18,7 +18,6 @@ from typing import Any, Dict, Optional
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..config.schemas import SCHEMAS
-from ..builders.topic_manager import build_state_topic, build_command_topic
 from ..utils.logger import get_logger
 from ..exceptions import CoreError
 
@@ -55,19 +54,10 @@ def create_entity(
 	if not name or not isinstance(name, str):
 		raise CoreError("name must be a non-empty string")
 
-	state_topic = build_state_topic(domain, unique_id, discovery_prefix)
-
-	schema = SCHEMAS.get(domain)
-	command_topic = None
-	if schema and "command_topic" in schema.required_fields:
-		command_topic = build_command_topic(domain, unique_id, discovery_prefix)
-
 	entity = Entity(
 		domain=domain,
 		name=name,
 		unique_id=unique_id,
-		state_topic=state_topic,
-		command_topic=command_topic,
 		device_info=device_info,
 		extra=extra,
 	)
