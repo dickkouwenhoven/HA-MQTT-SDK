@@ -15,7 +15,6 @@ from ..config.schemas import SCHEMAS
 from ..builders.discovery_payload import build_discovery_payload
 from ..builders.topic_manager import (
 	build_discovery_topic,
-	build_state_topic,
 	build_command_topic,
 	build_availability_topic,
 )
@@ -116,7 +115,12 @@ class AsyncEntityManager(BaseMQTTClient):
 			await self._mqtt.subscribe(entity.command_topic)
 
 	async def update_state(self, entity: Entity, state: Any) -> None:
-		await self._mqtt.publish(entity.state_topic, state)
+		topic = build_state_topic(
+			entity.domain,
+			entity.unique_id,
+			self._settings.discovery_prefix,
+		)
+		await self._mqtt.publish(topic, state)
 
 	async def update_availability(self, entity: Entity, online: bool) -> None:
 
