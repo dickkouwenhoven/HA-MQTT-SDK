@@ -97,7 +97,7 @@ def build_discovery_payload(
 			or build_state_topic(
 				entity.domain, 
 				entity.unique_id, 
-				prefix
+				prefix,
 			),
 	}
 
