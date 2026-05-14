@@ -22,7 +22,10 @@ class PahoMQTTClient(BaseMQTTClient):
 		self._config = config
 		self._logger = get_logger(__name__)
 
-		self._client = mqtt.Client(client_id=config.client_id)
+		self._client = mqtt.Client(
+			mqtt.CallbackAPIVersion.VERSION2,
+			client_id=config.client_id,
+		)
 		self._callbacks: Dict[str, Callable] = {}
 		self._message_callback: Optional[Callable] = None
 
