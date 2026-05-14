@@ -86,7 +86,10 @@ class TestHomeAssistantSDK(unittest.TestCase):
 			command_topic="home/livingroom/light/set",
 		)
 		
-		payload = build_discovery_payload(entity)
+		payload = build_discovery_payload(
+			entity, 
+			"homeassistant",
+		)
 		
 		self.assertEqual(payload["name"], "Living Room Light")
 		self.assertIn("command_topic", payload)
