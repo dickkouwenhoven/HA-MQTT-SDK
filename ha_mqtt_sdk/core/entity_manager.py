@@ -227,12 +227,10 @@ class EntityManager:
 		if not isinstance(entity, Entity):
 			raise CoreError("Invalid entity")
 
-		prefix = self._settings.discovery_prefix
-
 		topic = build_availability_topic(
 			entity.domain,
 			entity.unique_id,
-			prefix,
+			self._settings.discovery_prefix,
 		)
 
 		payload = "online" if online else "offline"
