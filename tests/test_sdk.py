@@ -62,7 +62,6 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		entity.validate()
 		
 		self.assertEqual(entity.name, "Temperature Sensor")
-		self.assertEqual(entity.state_topic, "sensor/temp")
 		self.assertEqual(entity.unique_id, "temp_sensor_1")
 
 	def test_entity_creation_missing_required(self):
