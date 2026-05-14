@@ -77,7 +77,10 @@ def _build_device_block(entity: Entity) -> Dict[str, Any]:
 # Public function
 # ---------------------------------------------------------------------------
 
-def build_discovery_payload(entity: Entity) -> Dict[str, Any]:
+def build_discovery_payload(
+	entity: Entity,
+	prefix: str,
+) -> Dict[str, Any]:
 	"""
 	Build full discovery payload for Home Assistant.
 
@@ -91,7 +94,11 @@ def build_discovery_payload(entity: Entity) -> Dict[str, Any]:
 		"name": entity.name,
 		"unique_id": entity.unique_id,
 		"state_topic": entity.state_topic
-			or build_state_topic(entity.domain, entity.unique_id),
+			or build_state_topic(
+				entity.domain, 
+				entity.unique_id, 
+				prefix
+			),
 	}
 
 	# Command topic (only if supported / provided)
