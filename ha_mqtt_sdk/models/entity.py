@@ -58,6 +58,26 @@ class Entity:
 		self._validate_basic()
 		self._validate_schema()
 
+
+	def to_dict(self) -> Dict[str, Any]:
+		payload = {
+			"name": self.name,
+			"unique_id": self.unique_id,
+		}
+
+		if self.state_topic:
+			payload["state_topic"] = self.state_topic
+
+		if self.command_topic:
+			payload["command_topic"] = self.command_topic
+
+		if self.device_info:
+			payload["device"] = self.device_info
+
+		payload.update(self.extra)
+
+		return payload
+	
 	# -----------------------------------------------------------------------
 	# Internal validation
 	# -----------------------------------------------------------------------
