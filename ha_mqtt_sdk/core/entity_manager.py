@@ -199,7 +199,7 @@ class EntityManager:
 		)
 		
 		self._mqtt.publish(
-			topic = entity.state_topic,
+			topic = topic,
 			payload = state,
 			retain = False,
 		)
