@@ -171,7 +171,7 @@ class EntityManager:
 
 		_logger.debug(
 			"Subscribed to command topic: %s",
-			entity.command_topic,
+			topic,
 		)
 
 		# Register callback if provided
