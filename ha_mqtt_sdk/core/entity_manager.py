@@ -64,7 +64,7 @@ class EntityManager:
 		self._settings = mqtt_settings
 
 		# Mapping command_topic -> callback
-		self._command_callback: Dict[str, Callable[[str, Any], None]] = {}
+		self._command_callbacks: Dict[str, Callable[[str, Any], None]] = {}
 
 		# Register global MQTT message handler
 		self._mqtt.set_message_callback(self._handle_command)
@@ -191,9 +191,13 @@ class EntityManager:
 		if not isinstance(entity, Entity):
 			raise CoreError("Invalid entity")
 
-		if not entity.state_topic:
-			raise CoreError("Entity has no state_topic")
-
+		prefix = self._settings.discovery_prefix
+		topic = build_state_topic(
+			entity.domain,
+			entity.unique_id,
+			prefix,
+		)
+		
 		self._mqtt.publish(
 			topic = entity.state_topic,
 			payload = state,
