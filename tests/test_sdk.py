@@ -100,6 +100,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		topic = build_discovery_topic(
 			HADomain.SENSOR,
 			"unique_sensor_id",
+			"homeassistant",
 		)
 		
 		self.assertTrue(
@@ -123,7 +124,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		
 		self.mqtt_client.publish(topic, payload)
 		
-		self.mqtt_client.client.publish.assert_called_once()
+		self.mqtt_client._client.publish.assert_called_once()
 		
 		args, kwargs = self.mqtt_client.client.publish.call_args
 		
