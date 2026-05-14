@@ -28,18 +28,12 @@ class Entity:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		state_topic: Optional[str] = None,
-		command_topic: Optional[str] = None,
 		device_info: Optional[Any] = None,
 		extra: Optional[Dict[str, Any]] = None,
 	):
 		self.domain = domain
 		self.name = name
 		self.unique_id = unique_id
-
-		self.state_topic = state_topic
-		self.command_topic = command_topic
-
 		self.device_info = device_info
 		self.extra = extra or {}
 
@@ -64,12 +58,6 @@ class Entity:
 			"name": self.name,
 			"unique_id": self.unique_id,
 		}
-
-		if self.state_topic:
-			payload["state_topic"] = self.state_topic
-
-		if self.command_topic:
-			payload["command_topic"] = self.command_topic
 
 		if self.device_info:
 			payload["device"] = self.device_info
