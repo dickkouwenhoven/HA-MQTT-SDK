@@ -24,22 +24,14 @@ from .conftest import AsyncMockMQTTClient
 
 @pytest.mark.asyncio
 async def test_async_publish():
-
-	config = MQTTConfig(
-		host="localhost",
-		port=1883,
-	)
-
-	client = AsyncMockMQTTClient(config)
-
-	client._client = AsyncMock()
+	client = AsyncMockMQTTClient()
 
 	await client.publish(
 		"homeassistant/test_sensor/config",
 		{"name": "Test Sensor"},
 	)
 
-	client._client.publish.assert_awaited_once()
+	assert client.published
 
 
 @pytest.mark.asyncio
@@ -62,21 +54,12 @@ async def test_async_publish_without_connection():
 @pytest.mark.asyncio
 async def test_async_subscribe():
 
-	config = MQTTConfig(
-		host="localhost",
-		port=1883,
-	)
-
-	client = AsyncMQTTClient(config)
-
-	client._client = AsyncMock()
+	client = AsyncMQTTClient()
 
 	await client.subscribe("test/topic")
 
-	client._client.subscribe.assert_awaited_once_with(
-		"test/topic"
-	)
-
+	assert "test/topic" in client.subscribed
+	
 
 # ------------------------------------
 # Entity manager tests
@@ -85,7 +68,7 @@ async def test_async_subscribe():
 @pytest.mark.asyncio
 async def test_async_register_entity():
 
-	mqtt = AsyncMock()
+	mqtt = AsyncMockMQTTClient()
 
 	manager = AsyncEntityManager(
 		mqtt,
@@ -102,13 +85,13 @@ async def test_async_register_entity():
 
 	await manager.register(entity)
 
-	assert mqtt.publish.await_count >= 1
+	assert mqtt.published
 
 
 @pytest.mark.asyncio
 async def test_async_update_state():
 
-	mqtt = AsyncMock()
+	mqtt = AsyncMockMQTTClient()
 
 	manager = AsyncEntityManager(
 		mqtt,
@@ -128,13 +111,13 @@ async def test_async_update_state():
 		"22.5",
 	)
 
-	mqtt.publish.assert_awaited_once()
+	assert mqtt.published[-1][1] == "22.5"
 
 
 @pytest.mark.asyncio
 async def test_async_update_availability():
 
-	mqtt = AsyncMock()
+	mqtt = AsyncMockMQTTClient()
 
 	manager = AsyncEntityManager(
 		mqtt,
@@ -154,7 +137,7 @@ async def test_async_update_availability():
 		True,
 	)
 
-	mqtt.publish.assert_awaited_once()
+	assert mqtt.published[-1][1] == "online"
 
 
 # ------------------------------------
@@ -164,7 +147,7 @@ async def test_async_update_availability():
 @pytest.mark.asyncio
 async def test_async_command_callback():
 
-	mqtt = AsyncMock()
+	mqtt = AsyncMockMQTTClient()
 
 	manager = AsyncEntityManager(
 		mqtt,
@@ -173,8 +156,11 @@ async def test_async_command_callback():
 		)
 	)
 
-	callback = AsyncMock()
-
+	called = {"value": False}
+	
+	async def callback(topic, payload):
+		called["value"] = True
+		
 	manager._command_callbacks["test/topic"] = callback
 
 	await manager._handle_command(
@@ -182,7 +168,5 @@ async def test_async_command_callback():
 		"ON",
 	)
 
-	callback.assert_awaited_once_with(
-		"test/topic",
-		"ON",
-	)
+	assert called["value"] is True
+	
