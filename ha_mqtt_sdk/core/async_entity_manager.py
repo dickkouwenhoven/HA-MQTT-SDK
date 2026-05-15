@@ -115,8 +115,15 @@ class AsyncEntityManager:
 		# Command handling
 		# ------------------------
 
-		if entity.command_topic:
-			await self._mqtt.subscribe(entity.command_topic)
+		# if entity.command_topic:
+		# 	await self._mqtt.subscribe(entity.command_topic)
+		topic = build_command_topic(
+			entity.domain,
+			entity.unique_id,
+			self._settings.discovery_prefix,
+		)
+
+		await self._mqtt.subscribe(topic)
 
 	async def update_state(self, entity: Entity, state: Any) -> None:
 		topic = build_state_topic(
