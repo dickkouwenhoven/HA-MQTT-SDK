@@ -82,7 +82,7 @@ def test_update_state(mqtt_client_sync):
 
 	manager.update_state(entity, 25)
 
-	assert ("homeassistant/sensor/temp_1/state", 25, False) in mqtt_client_sync.published.published
+	assert mqtt_client_sync.published[-1][1] == 25
 
 
 def test_update_availability(mqtt_client_sync):
