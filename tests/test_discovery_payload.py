@@ -9,7 +9,10 @@ def test_basic_payload():
 		unique_id = "temp_1",
 	)
 
-	payload = build_discovery_payload(entity)
+	payload = build_discovery_payload(
+		entity,
+		self._settings.discovery_prefix,
+	)
 
 	assert payload["name"] == "Temp"
 	assert payload["unique_id"] == "temp_1"
