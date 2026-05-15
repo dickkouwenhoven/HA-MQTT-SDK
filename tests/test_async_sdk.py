@@ -60,10 +60,11 @@ async def test_async_subscribe():
 	)
 
 	client = AsyncMQTTClient(config)
+	client._client = AsyncMock()
 
 	await client.subscribe("test/topic")
 
-	assert "test/topic" in client.subscribed
+	client._client.subscribe.assert_awaited_once_with("test/topic")
 	
 
 # ------------------------------------
