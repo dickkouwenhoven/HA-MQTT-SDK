@@ -28,6 +28,13 @@ class MockMQTTClient:
 	):
 		self.callback = callback
 
+	def set_last_will(
+		self,
+		topic,
+		payload="offline",
+	):
+		self.last_will = (topic, payload)
+
 	def simulate_message(self, topic, payload):
 		if self.callback:
 			self.callback(
@@ -37,15 +44,7 @@ class MockMQTTClient:
 
 @pytest.fixture
 def mqtt_client():
-	client = MagicMock()
-
-	client.publish = AsyncMock()
-	client.subscribe = AsyncMock()
-
-	client.set_message_callback = MagicMock()
-	client.set_last_will = MagicMock()
-	
-	return client
+	return MockMQTTClient()
 
 @pytest.fixture
 def mqtt_settings():
