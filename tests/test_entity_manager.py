@@ -38,7 +38,7 @@ def test_register_entity(mqtt_client_sync):
 
 	manager.register(entity)
 
-	assert len(mqtt_client.published) > 0
+	assert len(mqtt_client_sync.published) > 0
 
 
 def test_command_subscription(mqtt_client_sync):
@@ -63,7 +63,7 @@ def test_command_subscription(mqtt_client_sync):
 		"homeassistant",
 	)
 
-	assert expected_topic in mqtt_client.subscribed
+	assert expected_topic in mqtt_client_sync.subscribed
 
 
 def test_update_state(mqtt_client_sync):
@@ -101,7 +101,7 @@ def test_update_availability(mqtt_client_sync):
 
 	manager.update_availability(entity, True)
 
-	topic, payload, retain = mqtt_client.published[-1]
+	topic, payload, retain = mqtt_client_sync.published[-1]
 
 	assert payload == "online"
 	assert retain is True
