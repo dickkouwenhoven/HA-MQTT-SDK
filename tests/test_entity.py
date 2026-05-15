@@ -8,7 +8,6 @@ def test_valid_entity():
 		domain = HADomain.SENSOR,
 		name = "Temp",
 		unique_id = "temp_1",
-		state_topic = "test/topic",
 	)
 	entity.validate()
 
