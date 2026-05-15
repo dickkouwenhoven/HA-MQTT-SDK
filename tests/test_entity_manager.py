@@ -4,7 +4,7 @@ from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.builders.topic_manager import build_state_topic
 from ha_mqtt_sdk.builders.topic_manager import build_command_topic
 
-def test_create_entity(mqtt_client):
+def test_create_entity(mqtt_client_sync):
 	manager = EntityManager(
 		mqtt_client,
 		MQTTSettings(
@@ -22,7 +22,7 @@ def test_create_entity(mqtt_client):
 	assert entity.domain == HADomain.SENSOR
 
 
-def test_register_entity(mqtt_client):
+def test_register_entity(mqtt_client_sync):
 	manager = EntityManager(
 		mqtt_client,
 		MQTTSettings(
@@ -41,7 +41,7 @@ def test_register_entity(mqtt_client):
 	assert len(mqtt_client.published) > 0
 
 
-def test_command_subscription(mqtt_client):
+def test_command_subscription(mqtt_client_sync):
 	manager = EntityManager(
 		mqtt_client,
 		MQTTSettings(
@@ -66,7 +66,7 @@ def test_command_subscription(mqtt_client):
 	assert expected_topic in mqtt_client.subscribed
 
 
-def test_update_state(mqtt_client):
+def test_update_state(mqtt_client_sync):
 	manager = EntityManager(
 		mqtt_client,
 		MQTTSettings(
@@ -85,7 +85,7 @@ def test_update_state(mqtt_client):
 	assert mqtt_client.published[-1][1] == 25
 
 
-def test_update_availability(mqtt_client):
+def test_update_availability(mqtt_client_sync):
 	manager = EntityManager(
 		mqtt_client,
 		MQTTSettings(
@@ -107,7 +107,7 @@ def test_update_availability(mqtt_client):
 	assert retain is True
 
 
-def test_command_callback_execution(mqtt_client):
+def test_command_callback_execution(mqtt_client_sync):
 	manager = EntityManager(
 		mqtt_client,
 		MQTTSettings(
