@@ -26,7 +26,7 @@ class MockMQTTClient:
 	):
 		self.callback = callback
 
-	@pytest.fixture
-	def mqtt_client():
-		return MockMQTTClient()
+@pytest.fixture
+def mqtt_client():
+	return MockMQTTClient()
 
