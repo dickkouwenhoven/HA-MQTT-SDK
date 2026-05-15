@@ -52,11 +52,11 @@ def mqtt_client_sync():
 
 @pytest.fixture
 def mqtt_client_async():
-	client = MagicMock()
+	client = MockMQTTClient()
+	
 	client.publish = AsyncMock()
 	client.subscribe = AsyncMock()
-	client.set_last_will = MagicMock()
-	client.set_message_callback = MagicMock()
+	
 	return client
 
 @pytest.fixture
