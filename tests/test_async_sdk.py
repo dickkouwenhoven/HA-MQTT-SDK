@@ -1,0 +1,193 @@
+import pytest
+
+from unittest.mock import AsyncMock
+
+from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk.config.mqtt import MQTTSettings
+
+from ha_mqtt_sdk.models.entity import Entity
+
+from ha_mqtt_sdk.core.async_entity_manager import (
+	AsyncEntityManager,
+)
+
+from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
+from ha_mqtt_sdk.mqtt.config import MQTTConfig
+
+from ha_mqtt_sdk.exceptions import MQTTError
+
+
+# ------------------------------------
+# MQTT client tests
+# ------------------------------------
+
+@pytest.mark.asyncio
+async def test_async_publish():
+
+	config = MQTTConfig(
+		host="localhost",
+		port=1883,
+	)
+
+	client = AsyncMQTTClient(config)
+
+	client._client = AsyncMock()
+
+	payload = {
+		"name": "Test Sensor",
+		"unique_id": "test_sensor",
+	}
+
+	await client.publish(
+		"homeassistant/test_sensor/config",
+		payload,
+	)
+
+	client._client.publish.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_async_publish_without_connection():
+
+	config = MQTTConfig(
+		host="localhost",
+		port=1883,
+	)
+
+	client = AsyncMQTTClient(config)
+
+	with pytest.raises(MQTTError):
+		await client.publish(
+			"test/topic",
+			"hello",
+		)
+
+
+@pytest.mark.asyncio
+async def test_async_subscribe():
+
+	config = MQTTConfig(
+		host="localhost",
+		port=1883,
+	)
+
+	client = AsyncMQTTClient(config)
+
+	client._client = AsyncMock()
+
+	await client.subscribe("test/topic")
+
+	client._client.subscribe.assert_awaited_once_with(
+		"test/topic"
+	)
+
+
+# ------------------------------------
+# Entity manager tests
+# ------------------------------------
+
+@pytest.mark.asyncio
+async def test_async_register_entity():
+
+	mqtt = AsyncMock()
+
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings(
+			discovery_prefix="homeassistant"
+		)
+	)
+
+	entity = Entity(
+		domain=HADomain.LIGHT,
+		name="Kitchen Lamp",
+		unique_id="kitchen_lamp_1",
+	)
+
+	await manager.register(entity)
+
+	mqtt.publish.assert_awaited()
+
+
+@pytest.mark.asyncio
+async def test_async_update_state():
+
+	mqtt = AsyncMock()
+
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings(
+			discovery_prefix="homeassistant"
+		)
+	)
+
+	entity = Entity(
+		domain=HADomain.SENSOR,
+		name="Temperature",
+		unique_id="temp_1",
+	)
+
+	await manager.update_state(
+		entity,
+		"22.5",
+	)
+
+	mqtt.publish.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_async_update_availability():
+
+	mqtt = AsyncMock()
+
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings(
+			discovery_prefix="homeassistant"
+		)
+	)
+
+	entity = Entity(
+		domain=HADomain.SWITCH,
+		name="Relay",
+		unique_id="relay_1",
+	)
+
+	await manager.update_availability(
+		entity,
+		True,
+	)
+
+	mqtt.publish.assert_awaited_once()
+
+
+# ------------------------------------
+# Command callback handling
+# ------------------------------------
+
+@pytest.mark.asyncio
+async def test_async_command_callback():
+
+	mqtt = AsyncMock()
+
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings(
+			discovery_prefix="homeassistant"
+		)
+	)
+
+	callback = AsyncMock()
+
+	manager._command_callbacks["test/topic"] = callback
+
+	await manager._handle_command(
+		"test/topic",
+		"ON",
+	)
+
+	callback.assert_awaited_once_with(
+		"test/topic",
+		"ON",
+	)
+  
