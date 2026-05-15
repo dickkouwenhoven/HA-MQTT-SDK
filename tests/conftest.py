@@ -83,20 +83,6 @@ class AsyncMockMQTTClient:
 				payload
 			)
 			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @pytest.fixture
 def mqtt_client():
 	return MockMQTTClient()
@@ -107,12 +93,7 @@ def mqtt_client_sync():
 
 @pytest.fixture
 def mqtt_client_async():
-	client = MockMQTTClient()
-	
-	client.publish = AsyncMock()
-	client.subscribe = AsyncMock()
-	
-	return client
+	return AsyncMockMQTTClient()
 
 @pytest.fixture
 def mqtt_settings():
