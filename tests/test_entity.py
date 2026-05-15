@@ -1,6 +1,7 @@
 import pytest
 from ha_mqtt_sdk.models.entity import Entity
 from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk.exceptions import EntityError
 
 def test_valid_entity():
 	entity = Entity(
@@ -12,7 +13,7 @@ def test_valid_entity():
 	entity.validate()
 
 def test_missing_name():
-	with pytest.raises(ValueError):
+	with pytest.raises(EntityError):
 		Entity(
 			domain = HADomain.SENSOR,
 			name = "",
@@ -20,7 +21,7 @@ def test_missing_name():
 		).validate()
 
 def test_invalid_domain():
-	with pytest.raises(ValueError):
+	with pytest.raises(EntityError):
 		Entity(
 			domain = "invalid",
 			name = "Test",
