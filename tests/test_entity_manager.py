@@ -132,8 +132,8 @@ def test_command_callback_execution(mqtt_client):
 	)
 
 	# Simulate MQTT message
-	mqtt_client.callback(
-		entity.command_topic,
+	mqtt_client.simulate_message(
+		"homeassistant/switch/switch_1/set",
 		"ON"
 	)
 
