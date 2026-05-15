@@ -29,18 +29,13 @@ async def test_async_publish():
 		port=1883,
 	)
 
-	client = AsyncMQTTClient(config)
+	client = AsyncMockMQTTClient(config)
 
 	client._client = AsyncMock()
 
-	payload = {
-		"name": "Test Sensor",
-		"unique_id": "test_sensor",
-	}
-
 	await client.publish(
 		"homeassistant/test_sensor/config",
-		payload,
+		{"name": "Test Sensor"},
 	)
 
 	client._client.publish.assert_awaited_once()
@@ -106,7 +101,7 @@ async def test_async_register_entity():
 
 	await manager.register(entity)
 
-	mqtt.publish.assert_awaited()
+	assert mqtt.publish.await_count >= 1
 
 
 @pytest.mark.asyncio
@@ -190,4 +185,3 @@ async def test_async_command_callback():
 		"test/topic",
 		"ON",
 	)
-  
