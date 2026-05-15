@@ -17,6 +17,7 @@ from ..builders.topic_manager import (
 	build_discovery_topic,
 	build_command_topic,
 	build_availability_topic,
+	build_state_topic,
 )
 from ..utils.logger import get_logger
 from ..exceptions  import CoreError, MQTTError
@@ -83,7 +84,10 @@ class AsyncEntityManager:
 			self._settings.discovery_prefix,
 		)
 
-		payload = build_discovery_payload(entity)
+		payload = build_discovery_payload(
+			entity,
+			self._settings.discovery_prefix,
+		)
 
 		await self._mqtt.publish(topic, payload, retain=True)
 
