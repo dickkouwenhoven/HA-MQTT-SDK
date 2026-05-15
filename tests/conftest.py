@@ -27,6 +27,13 @@ class MockMQTTClient:
 	):
 		self.callback = callback
 
+	def simulate_message(self, topic, payload):
+		if self.callback:
+			self.callback(
+				topic,
+				payload
+			)
+
 @pytest.fixture
 def mqtt_client():
 	return MockMQTTClient()
