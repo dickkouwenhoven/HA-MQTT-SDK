@@ -54,7 +54,12 @@ async def test_async_publish_without_connection():
 @pytest.mark.asyncio
 async def test_async_subscribe():
 
-	client = AsyncMQTTClient()
+	config = MQTTConfig(
+		host="localhost",
+		port=1883,
+	)
+
+	client = AsyncMQTTClient(config)
 
 	await client.subscribe("test/topic")
 
