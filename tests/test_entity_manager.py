@@ -2,6 +2,7 @@ from ha_mqtt_sdk.core.entity_manager import EntityManager
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.builders.topic_manager import build_state_topic
+from ha_mqtt_sdk.builders.topic_manager import build_command_topic
 
 def test_create_entity(mqtt_client):
 	manager = EntityManager(
@@ -17,14 +18,8 @@ def test_create_entity(mqtt_client):
 		unique_id = "temp_1",
 	)
 
-	topic = build_state_topic(
-		entity.domain,
-		entity.unique_id,
-		"homeassistant",
-	)
-
-	assert topic is not None
-	assert "temp_1" in topic
+	assert entity.unique_id == "temp_1"
+	assert entity.domain == HADomain.SENSOR
 
 
 def test_register_entity(mqtt_client):
@@ -62,7 +57,13 @@ def test_command_subscription(mqtt_client):
 
 	manager.register(entity)
 
-	assert entity.command_topic in mqtt_client.subscribed
+	expected_topic = build_command_topic(
+		entity.domain,
+		entity.unique_id,
+		"homeassistant",
+	)
+
+	assert expected_topic in mqtt_client.subscribed
 
 
 def test_update_state(mqtt_client):
