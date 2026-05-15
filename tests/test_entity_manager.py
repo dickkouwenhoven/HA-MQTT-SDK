@@ -6,7 +6,7 @@ from ha_mqtt_sdk.builders.topic_manager import build_command_topic
 
 def test_create_entity(mqtt_client_sync):
 	manager = EntityManager(
-		mqtt_client,
+		mqtt_client_sync,
 		MQTTSettings(
 			discovery_prefix="homeassistant"
 		)
@@ -24,7 +24,7 @@ def test_create_entity(mqtt_client_sync):
 
 def test_register_entity(mqtt_client_sync):
 	manager = EntityManager(
-		mqtt_client,
+		mqtt_client_sync,
 		MQTTSettings(
 			discovery_prefix="homeassistant"
 		)
@@ -43,7 +43,7 @@ def test_register_entity(mqtt_client_sync):
 
 def test_command_subscription(mqtt_client_sync):
 	manager = EntityManager(
-		mqtt_client,
+		mqtt_client_sync,
 		MQTTSettings(
 			discovery_prefix="homeassistant"
 		)
@@ -68,7 +68,7 @@ def test_command_subscription(mqtt_client_sync):
 
 def test_update_state(mqtt_client_sync):
 	manager = EntityManager(
-		mqtt_client,
+		mqtt_client_sync,
 		MQTTSettings(
 			discovery_prefix="homeassistant"
 		)
@@ -82,12 +82,12 @@ def test_update_state(mqtt_client_sync):
 
 	manager.update_state(entity, 25)
 
-	assert mqtt_client.published[-1][1] == 25
+	assert ("homeassistant/sensor/temp_1/state", 25, False) in mqtt_client_sync.published.published
 
 
 def test_update_availability(mqtt_client_sync):
 	manager = EntityManager(
-		mqtt_client,
+		mqtt_client_sync,
 		MQTTSettings(
 			discovery_prefix="homeassistant"
 		)
@@ -109,7 +109,7 @@ def test_update_availability(mqtt_client_sync):
 
 def test_command_callback_execution(mqtt_client_sync):
 	manager = EntityManager(
-		mqtt_client,
+		mqtt_client_sync,
 		MQTTSettings(
 			discovery_prefix="homeassistant"
 		)
@@ -132,9 +132,13 @@ def test_command_callback_execution(mqtt_client_sync):
 	)
 
 	# Simulate MQTT message
-	mqtt_client.simulate_message(
-		"homeassistant/switch/switch_1/set",
-		"ON"
+	expected_topic = build_command_topic(
+		entity.domain,
+		entity.unique_id,
+		"homeassistant",
 	)
 
+	mqtt_client_sync.simulate_message(expected_topic, "ON")
+
 	assert called["value"] is True
+	
