@@ -1,12 +1,12 @@
 import pytest
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
-from unittest.mock import MagicMock, AsyncMock
 
 class MockMQTTClient:
 	def __init__(self):
 		self.published = []
 		self.subscribed = []
 		self.callback = None
+		self.last_will = None
 
 	def publish(
 		self,
@@ -48,6 +48,7 @@ class AsyncMockMQTTClient:
 		self.published = []
 		self.subscribed = []
 		self.callback = None
+		self.last_will = None
 
 	async def publish(
 		self,
@@ -83,10 +84,6 @@ class AsyncMockMQTTClient:
 				payload
 			)
 			
-@pytest.fixture
-def mqtt_client():
-	return MockMQTTClient()
-
 @pytest.fixture
 def mqtt_client_sync():
 	return MockMQTTClient()
