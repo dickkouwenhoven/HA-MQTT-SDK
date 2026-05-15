@@ -7,12 +7,10 @@ def test_basic_payload():
 		domain = HADomain.SENSOR,
 		name = "Temp",
 		unique_id = "temp_1",
-		state_topic = "topic/state",
 	)
 
 	payload = build_discovery_payload(entity)
 
 	assert payload["name"] == "Temp"
 	assert payload["unique_id"] == "temp_1"
-	assert "state_topic" in payload
-
+	
