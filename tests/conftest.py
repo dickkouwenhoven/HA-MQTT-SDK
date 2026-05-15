@@ -1,4 +1,5 @@
 import pytest
+from ha_mqtt_sdk.config.mqtt import MQTTSettings
 
 class MockMQTTClient:
 	def __init__(self):
@@ -30,3 +31,8 @@ class MockMQTTClient:
 def mqtt_client():
 	return MockMQTTClient()
 
+@pytest.fixture
+def mqtt_settings():
+	return MQTTSettings(
+		discovery_prefix="homeassistant"
+	)
