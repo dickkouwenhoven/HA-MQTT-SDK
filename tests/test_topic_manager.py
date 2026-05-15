@@ -23,7 +23,7 @@ def test_command_topic():
 	assert topic == "homeassistant/switch/id1/set"
 
 def test_availability_topic():
-	topic = build_availibity_topic(
+	topic = build_availability_topic(
                 HADomain.SENSOR,
                 "id1",
                 "homeassistant",
