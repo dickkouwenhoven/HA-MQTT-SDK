@@ -6,6 +6,7 @@ Used by:
 - asyncio_client.py
 """
 
+import os
 from typing import Optional
 from ..exceptions import MQTTError, ConfigurationError
 
@@ -25,16 +26,65 @@ class MQTTConfig:
 	):
 		self._validate(host, port, keepalive)
 
-		self.host = host
-		self.port = port
-		self.username = username
-		self.password = password
+		self.host = (
+			host
+			or os.getenv(
+				"MQTT_HOST",
+				"mqtt"
+			)
+		)
+		self.port = (
+			port
+			or os.getenv(
+				"MQTT_PORT",
+				"1883"
+			)
+		)
+		self.username = (
+			username
+			or os.getenv(
+				"MQTT_USER",
+				"hauser"
+			)
+		)
+		self.password = (
+			password
+			or os.getenv(
+				"MQTT_PASSWORD",
+				""
+			)
+		)
 		self.client_id = client_id
-		self.keepalive = keepalive
+		self.keepalive = (
+			keepalive
+			or os.getenv(
+				"MQTT_KEEPALIVE",
+				60
+			)
+		)
 		self.tls = tls
-		self.reconnect = reconnect
-		self.reconnect_delay_min = reconnect_delay_min
-		self.reconnect_delay_max = reconnect_delay_max
+		self.reconnect = (
+			reconnect
+			or os.getenv(
+				"RECONNECT",
+				True
+			)
+		)
+		self.reconnect_delay_min = (
+			reconnect_delay_min
+			or os.getenv(
+				"RECONNECT_DELAY_MIN",
+				1.0
+			)
+		)
+		self.reconnect_delay_max = (
+			reconnect_delay_max
+			or os.getenv(
+				"RECONNECT_DELAY_MAX",
+				60.0
+			)
+		)
+		
 
 	def _validate(self, host: str, port: int, keepalive: int) -> None:
 		if not host:
@@ -45,3 +95,5 @@ class MQTTConfig:
 
 		if keepalive <= 0:
 			raise MQTTError("Keepalive must be > 0")
+
+METRICS_INTERVAL=300
