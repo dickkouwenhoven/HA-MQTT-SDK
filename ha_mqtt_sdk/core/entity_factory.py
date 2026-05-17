@@ -27,7 +27,6 @@ def create_entity(
 	domain: HADomain,
 	name: str,
 	unique_id: str,
-	discovery_prefix: str,
 	device_info: Optional[Any] = None,
 	extra: Optional[Dict[str, Any]] = None,
 ) -> Entity:
@@ -40,7 +39,6 @@ def create_entity(
 		domain: HADomain value
 		name: Human-readable entity name
 		unique_id: Unique identifier for the entity
-		discovery_prefix: MQTT discovery prefix (e.g. 'homeassistant´)
 		device_info: Optional device info block
 		extra: Optional extra HA fields
 
