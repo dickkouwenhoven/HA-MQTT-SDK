@@ -189,4 +189,49 @@ ALLOWED_FIELDS_PER_DOMAIN: Dict[HADomain, Dict[str, Set[str]]] = {
 			"power_state_topic",
 		},
 	},
+	HADomain.CAMERA: {
+		"required": {"name", "topic", "unique_id"},
+		"optional": COMMON_FIELDS | {
+			"image_encoding",
+			"content_type",
+		},
+	},
+	HADomain.DATE: {
+		"required": {"name", "command_topic", "unique_id"},
+		"optional": COMMON_FIELDS | {
+			"state_topic",
+		},
+	},
+	HADomain.DATETIME: {
+		"required": {"name", "command_topic", "unique_id"},
+		"optional": COMMON_FIELDS | {
+			"state_topic",
+		},
+	},
+	HADomain.TIME: {
+		"required": {"name", "command_topic", "unique_id"},
+		"optional": COMMON_FIELDS | {
+			"state_topic",
+		},
+	},
+	HADomain.IMAGE: {
+		"required": {"name", "image_topic", "unique_id"},
+		"optional": COMMON_FIELDS | {
+			"content_type",
+		},
+	},
+	HADomain.NOTIFY: {
+		"required": {"name", "command_topic"},
+		"optional": COMMON_FIELDS | {
+			"title",
+			"icon",
+		},
+	},
+	HADomain.TAG: {
+		"required": {"topic"},
+		"optional": {
+			"value_template",
+			"qos",
+		},
+	},	
 }
