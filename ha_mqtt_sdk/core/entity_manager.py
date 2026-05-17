@@ -92,7 +92,6 @@ class EntityManager:
 			domain = domain,
 			name = name,
 			unique_id = unique_id,
-			discovery_prefix=self._settings.discovery_prefix,
 			device_info = device_info,
 			extra = extra,
 		)
