@@ -13,7 +13,7 @@ from ..exceptions import MQTTError, ConfigurationError
 class MQTTConfig:
 	def __init__(
 		self,
-		host: str,
+		host: str | None = None,
 		port: int = 1883,
 		username: Optional[str] = None,
 		password: Optional[str] = None,
@@ -95,5 +95,3 @@ class MQTTConfig:
 
 		if keepalive <= 0:
 			raise MQTTError("Keepalive must be > 0")
-
-METRICS_INTERVAL=300
