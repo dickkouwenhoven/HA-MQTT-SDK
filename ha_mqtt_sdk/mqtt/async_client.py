@@ -15,13 +15,13 @@ from typing import Callable, Any, Dict, Optional
 import aiomqtt
 
 from .base import BaseMQTTClient
-from .config import MQTTSettings
+from .config import MQTTConfig
 from ..utils.logger import get_logger
 from ..exceptions import MQTTError
 
 
 class AsyncMQTTClient(BaseMQTTClient):
-	def __init__(self, config: MQTTSettings):
+	def __init__(self, config: MQTTConfig):
 		self._config = config
 		self._logger = get_logger(__name__)
 		self._callbacks: Dict[str, Callable] = {}
