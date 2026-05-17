@@ -14,84 +14,84 @@ class MQTTConfig:
 	def __init__(
 		self,
 		host: str | None = None,
-		port: int = 1883,
+		port: int | None = None,
 		username: Optional[str] = None,
 		password: Optional[str] = None,
 		client_id: Optional[str] = None,
-		keepalive: int = 60,
+		keepalive: int | None = None,
 		tls: bool = False,
-		reconnect: bool = True,
-		reconnect_delay_min: float = 1.0,
-		reconnect_delay_max: float = 60.0,
+		reconnect: bool | None = None,
+		reconnect_delay_min: float | None = None,
+		reconnect_delay_max: float | None = None,
 	):
-		self._validate(host, port, keepalive)
-
 		self.host = (
 			host
-			or os.getenv(
-				"MQTT_HOST",
-				"mqtt"
-			)
-		)
-		self.port = (
-			port
-			or os.getenv(
-				"MQTT_PORT",
-				"1883"
-			)
-		)
-		self.username = (
-			username
-			or os.getenv(
-				"MQTT_USER",
-				"hauser"
-			)
-		)
-		self.password = (
-			password
-			or os.getenv(
-				"MQTT_PASSWORD",
-				""
-			)
-		)
-		self.client_id = client_id
-		self.keepalive = (
-			keepalive
-			or os.getenv(
-				"MQTT_KEEPALIVE",
-				60
-			)
-		)
-		self.tls = tls
-		self.reconnect = (
-			reconnect
-			or os.getenv(
-				"RECONNECT",
-				True
-			)
-		)
-		self.reconnect_delay_min = (
-			reconnect_delay_min
-			or os.getenv(
-				"RECONNECT_DELAY_MIN",
-				1.0
-			)
-		)
-		self.reconnect_delay_max = (
-			reconnect_delay_max
-			or os.getenv(
-				"RECONNECT_DELAY_MAX",
-				60.0
-			)
+			if host is not None
+			else os.getenv("MQTT_HOST", "mqtt")
 		)
 		
+		self.port = (
+			port
+			if port is not None
+			else int(os.getenv("MQTT_PORT",	1883))
+		)
+		
+		self.username = (
+			username
+			if username is not None
+			else os.getenv("MQTT_USER", "hauser")
+		)
+		
+		self.password = (
+			password
+			if password is not None
+			else os.getenv("MQTT_PASSWORD", "")
+		)
+		
+		self.client_id = client_id
+		
+		self.keepalive = (
+			keepalive
+			if keepalive is not None
+			else int(os.getenv("MQTT_KEEPALIVE", 60))
+		)
+		
+		self.tls = tls
+		
+		self.reconnect = (
+			reconnect
+			if reconnect is not None
+			else os.getenv("RECONNECT", "True").lower() == "true"
+		)
+		
+		self.reconnect_delay_min = (
+			reconnect_delay_min
+			if reconnect_delay_min is not None
+			else float(os.getenv("RECONNECT_DELAY_MIN", 1.0))
+		)
+		
+		self.reconnect_delay_max = (
+			reconnect_delay_max
+			if reconnect_delay_max is not None
+			else float(os.getenv("RECONNECT_DELAY_MAX", 60.0))
+		)
 
-	def _validate(self, host: str, port: int, keepalive: int) -> None:
-		if not host:
+		self._validate()
+		
+
+	def _validate(self) -> None:
+		
+		if not self.host:
 			raise MQTTError("MQTT host must not be empty")
 
-		if not isinstance(port, int) or port <= 0:
+		if not isinstance(self.port, int) or self.port <= 0:
 			raise MQTTError("MQTT port must be a positive integer")
 
-		if keepalive <= 0:
+		if self.keepalive <= 0:
 			raise MQTTError("Keepalive must be > 0")
+
+		if self.reconnect_delay_min <= 0:
+			raise MQTTError("Reconnect delay min must be > 0")
+
+		if self.reconnect_delay_max < self.reconnect_delay_min:
+			raise MQTTError("Reconnect delay max must be >= reconnect delay min")
