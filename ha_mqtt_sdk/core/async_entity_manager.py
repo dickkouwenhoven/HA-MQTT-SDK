@@ -8,6 +8,8 @@ Used for asyncio-based integrations.
 
 from typing import Optional, Dict, Any, Callable, Awaitable
 
+from .entity_factory import create_entity as _create_entity
+
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
@@ -54,7 +56,6 @@ class AsyncEntityManager:
 			domain=domain,
 			name=name,
 			unique_id=unique_id,
-			discovery_prefix=self._settings.discovery_prefix,
 			device_info=device_info,
 			extra=extra,
 		)
