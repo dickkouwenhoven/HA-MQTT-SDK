@@ -212,4 +212,32 @@ SCHEMAS: Dict[HADomain, ComponentSchema] = {
 		HADomain.DEVICE_TRACKER,
 		COMMON_REQUIRED,
 	),
+	HADomain.CAMERA: _schema(
+		HADomain.CAMERA,
+		COMMON_REQUIRED,
+	),
+	HADomain.DATE: _schema(
+		HADomain.DATE,
+		COMMON_REQUIRED,
+	),
+	HADomain.DATETIME: _schema(
+		HADomain.DATETIME,
+		COMMON_REQUIRED,
+	),
+	HADomain.TIME: _schema(
+		HADomain.TIME,
+		COMMON_REQUIRED,
+	),
+	HADomain.IMAGE: _schema(
+		HADomain.IMAGE,
+		COMMON_REQUIRED,
+	),
+	HADomain.NOTIFY: _schema(
+		HADomain.NOTIFY,
+		{"name", "command_topic"},
+	),
+	HADomain.TAG: _schema(
+		HADomain.TAG,
+		{"topic"},
+	),	
 }
