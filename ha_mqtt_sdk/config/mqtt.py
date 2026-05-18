@@ -98,11 +98,9 @@ class MQTTSettings:
 
 		if self.keepalive <= 0:
 			raise MQTTError("Keepalive must be > 0")
-
-	 	if not isinstance(discovery_prefix, str) or not discovery_prefix.strip():
+			
+		if not isinstance(discovery_prefix, str) or not discovery_prefix.strip():
 			raise MQTTError("discovery_prefix must be a non-empty string")
-
-		self.discovery_prefix = discovery_prefix
 
 		if self.reconnect_delay_min <= 0:
 			raise MQTTError("Reconnect delay min must be > 0")
