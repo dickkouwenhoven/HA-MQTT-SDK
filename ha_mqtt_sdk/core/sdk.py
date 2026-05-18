@@ -19,7 +19,6 @@ from typing import Optional, Callable, Any
 
 from ..mqtt import (
 	BaseMQTTClient,
-	MQTTConfig,
 	PahoMQTTClient,
 )
 from ..models.entity import Entity
@@ -31,7 +30,7 @@ from ..exceptions import SDKError
 class HASDK:
 	def __init__(
 		self,
-		mqtt_config: Optional[MQTTConfig] = None,
+		mqtt_config: Optional[MQTTSettings] = None,
 		mqtt_client: Optional[BaseMQTTClient] = None,
 		mqtt_settings: MQTTSettings | None = None,
 	):
