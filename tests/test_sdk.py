@@ -23,8 +23,6 @@ from ha_mqtt_sdk.builders.discovery_payload import build_discovery_payload
 from ha_mqtt_sdk.builders.topic_manager import build_discovery_topic
 
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
-from ha_mqtt_sdk.mqtt.config import MQTTConfig
-
 from ha_mqtt_sdk.exceptions import EntityError
 from ha_mqtt_sdk.utils.logger import get_logger
 
@@ -36,7 +34,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		"""
 		Create mocked MQTT client.
 		"""
-		config = MQTTConfig(
+		config = MQTTSettings(
 			host="localhost",
 			port=1883,
 		)
