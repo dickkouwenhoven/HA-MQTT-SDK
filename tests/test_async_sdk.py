@@ -12,7 +12,6 @@ from ha_mqtt_sdk.core.async_entity_manager import (
 )
 
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
-from ha_mqtt_sdk.mqtt.config import MQTTConfig
 
 from ha_mqtt_sdk.exceptions import MQTTError
 from .conftest import AsyncMockMQTTClient
