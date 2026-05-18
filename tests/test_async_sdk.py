@@ -37,7 +37,7 @@ async def test_async_publish():
 @pytest.mark.asyncio
 async def test_async_publish_without_connection():
 
-	config = MQTTConfig(
+	config = MQTTSettings(
 		host="localhost",
 		port=1883,
 	)
@@ -54,7 +54,7 @@ async def test_async_publish_without_connection():
 @pytest.mark.asyncio
 async def test_async_subscribe():
 
-	config = MQTTConfig(
+	config = MQTTSettings(
 		host="localhost",
 		port=1883,
 	)
