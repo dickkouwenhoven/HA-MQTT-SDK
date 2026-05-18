@@ -13,12 +13,12 @@ from typing import Callable, Any, Dict
 import paho.mqtt.client as mqtt
 
 from .base import BaseMQTTClient
-from .config import MQTTConfig
+from ..config.mqtt import MQTTSettings
 from ..utils.logger import get_logger
 from ..exceptions import MQTTError, ValidationError
 
 class PahoMQTTClient(BaseMQTTClient):
-	def __init__(self, config: MQTTConfig):
+	def __init__(self, config: MQTTSettings):
 		self._config = config
 		self._logger = get_logger(__name__)
 
