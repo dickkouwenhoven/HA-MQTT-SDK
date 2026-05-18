@@ -36,27 +36,64 @@ HA-MQTT-SDK/
 ├── .env.example
 ├── setup.py
 ├── pyproject.toml
+├── pytest.ini
 ├── requirements.txt
+├── requirements-dev.txt
+├── Dockerfile
+├── docker-compose.yml
+├── LICENSE
+├── mosquitto.conf
+├── setup.py
+├── pyproject.toml
+├── .github
+│   └── workflows/
+│       └── ci.yml
+├── examples
+│   └── basic_usage/
+│       ├── README.md
+│       └── main.py
 ├── ha_mqtt_sdk/
 │   ├── __init__.py
+│   ├── exceptions.py
+│   ├── plugin_interface.py
+│   ├── plugin_manager.py
+│   ├── builders/
+│   │   ├── __init__.py
+│   │   ├── discovery_payload.py
+│   │   └── topic_manager.py
 │   ├── config/
 │   │   ├── __init__.py
 │   │   ├── domains.py
+│   │   ├── mqtt.py
+│   │   ├── schemas.py
 │   │   └── device_fields.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── async_entity_manager.py
+│   │   ├── entity_factory.py
+│   │   ├── entity_manager.py
+│   │   └── sdk.py
 │   ├── models/
 │   │   ├── __init__.py
+│   │   ├── device_info.py
 │   │   ├── entity.py
 │   ├── mqtt/
 │   │   ├── __init__.py
-│   │   ├── mqtt_client.py
-│   │   ├── topic_manager.py
-│   │   └── discovery_payload.py
+│   │   ├── async_client.py
+│   │   ├── base.py
+│   │   └── paho_client.py
 │   └── utils/
 │       ├── __init__.py
 │       └── logger.py
 └── tests/
     ├── __init__.py
-    └── test_sdk.py
+    ├── conftest.py
+    ├── test_async_sdk.py
+    ├── test_discovery_payload.py
+    ├── test_entity.py
+    ├── test_entity_manager.py
+    ├── test_sdk.py
+    └── test_topic_manager.py
 
 🚀 Usage
 Start everything:
