@@ -37,7 +37,7 @@ classifiers = [
 dependencies = [
 	"paho-mqtt>=2.1.0",
 	"aiomqtt>=2.5.1",
-	"pydantic>="2.11.10"
+	"pydantic>=2.11.10"
 ]
 
 [project.optional-dependencies]
