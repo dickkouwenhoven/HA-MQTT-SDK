@@ -82,7 +82,13 @@ def build_discovery_payload(
 	prefix: str,
 ) -> Dict[str, Any]:
 	"""
-	Build full discovery payload for Home Assistant.
+	Build full Home Assistant MQTT discovery payload.
+
+	Responsibilities:
+	- Build HA-compatible discovery payload
+	- Add optional device block
+	- Merge extra attributes
+	- Validate against domain schema
 
 	Used by:
 	- EntityManager.register()
@@ -90,6 +96,10 @@ def build_discovery_payload(
 
 	_validate_entity(entity)
 
+	# ------------------------------------------------------
+	# Base payload
+	# ------------------------------------------------------
+	
 	payload: Dict[str, Any] = {
 		"name": entity.name,
 		"unique_id": entity.unique_id,
@@ -100,33 +110,48 @@ def build_discovery_payload(
 			),
 	}
 
+	# ------------------------------------------------------
+	# Optional command topic
+	# ------------------------------------------------------
+	
 	command_topic = build_command_topic(
 		entity.domain,
 		entity.unique_id,
 		prefix,
 	)
-	payload = {
-		"name": entity.name,
-		"unique_id": entity.unique_id,
-		"command_topic": command_topic,
-	}
 
-	# Device block
+	if command_topic:
+		payload["command_topic"] = command_topic,
+
+	# ------------------------------------------------------
+	# Optional device block
+	# ------------------------------------------------------
+	
 	device_block = _build_device_block(entity)
+	
 	if device_block:
 		payload["device"] = device_block
 
-	# Extra attributes (flexibility)
+	# ------------------------------------------------------
+	# Extra user-defined attributes
+	# ------------------------------------------------------
+	
 	if entity.extra:
 		payload.update(entity.extra)
 
-	# Validate against schema
+	# ------------------------------------------------------
+	# Schema validation
+	# ------------------------------------------------------
+	
 	_validate_schema(entity, payload)
 
+	# ------------------------------------------------------
+	# Logging
+	# ------------------------------------------------------
+	
 	_logger.debug(
 		"Discovery payload built for %s: %s",
 		entity.unique_id,
-		payload,
 	)
 
 	return payload
