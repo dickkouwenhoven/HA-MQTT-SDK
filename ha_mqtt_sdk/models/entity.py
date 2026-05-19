@@ -60,7 +60,7 @@ class Entity:
 		}
 
 		if self.device_info:
-			payload["device"] = self.device_info
+			payload["device"] = self.device_info.to_dict()
 
 		payload.update(self.extra)
 
