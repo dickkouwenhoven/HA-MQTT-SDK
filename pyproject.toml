@@ -7,7 +7,7 @@ name = "ha_mqtt_sdk"
 version = "0.1.0"
 description = "Home Assistant MQTT SDK for discovery, topics, and device management"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.14.5"
 license = {text = "MIT"}
 
 authors = [
@@ -19,24 +19,27 @@ keywords = [
 	"mqtt",
 	"iot",
 	"sdk",
-	"automation"
+	"automation",
+	"python",
+	"smarthome",
 ]
+
+requires-python = ">=3.12"
 
 classifiers = [
 	"Development Status :: 3 - Alpha",
 	"Intended Audience :: Developers",
 	"Topic :: Home Automation",
 	"License :: OSI Approved :: MIT License",
-	"Programming Language :: Python :: 3",
-	"Programming Language :: Python :: 3.9",
-	"Programming Language :: Python :: 3.10",
-	"Programming Language :: Python :: 3.11",
-	"Programming Language :: Python :: 3.12"
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+	"Programming Language :: Python :: 3.14",
 ]
 
 dependencies = [
-	"paho-mqtt>=1.6.1",
-	"aiomqtt>=2.0"
+	"paho-mqtt>=2.1.0",
+	"aiomqtt>=2.5.1",
+	"pydantic>="2.11.10"
 ]
 
 [project.optional-dependencies]
