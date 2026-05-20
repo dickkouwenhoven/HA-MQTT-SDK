@@ -8,8 +8,13 @@ Provides:
 """
 
 from .base import BaseMQTTClient
-from .paho_client import PahoMQTTClient
 from .async_client import AsyncMQTTClient
+
+# Optional Paho import
+try:
+	from .paho_client import PahoMQTTClient
+except ModuleNotFoundError: # pragma: no cover
+	PahoMQTTClient = None
 
 __all__ = [
 	"BaseMQTTClient",
