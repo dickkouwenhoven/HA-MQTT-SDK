@@ -28,7 +28,7 @@ class Entity:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		device_info: Optional[Any] = None,
+		device_info: Optional[Dict[str, Any]] = None,
 		extra: Optional[Dict[str, Any]] = None,
 	):
 		self.domain = domain
