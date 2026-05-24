@@ -15,6 +15,7 @@ from typing import Dict, Any
 
 from ..models.entity import Entity
 from ..config.schemas import SCHEMAS
+from ..validators.payload_validator import validate_discovery_payload 
 from ..utils.logger import get_logger
 from .topic_manager import (
 	build_state_topic,
@@ -144,6 +145,11 @@ def build_discovery_payload(
 	# ------------------------------------------------------
 	
 	_validate_schema(entity, payload)
+
+	# ------------------------------------------------------
+	# Payload validation
+	# ------------------------------------------------------
+	validate_discovery_payload(payload)
 
 	# ------------------------------------------------------
 	# Logging
