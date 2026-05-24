@@ -149,7 +149,10 @@ def build_discovery_payload(
 	# ------------------------------------------------------
 	# Payload validation
 	# ------------------------------------------------------
-	validate_discovery_payload(payload)
+	validate_discovery_payload(
+		payload,
+		entity.domain,
+	)
 
 	# ------------------------------------------------------
 	# Logging
@@ -157,6 +160,7 @@ def build_discovery_payload(
 	
 	_logger.debug(
 		"Discovery payload built for %s: %s",
+		entity.name,
 		entity.unique_id,
 	)
 
