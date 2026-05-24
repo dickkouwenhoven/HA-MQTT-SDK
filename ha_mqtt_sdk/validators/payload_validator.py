@@ -9,6 +9,7 @@ import json
 from typing import Any
 from collections.abc import Mapping
 
+from ..config.domains import HADomain
 from ..exceptions import ValidationError
 
 
@@ -33,6 +34,7 @@ def validate_json_serializable(
 
 def validate_discovery_payload(
     payload: Mapping[str, Any],
+    domain: HADomain,
 ) -> None:
     """
     Validate Home Assistant discovery payload.
