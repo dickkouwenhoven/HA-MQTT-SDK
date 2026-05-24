@@ -11,17 +11,23 @@ This module is INTERNAL and should not be used directly by SDK users.
 Used by:
 - ha_mqtt_sdk.models.entity.make_entity
 """
+from __future__ import annotations
 
-from typing import Dict, Any
+from typing import Any
+from collections.abc import Mapping
+
 from ..utils.logger import get_logger
 from ..exceptions import DeviceError
 
 LOGGER = get_logger(__name__)
 
 class DeviceInfo:
+	"""
+	Stateless Home Assistant device_info builder.
+	"""
 
 	# Default mapping from source device data → HA device info
-	_DEFAULT_MAPPING = {
+	_DEFAULT_MAPPING: dict[str, str] = {
 		"identifiers": "serial_number",
 		"manufacturer": "manufacturer",
 		"model": "model",
@@ -31,57 +37,102 @@ class DeviceInfo:
 		"suggested_area": "room",
 	}
 
+	@staticmethod
+	def _extract_value(
+		source: Dict[str, Any],
+		path: str,
+	) -> Any:
+		"""
+		Extract value using dot notation.
+		
+		Example: "attributes.serial_number"
+		"""
+		current: Any = source
 
-	def _extract_value(source: Dict[str, Any], path: str) -> Any:
-		"""
-		Extract value from dict using dot-notation path.
-		Example: "attributes.serialNumber"
-		"""
-		try:
-			keys = path.split(".")
-			value = source
-			for key in keys:
-				value = value[key]
-			return value
-		except (KeyError, TypeError):
-			return None
+		for key in path.split("."):
+			if not isinstance(current, Mapping):
+				return None
 
+			current = current.get(key)
 
-	def _validate_device_input(device: Dict[str, Any]) -> None:
+			if current is None:
+				return None
+
+			return current
+		
+	@staticmethod
+	def _validate_device_input(
+		device: Mapping[str, Any],
+	) -> None:
 		"""
-		Validate input device data.
+		Validate raw device input.
 		"""
-		if not isinstance(device, dict):
-			raise DeviceError("device must be a dictionary")
+		if not isinstance(device, Mapping):
+			raise DeviceError("device must be a mapping")
 
 		if not device:
 			raise DeviceError("device cannot be empty")
 
-
-	def build_device_info(
-		device: Dict[str, Any],
-		mapping: Dict[str, str] = None
-	) -> Dict[str, Any]:
+	@staticmethod
+	def _normalize_identifiers(
+		value: Any,
+	) -> list[tuple[str, str]]:
 		"""
-		Build Home Assistant device info structure.
+		Normalize identifiers to Home Assistant format.
 
-		Args:
-		device: Source device data (raw input)
-		mapping: Optional custom mapping
+		HA expects:
+			[(domain, identifier)}
+		"""
 
-		Returns:
-		Dict[str, Any]: HA device info block
+		if isinstance(value, str):
+			if not value.strip():
+				raise DeviceError("identifier cannot be empty")
+			return [("ha_mqtt_sdk", value)]
+
+		if isinstance(value, tuple):
+			if len(value) != 2:
+				raise DeviceError("identifier tuple must contain 2 items")
+
+			return [value]
+
+		if isinstance(value, list):
+			normalized: list[tuple[str, str]] = []
+
+			for item in value:
+				if (
+					not isinstance(item, tuple)
+					or len(item) != 2
+				):
+					raise DeviceError("all identifiers must be 2-item tuples")
+
+				normalized.append(item)
+
+			return normalized
+
+		raise DeviceError("identifiers must be a string, tuple, or list of tuples")
+
+	
+	@classmethod			
+	def build_device_info(
+		cls,
+		device: Mapping[str, Any],
+		mapping: Mapping[str, str] | None = None
+	) -> dict[str, Any]:
+		"""
+		Build Home Assistant compatible device_info.
 
 		Used by:
 		ha_mqtt_sdk.models.entity.make_entity
 		"""
-		_validate_device_input(device)
+		cls._validate_device_input(device)
 
-		mapping = mapping or _DEFAULT_MAPPING
-		device_info: Dict[str, Any] = {}
+		active_mapping = mapping or cls._DEFAULT_MAPPING
+		
+		device_info: dict[str, Any] = {}
 
-		for ha_key, source_path in mapping.items():
-			value = _extract_value(device, source_path)
+		for ha_key, source_path in active_mapping.items():
+			value = cls._extract_value(device, source_path,)
+			
 			if value is not None:
 				device_info[ha_key] = value
 
@@ -90,9 +141,12 @@ class DeviceInfo:
 			raise DeviceError("Device info must contain 'identifiers'")
 
 		# HA expects identifiers as list of tuples
-		if not isinstance(device_info["identifiers"], list):
-			device_info["identifiers"] = [(device_info["identifiers"],)]
-
-		LOGGER.debug("Built device_info: %s", device_info)
+		device_info["identifiers"] = (
+			cls._normalize_identifiers(
+				device_info["identifiers"]
+			)
+		)
+		
+		LOGGER.debug("Built device_info: %s", device_info,)
 
 		return device_info
