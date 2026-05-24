@@ -150,8 +150,8 @@ def build_discovery_payload(
 	# Payload validation
 	# ------------------------------------------------------
 	validate_discovery_payload(
-		payload,
-		entity.domain,
+		payload=payload,
+		domain=entity.domain,
 	)
 
 	# ------------------------------------------------------
