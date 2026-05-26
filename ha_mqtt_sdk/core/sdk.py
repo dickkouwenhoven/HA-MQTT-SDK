@@ -101,7 +101,7 @@ class HASDK:
 
 		self._entity_manager.update_state(entity, payload)
 
-	def on_command(self, entity: Entity, callback: Callable[[str, Any], None]) -> None:
+	def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
 		"""
 		Register global command handler.
 
