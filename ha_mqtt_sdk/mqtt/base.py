@@ -8,13 +8,19 @@ Used by:
 - ha_mqtt_sdk/core/sdk.py (HASDK)
 """
 
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Callable, Any
+from collections.abc import Callable
+
+MessageCallback = Callable[[str, str]], None]
 
 
 class BaseMQTTClient(ABC):
 	"""
-	Abstract base MQTT client.
+	Base MQTT transport interface.
+
+	All MQTT transport implementations must inherit from this class.
 	"""
 
 	@abstractmethod
@@ -26,13 +32,13 @@ class BaseMQTTClient(ABC):
 		"""Disconnect from the MQTT broker."""
 
 	@abstractmethod
-	def publish(self, topic: str, payload: Any, retain: bool = False) -> None:
-		"""Publish a message to a topic. """
+	def publish(self, topic: str, payload: str, retain: bool = False) -> None:
+		"""Publish a message to a topic."""
 
 	@abstractmethod
-	def subscribe(self, topic: str, callback: Callable[[str, Any], None]) -> None:
+	def subscribe(self, topic: str, callback: MessageCallback) -> None:
 		"""Subscribe to a topic and register a message callback."""
 
 	@abstractmethod
-	def set_message_callback(self, callback: Callable[[str, Any], None]) -> None:
+	def set_message_callback(self, callback: MessageCallback) -> None:
 		"""Register a global message handler."""
