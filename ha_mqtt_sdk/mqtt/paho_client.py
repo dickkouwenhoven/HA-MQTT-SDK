@@ -103,7 +103,7 @@ class PahoMQTTClient(BaseMQTTClient):
 
 		self._client.subscribe(topic)
 
-	def set_message_callback(self, callback: Callable[[str, Any], None]) -> None:
+	def set_message_callback(self, callback: Callable[[str, str], None]) -> None:
 		self._message_callback = callback
 
 	# -----------------------
