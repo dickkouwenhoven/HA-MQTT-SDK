@@ -13,7 +13,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 
-MessageCallback = Callable[[str, str]], None]
+MessageCallback = Callable[[str, str], None]
 
 
 class BaseMQTTClient(ABC):
