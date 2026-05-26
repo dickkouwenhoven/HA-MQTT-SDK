@@ -32,6 +32,7 @@ from ..builders.topic_manager import (
 	build_command_topic,
 	build_availability_topic,
 )
+from ..mqtt.base import BaseMQTTClient
 from ..utils.logger import get_logger
 from ..exceptions import CoreError
 
@@ -40,8 +41,8 @@ _logger = get_logger(__name__)
 class EntityManager:
 	def __init__(
 		self,
-		mqtt_client,
-		mqtt_settings: MQTTSettings
+		mqtt_client: BaseMQTTClient,
+		mqtt_settings: MQTTSettings,
 	):
 		"""
 		Initialize EntityManager.
@@ -51,8 +52,11 @@ class EntityManager:
 			mqtt_settings: MQTTSettings instance
 		""" 
 
-		if not mqtt_client:
-			raise CoreError("mqtt_client is required")
+		if not isinstance(
+			mqtt_client,
+			BaseMQTTClient,
+		):
+			raise CoreError("mqtt_client must inherit from BaseMQTTClient")
 
 		if not isinstance(
 			mqtt_settings,
