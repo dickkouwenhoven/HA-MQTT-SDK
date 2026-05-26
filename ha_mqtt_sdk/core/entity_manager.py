@@ -103,7 +103,7 @@ class EntityManager:
 	def register(
 		self,
 		entity: Entity,
-		command_callback: Optional[Callable[[str, Any], None]] = None,
+		command_callback: Optional[Callable[[str, str], None]] = None,
 	) -> None:
 		"""
 		Register entity in Home Assistant via MQTT discovery.
@@ -257,7 +257,7 @@ class EntityManager:
 	def set_command_callback(
 		self,
 		entity: Entity,
-		callback: Callable[[str, Any], None],
+		callback: Callable[[str, str], None],
 	) -> None:
 		"""
 		Set or update command callback for an entity.
