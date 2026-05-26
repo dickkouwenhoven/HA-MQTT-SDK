@@ -21,20 +21,30 @@ from ..builders.topic_manager import (
 	build_availability_topic,
 	build_state_topic,
 )
+from ..mqtt.base import BaseMQTTClient
 from ..utils.logger import get_logger
 from ..exceptions  import CoreError, MQTTError
 
 _logger = get_logger(__name__)
 
 class AsyncEntityManager:
-	def __init__(self, mqtt_client, mqtt_settings: MQTTSettings):
+	def __init__(self, mqtt_client: BaseMQTTClient, mqtt_settings: MQTTSettings):
 
-		if not mqtt_client:
-			raise CoreError("mqtt_client is required")
+		if not isinstance(
+			mqtt_client,
+			BaseMQTTClient,
+		):
+			raise CoreError("mqtt_client must inherit from BaseMQTTClient")
 
+		if not isinstance(
+			mqtt_settings,
+			MQTTSettings
+		):
+			raise CoreError("mqtt_settings must be MQTTSettings")
+				
 		self._mqtt = mqtt_client
 		self._settings = mqtt_settings
-		self._command_callbacks: Dict[str, Callable[[str, Any], Awaitable[None]]] = {}
+		self._command_callbacks: Dict[str, Callable[[str, str], Awaitable[None]]] = {}
 		self._mqtt.set_message_callback(self._handle_command)
 
 	async def create_entity(
