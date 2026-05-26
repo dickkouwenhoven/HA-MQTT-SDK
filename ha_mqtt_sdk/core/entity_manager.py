@@ -68,7 +68,7 @@ class EntityManager:
 		self._settings = mqtt_settings
 
 		# Mapping command_topic -> callback
-		self._command_callbacks: Dict[str, Callable[[str, Any], None]] = {}
+		self._command_callbacks: Dict[str, Callable[[str, str], None]] = {}
 
 		# Register global MQTT message handler
 		self._mqtt.set_message_callback(self._handle_command)
