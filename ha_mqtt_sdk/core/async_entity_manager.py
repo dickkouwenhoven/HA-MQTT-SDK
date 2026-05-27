@@ -22,19 +22,20 @@ from ..builders.topic_manager import (
 	build_state_topic,
 )
 from ..mqtt.base import BaseMQTTClient
+from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
 from ..exceptions  import CoreError, MQTTError
 
 _logger = get_logger(__name__)
 
 class AsyncEntityManager:
-	def __init__(self, mqtt_client: BaseMQTTClient, mqtt_settings: MQTTSettings):
+	def __init__(self, mqtt_client: AsyncMQTTClient, mqtt_settings: MQTTSettings):
 
 		if not isinstance(
 			mqtt_client,
-			BaseMQTTClient,
+			AsyncMQTTClient,
 		):
-			raise CoreError("mqtt_client must inherit from BaseMQTTClient")
+			raise CoreError("mqtt_client must inherit from AsyncMQTTClient")
 
 		if not isinstance(
 			mqtt_settings,
