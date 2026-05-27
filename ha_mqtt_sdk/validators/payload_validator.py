@@ -19,7 +19,62 @@ def validate_json_serializable(
     """
     Ensure payload is JSON serializable.
     """
+    _validate_json_value(
+        value=payload,
+        path="payload",
+    )
 
+def _validate_json_value(
+    value: Any,
+    path: str,
+): -> None:
+    """
+    Recursively validate JSON serializability
+    and provide precise error locations.
+    """
+    if value is None:
+        return
+
+    if isinstance(
+        value,
+        (
+            str,
+            int,
+            float,
+            bool,
+        ),
+    ):
+        return
+
+    if isinstance(value, list):
+        for index, item in enumerate(value):
+            _validate_json_value(
+                item,
+                f"{path}[{index}]",
+            )
+        return
+
+    if isinstance(value, tuple):
+        for index, item in enumerate(value):
+            _validate_json_value(
+                item,
+                f"{path}[{index}]",
+            )
+            return
+
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ValidationError(
+                    f"{path}: JSON object keys must be strings"
+                )
+
+            _validate_json_value(
+                item,
+                f"{path}.{key}",
+            )
+        return
+                
     try:
         json.dumps(payload)
 
@@ -28,9 +83,11 @@ def validate_json_serializable(
         ValueError,
     ) as err:
         raise ValidationError(
-            f"Payload is not JSON serializable: {err}"
+            f"{path}: value of type "
+            f"{type(value).__name__} "
+            f"is not JSON serializable"
         ) from err
-
+        
 
 def validate_discovery_payload(
     payload: Mapping[str, Any],
