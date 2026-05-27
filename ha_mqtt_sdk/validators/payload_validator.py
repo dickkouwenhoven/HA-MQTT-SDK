@@ -27,7 +27,7 @@ def validate_json_serializable(
 def _validate_json_value(
     value: Any,
     path: str,
-): -> None:
+) -> None:
     """
     Recursively validate JSON serializability
     and provide precise error locations.
