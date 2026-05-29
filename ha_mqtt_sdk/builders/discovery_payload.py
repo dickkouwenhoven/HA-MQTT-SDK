@@ -36,24 +36,6 @@ def _validate_entity(entity: Entity) -> None:
 		raise EntityError("Invalid entity")
 
 
-def _validate_schema(entity: Entity, payload: Dict[str, Any]) -> None:
-	"""
-	Validate payload against schema definition.
-	"""
-
-	schema = SCHEMAS.get(entity.domain)
-
-	if not schema:
-		raise BuilderError(f"No schema found for domain {entity.domain}")
-
-	missing = schema.required_fields - payload.keys()
-
-	if missing:
-		raise BuilderError(
-			f"Missing required fields for {entity.domain.value}: {missing}"
-		)
-
-
 def _build_device_block(entity: Entity) -> Dict[str, Any]:
 	"""
 	Build device block for HA.
@@ -139,12 +121,6 @@ def build_discovery_payload(
 	
 	if entity.extra:
 		payload.update(entity.extra)
-
-	# ------------------------------------------------------
-	# Schema validation
-	# ------------------------------------------------------
-	
-	_validate_schema(entity, payload)
 
 	# ------------------------------------------------------
 	# Payload validation
