@@ -108,7 +108,7 @@ class Entity:
 			payload_keys.update(self.extra.keys())
 
 		# Check required fields
-		missing = schema.required_fields - payload_keys
+		missing = schema["required"] - payload_keys
 
 		if missing:
 			raise EntityError(
@@ -116,7 +116,10 @@ class Entity:
 			)
 
 		# Strict mode
-		allowed = schema.required_fields | schema.optional_fields
+		allowed = (
+			schema["required"]
+			| schema["optional"]
+		)
 		invalid = payload_keys - allowed
 		if invalid:
 			raise EntityError(
