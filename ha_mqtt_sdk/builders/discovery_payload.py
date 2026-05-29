@@ -5,7 +5,6 @@ Responsible for building Home Assistant MQTT discovery payloads.
 
 This module:
 - Translates Entity → HA payload
-- Validates against schemas
 
 Used by:
 - sdk/core/entity_manager.py
