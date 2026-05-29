@@ -14,7 +14,6 @@ Used by:
 from typing import Dict, Any
 
 from ..models.entity import Entity
-from ..config.schemas import SCHEMAS
 from ..validators.payload_validator import validate_discovery_payload 
 from ..utils.logger import get_logger
 from .topic_manager import (
