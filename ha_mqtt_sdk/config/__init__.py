@@ -8,7 +8,6 @@ Contains:
 """
 
 from .domains import HADomain
-from .schemas import ComponentSchema
 from .device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from .mqtt import MQTTSettings
 
