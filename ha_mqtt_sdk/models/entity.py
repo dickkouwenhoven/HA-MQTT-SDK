@@ -15,7 +15,7 @@ Used by:
 from typing import Optional, Dict, Any
 
 from ..config.domains import HADomain
-from ..config.schemas import SCHEMAS
+from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from ..utils.logger import get_logger
 from ..exceptions import EntityError
 
@@ -88,7 +88,9 @@ class Entity:
 	def _validate_schema(self) -> None:
 		"""Validate against HA schema"""
 
-		schema = SCHEMAS.get(self.domain)
+		schema = ALLOWED_FIELDS_PER_DOMAIN.get(
+			self.domain
+		)
 
 		if not schema:
 			raise EntityError(f"No schema defined for domain {self.domain}")
