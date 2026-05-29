@@ -8,13 +8,14 @@ Contains:
 """
 
 from .domains import HADomain
-from .schemas import SCHEMAS, ComponentSchema
+from .schemas import ComponentSchema
+from .device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from .mqtt import MQTTSettings
 
 __all__ = [
 	"HADomain",
-	"SCHEMAS",
 	"ComponentSchema",
+	"ALLOWED_FIELDS_PER_DOMAIN",
 	"MQTTSettings"
 ]
 
