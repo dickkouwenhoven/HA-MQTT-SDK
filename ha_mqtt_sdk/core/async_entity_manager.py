@@ -13,7 +13,6 @@ from .entity_factory import create_entity as _create_entity
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
-from ..config.schemas import SCHEMAS
 from ..builders.discovery_payload import build_discovery_payload
 from ..builders.topic_manager import (
 	build_discovery_topic,
