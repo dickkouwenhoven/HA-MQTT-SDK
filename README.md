@@ -65,7 +65,6 @@ HA-MQTT-SDK/
 │   │   ├── __init__.py
 │   │   ├── domains.py
 │   │   ├── mqtt.py
-│   │   ├── schemas.py
 │   │   └── device_fields.py
 │   ├── core/
 │   │   ├── __init__.py
