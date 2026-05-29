@@ -83,16 +83,14 @@ def build_discovery_payload(
 	# Base payload
 	# ------------------------------------------------------
 	
-	payload: Dict[str, Any] = {
-		"name": entity.name,
-		"unique_id": entity.unique_id,
-		"state_topic": build_state_topic(
-				entity.domain, 
-				entity.unique_id, 
-				prefix,
-			),
-	}
-
+	payload = entity.to_dict()
+	
+	payload["state_topic"] = build_state_topic(
+		entity.domain, 
+		entity.unique_id, 
+		prefix,
+	)
+	
 	# ------------------------------------------------------
 	# Optional command topic
 	# ------------------------------------------------------
