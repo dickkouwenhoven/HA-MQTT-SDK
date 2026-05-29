@@ -17,7 +17,6 @@ from typing import Any, Dict, Optional
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
-from ..config.schemas import SCHEMAS
 from ..utils.logger import get_logger
 from ..exceptions import CoreError
 
