@@ -147,6 +147,9 @@ class DeviceInfo:
 			)
 		)
 		
-		LOGGER.debug("Built device_info: %s", device_info,)
+		LOGGER.debug(
+			"Built device_info with %d fields",
+			len(device_info),
+		)
 
 		return device_info
