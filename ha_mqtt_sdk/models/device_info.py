@@ -58,7 +58,7 @@ class DeviceInfo:
 			if current is None:
 				return None
 
-			return current
+		return current
 		
 	@staticmethod
 	def _validate_device_input(
