@@ -10,6 +10,7 @@ Used by:
 """
 
 from ..config.domains import HADomain
+from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from ..exceptions import BuilderError
 
 def _validate_domain(domain: HADomain) -> None:
@@ -58,43 +59,35 @@ def build_state_topic(
 	return f"{prefix}/{domain.value}/{unique_id}/state"
 
 
-def build_command_topic(domain: HADomain, unique_id: str, prefix: str,) -> str:
+def build_command_topic(
+	domain: HADomain,
+	unique_id: str,
+	prefix: str,
+) -> str:
 	"""
 	Build command topic.
 
 	Used by:
 	- EntityManager.register()
 	"""
-	COMMANDABLE_DOMAINS = {
-		HADomain.ALARM_CONTROL_PANEL,
-		HADomain.BUTTON,
-		HADomain.CLIMATE,
-		HADomain.COVER,
-		HADomain.DATE,
-		HADomain.DATETIME,
-		HADomain.FAN,
-		HADomain.HUMIDIFIER,
-		HADomain.LAWN_MOWER,
-		HADomain.LIGHT,
-		HADomain.LOCK,
-		HADomain.NOTIFY,
-		HADomain.NUMBER,
-		HADomain.SCENE,
-		HADomain.SELECT,
-		HADomain.SIREN,
-		HADomain.SWITCH,
-		HADomain.TEXT,
-		HADomain.TIME,
-		HADomain.UPDATE,
-		HADomain.VACUUM,
-		HADomain.VALVE,
-		HADomain.WATER_HEATER,
-	}
-
+	
 	_validate_domain(domain)
 	_validate_unique_id(unique_id)
 
-	if domain not in COMMANDABLE_DOMAINS:
+	schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
+
+	if not schema:
+		raise BuilderError(
+			f"No field definition found for domain {domain}"
+		)
+
+	required = schema["required"]
+	optional = schema["optional"]
+	
+	if (
+		"command_topic" not in required
+		and "command_topic" not in optional
+	): 
 		return ""
 	
 	return f"{prefix}/{domain.value}/{unique_id}/set"
