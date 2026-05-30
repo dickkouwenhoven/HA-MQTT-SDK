@@ -59,6 +59,8 @@ def create_entity(
 		extra=extra,
 	)
 
-	_logger.debug("Entity created: %s (%s)", name, domain.value)
+	entity.validate()
+
+	_logger.debug("Entity created and validated: %s (%s)", name, domain.value)
 
 	return entity
