@@ -56,6 +56,22 @@ def build_state_topic(
 	_validate_domain(domain)
 	_validate_unique_id(unique_id)
 
+	schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
+
+	if not schema:
+		raise BuilderError(
+			f"No field definition found for domain {domain}"
+		)
+
+	required = schema["required"]
+	optional = schema["optional"]
+	
+	if (
+		"state_topic" not in required
+		and "state_topic" not in optional
+	): 
+		return ""
+	
 	return f"{prefix}/{domain.value}/{unique_id}/state"
 
 
