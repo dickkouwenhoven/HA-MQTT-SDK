@@ -69,8 +69,7 @@ def build_discovery_payload(
 	- Build HA-compatible discovery payload
 	- Add optional device block
 	- Merge extra attributes
-	- Validate against domain schema
-
+	
 	Used by:
 	- EntityManager.register()
 	"""
