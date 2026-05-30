@@ -39,7 +39,7 @@ class DeviceInfo:
 
 	@staticmethod
 	def _extract_value(
-		source: Dict[str, Any],
+		source: Mapping[str, Any],
 		path: str,
 	) -> Any:
 		"""
