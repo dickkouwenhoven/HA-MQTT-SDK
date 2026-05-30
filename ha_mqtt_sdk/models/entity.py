@@ -85,6 +85,85 @@ class Entity:
 		if self.extra and not isinstance(self.extra, dict):
 			raise EntityError("extra must be a dictionary")
 
+		# -----------------------------------------------------------------------
+		# Device Info validation
+		# -----------------------------------------------------------------------
+
+		if self.device_info is not None:
+
+			if not isinstance(self.device_info, dict):
+				raise EntityError(
+					"device_info must be a dictionary"
+				)
+			
+			identifiers = self.device_info.get("identifiers")
+
+			if not identifiers:
+				raise EntityError(
+					"device_info requires identifiers"
+				)
+
+			if not isinstance(identifiers, list):
+				raise EntityError(
+					"device_info identifiers must be a list"
+				)
+
+			for identifier in identifiers:
+
+				if (
+					not isinstance(identifier, tuple)
+					or len(identifier) != 2
+				):
+					raise EntityError(
+						"device_info identifiers must contain 2-item tuples"
+					)
+
+				domain, value = identifier
+
+				if (
+					not isinstance(domain, str)
+					or not domain.strip()
+				):
+					raise EntityError(
+						"device_info identifier domain must be a non-empty string"
+					)
+
+				if (
+					not isinstance(value, str)
+					or not value.strip()
+				):
+					raise EntityError(
+						"device_info identifier value must be a non-empty string"
+					)
+
+			string_fields = (
+				"manufacturer",
+				"model",
+				"name",
+				"sw_version",
+				"hw_version",
+				"suggested_area",
+			)
+
+			for field in string_fields:
+
+				value = self.device_info.get(field)
+
+				if value is None:
+					continue
+
+				if not isinstance(value, str):
+					raise EntityError(
+						f"device_info field '{field}' must be a string"
+					)
+
+				if not value.strip():
+					raise EntityError(
+						f"device_info field ´{field}' cannot be empty"
+					)
+						
+		
+
 	def _validate_schema(self) -> None:
 		"""Validate against HA schema"""
 
