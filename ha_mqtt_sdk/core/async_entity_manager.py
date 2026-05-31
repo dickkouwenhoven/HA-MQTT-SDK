@@ -23,7 +23,7 @@ from ..builders.topic_manager import (
 from ..mqtt.base import BaseMQTTClient
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
-from ..exceptions  import MQTTError
+from ..exceptions  import MQTTError, CoreError
 
 _logger = get_logger(__name__)
 
