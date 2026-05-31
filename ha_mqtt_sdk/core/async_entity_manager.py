@@ -20,7 +20,6 @@ from ..builders.topic_manager import (
 	build_availability_topic,
 	build_state_topic,
 )
-from ..mqtt.base import BaseMQTTClient
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
 from ..exceptions  import MQTTError, EntityError
