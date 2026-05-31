@@ -12,6 +12,7 @@ class SDKError(Exception):
 	"""Base exception for all SDK errors."""
 	pass
 
+
 class ValidationError(SDKError):
 	"""Raised when input validation fails."""
 	pass
@@ -24,9 +25,27 @@ class DeviceError(ValidationError):
 	"""Raised for device_info-related issues."""
 	pass
 
+class SchemaError(ValidationError):
+	"""Raised for schema-related issues."""
+	pass
+	
+
 class MQTTError(SDKError):
 	"""Raised when MQTT-related issues occur."""
 	pass
+
+class MQTTConnectionError(MQTTError):
+	"""Raised when MQTT-connection issues occur."""
+	pass
+
+class MQTTPublishError(MQTTError):
+	"""Raised when MQTT-publish issues occur."""
+	pass
+
+class MQTTSubscribeError(MQTTError):
+	"""Raised when MQTT-subscribe issues occur."""
+	pass
+	
 
 class CoreError(SDKError):
 	"""Raised when Core-related issues occur."""
