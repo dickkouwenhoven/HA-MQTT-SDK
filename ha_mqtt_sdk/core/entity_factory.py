@@ -45,12 +45,6 @@ def create_entity(
 		Entity: Fully constructed entity instance
 	"""
 
-	if not unique_id or not isinstance(unique_id, str):
-		raise EntityError("unique_id must be a non-empty string")
-
-	if not name or not isinstance(name, str):
-		raise EntityError("name must be a non-empty string")
-
 	entity = Entity(
 		domain=domain,
 		name=name,
