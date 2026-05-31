@@ -118,7 +118,7 @@ class EntityManager:
 		"""
 
 		if not isinstance(entity, Entity):
-			raise CoreError("Invalid entity")
+			raise EntityError("Invalid entity")
 
 		prefix = self._settings.discovery_prefix
 
