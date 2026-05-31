@@ -18,7 +18,7 @@ from typing import Any, Dict, Optional
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..utils.logger import get_logger
-from ..exceptions import CoreError
+from ..exceptions import EntityError
 
 _logger = get_logger(__name__)
 
@@ -46,10 +46,10 @@ def create_entity(
 	"""
 
 	if not unique_id or not isinstance(unique_id, str):
-		raise CoreError("unique_id must be a non-empty string")
+		raise EntityError("unique_id must be a non-empty string")
 
 	if not name or not isinstance(name, str):
-		raise CoreError("name must be a non-empty string")
+		raise EntityError("name must be a non-empty string")
 
 	entity = Entity(
 		domain=domain,
