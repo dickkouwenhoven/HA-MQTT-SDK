@@ -148,15 +148,22 @@ class AsyncEntityManager:
 			
 
 	async def update_state(self, entity: Entity, state: Any) -> None:
+		if not isinstance(entity, Entity):
+			raise EntityError("Invalid entity")
+			
 		topic = build_state_topic(
 			entity.domain,
 			entity.unique_id,
 			self._settings.discovery_prefix,
 		)
+
 		await self._mqtt.publish(topic, state)
 
 	async def update_availability(self, entity: Entity, online: bool) -> None:
 
+		if not isinstance(entity, Entity):
+			raise EntityError("Invalid entity")
+			
 		topic = build_availability_topic(
 			entity.domain,
 			entity.unique_id,
