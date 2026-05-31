@@ -16,11 +16,11 @@ class ValidationError(SDKError):
 	"""Raised when input validation fails."""
 	pass
 
-class EntityError(SDKError):
+class EntityError(ValidationError):
 	"""Raised for entity-related issues."""
 	pass
 
-class DeviceError(SDKError):
+class DeviceError(ValidationError):
 	"""Raised for device_info-related issues."""
 	pass
 
