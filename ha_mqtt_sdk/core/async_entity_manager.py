@@ -47,7 +47,7 @@ class AsyncEntityManager:
 		self._command_callbacks: Dict[str, Callable[[str, str], Awaitable[None]]] = {}
 		self._mqtt.set_message_callback(self._handle_command)
 
-	async def create_entity(
+	def create_entity(
 		self,
 		domain: HADomain,
 		name: str,
