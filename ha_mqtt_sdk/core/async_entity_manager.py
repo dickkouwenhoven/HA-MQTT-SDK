@@ -23,7 +23,7 @@ from ..builders.topic_manager import (
 from ..mqtt.base import BaseMQTTClient
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
-from ..exceptions  import MQTTError, CoreError
+from ..exceptions  import MQTTError, EntityError
 
 _logger = get_logger(__name__)
 
@@ -83,7 +83,7 @@ class AsyncEntityManager:
 		"""
 
 		if not isinstance(entity, Entity):
-			raise CoreError("Invalid entity")
+			raise EntityError("Invalid entity")
 
 		# -----------------------------
 		# Discovery
