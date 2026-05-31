@@ -13,7 +13,6 @@ from .mqtt import MQTTSettings
 
 __all__ = [
 	"HADomain",
-	"ComponentSchema",
 	"ALLOWED_FIELDS_PER_DOMAIN",
 	"MQTTSettings"
 ]
