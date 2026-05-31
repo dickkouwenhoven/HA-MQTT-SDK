@@ -109,24 +109,11 @@ def build_command_topic(
 	return f"{prefix}/{domain.value}/{unique_id}/set"
 
 def build_availability_topic(
-	domain,
-	unique_id,
-	prefix,
+	domain: HADomain,
+	unique_id: str,
+	prefix: str,
 ):
-	schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
-
-	if not schema:
-		raise BuilderError(
-			f"No field definition found for domain {domain}"
-		)
-
-	required = schema["required"]
-	optional = schema["optional"]
-
-	if (
-		"availability_topic" not in required
-		and "availability_topic" not in optional
-	):
-		return ""
-		
+	_validate_domain(domain)
+	_validate_unique_id(unique_id)
+	
 	return f"{prefix}/{domain.value}/{unique_id}/availability"
