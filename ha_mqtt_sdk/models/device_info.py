@@ -1,4 +1,11 @@
 """
+DeviceInfo builder currently unused.
+Investigate whether:
+- integrate it into EntityFactory
+or
+- remove it completely.
+
+
 Device Info Builder for Home Assistant MQTT SDK.
 
 Purpose:
