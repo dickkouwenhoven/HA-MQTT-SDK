@@ -113,4 +113,20 @@ def build_availability_topic(
 	unique_id,
 	prefix,
 ):
+	schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
+
+	if not schema:
+		raise BuilderError(
+			f"No field definition found for domain {domain}"
+		)
+
+	required = schema["required"]
+	optional = schema["optional"]
+
+	if (
+		"availability_topic" not in required
+		and "availability_topic" not in optional
+	):
+		return ""
+		
 	return f"{prefix}/{domain.value}/{unique_id}/availability"
