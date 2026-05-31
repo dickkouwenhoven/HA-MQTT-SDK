@@ -17,7 +17,7 @@ from typing import Optional, Dict, Any
 from ..config.domains import HADomain
 from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from ..utils.logger import get_logger
-from ..exceptions import EntityError
+from ..exceptions import EntityError, SchemaError
 
 _logger = get_logger(__name__)
 
@@ -83,7 +83,7 @@ class Entity:
 			raise EntityError("unique_id must be a non-empty string")
 
 		if self.extra and not isinstance(self.extra, dict):
-			raise EntityError("extra must be a dictionary")
+			raise SchemaError("extra must be a dictionary")
 
 		# -----------------------------------------------------------------------
 		# Device Info validation
@@ -172,7 +172,7 @@ class Entity:
 		)
 
 		if not schema:
-			raise EntityError(f"No schema defined for domain {self.domain}")
+			raise SchemaError(f"No schema defined for domain {self.domain}")
 
 		# Build a virtual payload for validation
 		payload_keys = {
@@ -190,7 +190,7 @@ class Entity:
 		missing = schema["required"] - payload_keys
 
 		if missing:
-			raise EntityError(
+			raise SchemaError(
 				f"{self.domain.value} missing required fields: {missing}"
 			)
 
