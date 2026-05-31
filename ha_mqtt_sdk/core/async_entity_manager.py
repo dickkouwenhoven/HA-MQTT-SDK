@@ -22,7 +22,7 @@ from ..builders.topic_manager import (
 )
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
-from ..exceptions  import MQTTError, EntityError
+from ..exceptions  import ValidationError, EntityError
 
 _logger = get_logger(__name__)
 
@@ -33,13 +33,13 @@ class AsyncEntityManager:
 			mqtt_client,
 			AsyncMQTTClient,
 		):
-			raise MQTTError("mqtt_client must inherit from AsyncMQTTClient")
+			raise ValidationError("mqtt_client must inherit from AsyncMQTTClient")
 
 		if not isinstance(
 			mqtt_settings,
 			MQTTSettings
 		):
-			raise MQTTError("mqtt_settings must be MQTTSettings")
+			raise ValidationError("mqtt_settings must be MQTTSettings")
 				
 		self._mqtt = mqtt_client
 		self._settings = mqtt_settings
