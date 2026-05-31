@@ -70,7 +70,13 @@ class AsyncEntityManager:
 			extra=extra,
 		)
 
-	async def register(self, entity: Entity) -> None:
+	async def register(
+		self,
+		entity: Entity,
+		command_callback: Optional[
+			Callable[[str, str], Awaitable[None]]
+		] = None
+	) -> None:
 		"""
 		Register entity in Home Assistant via MQTT discovery.
 
