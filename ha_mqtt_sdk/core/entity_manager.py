@@ -33,7 +33,7 @@ from ..builders.topic_manager import (
 )
 from ..mqtt.base import BaseMQTTClient
 from ..utils.logger import get_logger
-from ..exceptions import CoreError
+from ..exceptions import EntityError
 
 _logger = get_logger(__name__)
 
@@ -55,13 +55,13 @@ class EntityManager:
 			mqtt_client,
 			BaseMQTTClient,
 		):
-			raise CoreError("mqtt_client must inherit from BaseMQTTClient")
+			raise EntityError("mqtt_client must inherit from BaseMQTTClient")
 
 		if not isinstance(
 			mqtt_settings,
 			MQTTSettings
 		):
-			raise CoreError("mqtt_settings must be MQTTSettings")
+			raise EntityError("mqtt_settings must be MQTTSettings")
 
 		self._mqtt = mqtt_client
 		self._settings = mqtt_settings
@@ -195,7 +195,7 @@ class EntityManager:
 		"""
 
 		if not isinstance(entity, Entity):
-			raise CoreError("Invalid entity")
+			raise EntityError("Invalid entity")
 
 		topic = build_state_topic(
 			entity.domain,
@@ -231,7 +231,7 @@ class EntityManager:
 		"""
 
 		if not isinstance(entity, Entity):
-			raise CoreError("Invalid entity")
+			raise EntityError("Invalid entity")
 
 		topic = build_availability_topic(
 			entity.domain,
@@ -267,10 +267,10 @@ class EntityManager:
 		"""
 
 		if not entity.command_topic:
-			raise CoreError("Entity does not support commands")
+			raise EntityError("Entity does not support commands")
 
 		if not callable(callback):
-			raise CoreError("callback must be callable")
+			raise EntityError("callback must be callable")
 
 		self._command_callbacks[entity.command_topic] = callback
 
