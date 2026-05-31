@@ -31,7 +31,7 @@ from ..builders.topic_manager import (
 	build_command_topic,
 	build_availability_topic,
 )
-from ..mqtt.base import BaseMQTTClient
+from ..mqtt.paho_client import PahoMQTTClient
 from ..utils.logger import get_logger
 from ..exceptions import EntityError
 
@@ -40,7 +40,7 @@ _logger = get_logger(__name__)
 class EntityManager:
 	def __init__(
 		self,
-		mqtt_client: BaseMQTTClient,
+		mqtt_client: PahoMQTTClient,
 		mqtt_settings: MQTTSettings,
 	):
 		"""
@@ -53,9 +53,9 @@ class EntityManager:
 
 		if not isinstance(
 			mqtt_client,
-			BaseMQTTClient,
+			PahoMQTTClient,
 		):
-			raise EntityError("mqtt_client must inherit from BaseMQTTClient")
+			raise EntityError("mqtt_client must inherit from PahoMQTTClient")
 
 		if not isinstance(
 			mqtt_settings,
