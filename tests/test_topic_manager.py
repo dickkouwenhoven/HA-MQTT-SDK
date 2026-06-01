@@ -51,7 +51,7 @@ def test_sensor_has_no_command_topic():
 
 	assert topic == ""
 
-def test_invalid_domain):
+def test_invalid_domain():
 	with pytest.raise(BuilderError):
 		build_state_topic(
 			"invalid",
