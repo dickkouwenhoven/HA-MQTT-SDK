@@ -266,13 +266,19 @@ class EntityManager:
 		callback: function(topic, payload)
 		"""
 
-		if not entity.command_topic:
+		topic = build_command_topic(
+			entity.domain,
+			entity.unique_id,
+			self._settings.discovery_prefix,
+		)
+		
+		if not topic:
 			raise EntityError("Entity does not support commands")
 
 		if not callable(callback):
 			raise EntityError("callback must be callable")
 
-		self._command_callbacks[entity.command_topic] = callback
+		self._command_callbacks[topic] = callback
 
 		_logger.debug(
 			"Command callback set for topic: %s",
