@@ -75,6 +75,7 @@ def build_discovery_payload(
 	"""
 
 	_validate_entity(entity)
+	entity.validate()
 
 	# ------------------------------------------------------
 	# Base payload
