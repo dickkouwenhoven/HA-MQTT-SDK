@@ -7,7 +7,7 @@ name = "ha_mqtt_sdk"
 version = "0.1.0"
 description = "Home Assistant MQTT SDK for discovery, topics, and device management"
 readme = "README.md"
-requires-python = ">=3.14.5"
+requires-python = ">=3.12"
 license = {text = "MIT"}
 
 authors = [
@@ -36,8 +36,7 @@ classifiers = [
 
 dependencies = [
 	"paho-mqtt>=2.1.0",
-	"aiomqtt>=2.5.1",
-	"pydantic>=2.11.10"
+	"aiomqtt>=2.5.1",	
 ]
 
 [project.optional-dependencies]
