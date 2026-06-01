@@ -1,7 +1,9 @@
 import pytest
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
+from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
+from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
-class MockMQTTClient:
+class MockMQTTClient(PahoMQTTClient):
 	def __init__(self):
 		self.published = []
 		self.subscribed = []
@@ -43,7 +45,7 @@ class MockMQTTClient:
 			)
 
 
-class AsyncMockMQTTClient:
+class AsyncMockMQTTClient(AsyncMQTTClient):
 	def __init__(self):
 		self.published = []
 		self.subscribed = []
