@@ -169,12 +169,14 @@ class EntityManager:
 			entity.unique_id,
 			self._settings.discovery_prefix,
 		)
-		self._mqtt.subscribe(topic)
-
-		_logger.debug(
-			"Subscribed to command topic: %s",
-			topic,
-		)
+		
+		if topic:
+			self._mqtt.subscribe(topic)
+	
+			_logger.debug(
+				"Subscribed to command topic: %s",
+				topic,
+			)
 
 		# Register callback if provided
 		if command_callback:
