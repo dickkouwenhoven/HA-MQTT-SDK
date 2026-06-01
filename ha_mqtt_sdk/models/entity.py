@@ -83,7 +83,7 @@ class Entity:
 			raise EntityError("unique_id must be a non-empty string")
 
 		if self.extra and not isinstance(self.extra, dict):
-			raise SchemaError("extra must be a dictionary")
+			raise EntityError("extra must be a dictionary")
 
 		# -----------------------------------------------------------------------
 		# Device Info validation
@@ -159,7 +159,7 @@ class Entity:
 
 				if not value.strip():
 					raise EntityError(
-						f"device_info field ´{field}' cannot be empty"
+						f"device_info field '{field}' cannot be empty"
 					)
 						
 		
@@ -201,7 +201,7 @@ class Entity:
 		)
 		invalid = payload_keys - allowed
 		if invalid:
-			raise EntityError(
+			raise SchemaError(
 				f"{self.domain.value} invalid fields: {invalid}"
 			)
 
