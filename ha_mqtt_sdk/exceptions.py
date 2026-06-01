@@ -53,9 +53,8 @@ class CoreError(SDKError):
 
 class ConfigurationError(SDKError):
 	"""Raised for Config-related issues occur."""
-    pass
+	pass
 
 class BuilderError(SDKError):
 	"""Raised for Builders-related issues occur."""
 	pass
-
