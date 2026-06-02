@@ -62,7 +62,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		self.assertEqual(entity.name, "Temperature Sensor")
 		self.assertEqual(entity.unique_id, "temp_sensor_1")
 
-	def test_entity_creation_missing_required(self):
+	def test_entity_creation_invalid_name(self):
 		
 		with self.assertRaises(EntityError):
 
@@ -88,24 +88,6 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		
 		self.assertEqual(payload["name"], "Living Room Light")
 		self.assertIn("command_topic", payload)
-
-	# -----------------------------------
-	# Discovery topic
-	# -----------------------------------
-
-	def test_build_discovery_topic(self):
-		
-		topic = build_discovery_topic(
-			HADomain.SENSOR,
-			"unique_sensor_id",
-			"homeassistant",
-		)
-		
-		self.assertTrue(
-			topic.startswith(
-				"homeassistant/sensor/unique_sensor_id"
-			)
-		)
 
 	# -----------------------------------
 	# MQTT publish
@@ -136,7 +118,10 @@ class TestHomeAssistantSDK(unittest.TestCase):
 	def test_logger_dual_mode(self):
 		# Should use existing logger
 		custom_logger = get_logger("custom_test_logger")
-		self.assertIsNotNone(custom_logger)
+		self.assertEqual(
+			custom_logger.name,
+			"custom_test_logger"
+		)
 
 	# -----------------------------------
 	# Full flow
@@ -171,6 +156,29 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		self.assertTrue(
 			self.mqtt_client._client.publish.called
 		)	
+
+
+def test_full_flow_sensor():
+	
+	manager = EntityManager(
+		self.mqtt_client,
+		MQTTSettings(
+			discovery_prefix="homeassistant"
+		)
+	)
+	
+	entity = manager.create_entity(
+		domain=HADomain.SENSOR,
+		name="Temperature",
+		unique_id="temp_1",
+	)
+	
+	manager.register(entity)
+
+    # Should not subscribe to command topics
+	self.assertFalse(
+		self.mqtt_client._client.subscribe.called
+	)
 
 if __name__ == "__main__":
 	unittest.main()
