@@ -173,7 +173,7 @@ def test_register_invalid_entity(
 		MQTTSettings()
 	)
 
-	with pytest.raises(CoreError):
+	with pytest.raises(EntityError):
 		manager.register("invalid")
 
 
