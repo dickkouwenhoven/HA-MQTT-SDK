@@ -158,27 +158,27 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		)	
 
 
-def test_full_flow_sensor():
+	def test_full_flow_sensor():
 	
-	manager = EntityManager(
-		self.mqtt_client,
-		MQTTSettings(
-			discovery_prefix="homeassistant"
+		manager = EntityManager(
+			self.mqtt_client,
+			MQTTSettings(
+				discovery_prefix="homeassistant"
+			)
 		)
-	)
 	
-	entity = manager.create_entity(
-		domain=HADomain.SENSOR,
-		name="Temperature",
-		unique_id="temp_1",
-	)
+		entity = manager.create_entity(
+			domain=HADomain.SENSOR,
+			name="Temperature",
+			unique_id="temp_1",
+		)
 	
-	manager.register(entity)
+		manager.register(entity)
 
-    # Should not subscribe to command topics
-	self.assertFalse(
-		self.mqtt_client._client.subscribe.called
-	)
+    	# Should not subscribe to command topics
+		self.assertFalse(
+			self.mqtt_client._client.subscribe.called
+		)
 
 if __name__ == "__main__":
 	unittest.main()
