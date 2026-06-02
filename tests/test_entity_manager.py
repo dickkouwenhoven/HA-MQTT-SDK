@@ -4,7 +4,7 @@ from ha_mqtt_sdk.core.entity_manager import EntityManager
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.builders.topic_manager import build_command_topic
-from ha_mqtt_sdk.exceptions import CoreError, EntityError
+from ha_mqtt_sdk.exceptions import EntityError
 
 def test_create_entity(mqtt_client_sync):
 	manager = EntityManager(
