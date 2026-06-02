@@ -1,8 +1,10 @@
+import pytest
+
 from ha_mqtt_sdk.core.entity_manager import EntityManager
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
-from ha_mqtt_sdk.builders.topic_manager import build_state_topic
 from ha_mqtt_sdk.builders.topic_manager import build_command_topic
+from ha_mqtt_sdk.exceptions import CoreError, EntityError
 
 def test_create_entity(mqtt_client_sync):
 	manager = EntityManager(
@@ -142,3 +144,85 @@ def test_command_callback_execution(mqtt_client_sync):
 
 	assert called["value"] is True
 	
+def test_sensor_has_no_command_subscription(
+	mqtt_client_sync,
+):
+	manager = EntityManager(
+		mqtt_client_sync,
+		MQTTSettings(
+			discovery_prefix="homeassistant"
+		)
+	)
+
+	entity = manager.create_entity(
+		domain=HADomain.SENSOR,
+		name="Temp",
+		unique_id="temp_1",
+	)
+
+	manager.register(entity)
+
+	assert mqtt_client_sync.subscribed == []
+
+
+def test_register_invalid_entity(
+	mqtt_client_sync,
+):
+	manager = EntityManager(
+		mqtt_client_sync,
+		MQTTSettings()
+	)
+
+	with pytest.raises(CoreError):
+		manager.register("invalid")
+
+
+def test_update_state_invalid_entity(
+	mqtt_client_sync,
+):
+	manager = EntityManager(
+		mqtt_client_sync,
+		MQTTSettings()
+	)
+
+	with pytest.raises(EntityError):
+		manager.update_state(
+			"invalid",
+			25,
+		)
+
+def test_update_availability_invalid_entity(
+	mqtt_client_sync,
+):
+	manager = EntityManager(
+		mqtt_client_sync,
+		MQTTSettings()
+	)
+
+	with pytest.raises(EntityError):
+		manager.update_availability(
+			"invalid",
+			True,
+		)
+
+
+def test_set_callback_on_sensor_fails(
+	mqtt_client_sync,
+):
+	manager = EntityManager(
+		mqtt_client_sync,
+		MQTTSettings()
+	)
+
+	entity = manager.create_entity(
+		domain=HADomain.SENSOR,
+		name="Temp",
+		unique_id="temp_1",
+	)
+
+	with pytest.raises(EntityError):
+		manager.set_command_callback(
+			entity,
+			lambda t, p: None,
+		)
+
