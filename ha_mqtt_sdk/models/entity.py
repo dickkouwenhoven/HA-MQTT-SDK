@@ -165,46 +165,35 @@ class Entity:
 		
 
 	def _validate_schema(self) -> None:
-		"""Validate against HA schema"""
+		"""Validate extra fields against HA domain definitions."""
 
 		schema = ALLOWED_FIELDS_PER_DOMAIN.get(
 			self.domain
 		)
 
 		if not schema:
-			raise SchemaError(f"No schema defined for domain {self.domain}")
+			raise SchemaError(f"No field definition for domain {self.domain}")
 
-		# Build a virtual payload for validation
-		payload_keys = {
-			"name",
-			"unique_id",
-		}
-
-		if self.device_info:
-			payload_keys.add("device")
-
-		if self.extra:
-			payload_keys.update(self.extra.keys())
-
-		# Check required fields
-		missing = schema["required"] - payload_keys
-
-		if missing:
-			raise SchemaError(
-				f"{self.domain.value} missing required fields: {missing}"
-			)
-
-		# Strict mode
 		allowed = (
 			schema["required"]
 			| schema["optional"]
 		)
-		invalid = payload_keys - allowed
+
+		allowed.update({
+			"name",
+			"unique_id",
+			"device",
+		})
+		
+		invalid = set(
+			(self.extra or {}).keys()
+		) - allowed
+		
 		if invalid:
 			raise SchemaError(
 				f"{self.domain.value} invalid fields: {invalid}"
 			)
-
+		
 		_logger.debug(
 			"Entity validated successfully: %s (%s)",
 			self.name,
