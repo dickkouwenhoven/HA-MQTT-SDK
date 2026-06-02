@@ -13,7 +13,7 @@ from ha_mqtt_sdk.core.async_entity_manager import (
 
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
-from ha_mqtt_sdk.exceptions import MQTTError
+from ha_mqtt_sdk.exceptions import MQTTError, EntityError
 from .conftest import AsyncMockMQTTClient
 
 
@@ -175,3 +175,73 @@ async def test_async_command_callback():
 
 	assert called["value"] is True
 	
+
+@pytest.mark.asyncio
+async def test_async_sensor_not_subscribed():
+	mqtt = AsyncMockMQTTClient()
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings()
+	)
+	
+	entity = Entity(
+		domain=HADomain.SENSOR,
+		name="Temperature",
+		unique_id="temp_1",
+	)
+
+	await manager.register(entity)
+	
+	assert mqtt.subscribed == []
+
+
+@pytest.mark.asyncio
+async def test_async_switch_subscribed():
+	
+	mqtt = AsyncMockMQTTClient()
+	
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings()
+	)
+
+	entity = Entity(
+		domain=HADomain.SWITCH,
+		name="Switch",
+		unique_id="switch_1",
+	)
+	
+	await manager.register(entity)
+	
+	assert len(mqtt.subscribed) == 1
+
+
+@pytest.mark.asyncio
+async def test_async_register_invalid_entity():
+	
+	mqtt = AsyncMockMQTTClient()
+	
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings()
+	)
+	
+	with pytest.raises(EntityError):
+		
+		await manager.register("invalid")
+
+
+@pytest.mark.asyncio
+async def test_async_command_without_callback():
+	
+	mqtt = AsyncMockMQTTClient()
+	
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings()
+	)
+
+	await manager._handle_command(
+		"unknown/topic",
+		"ON",
+	)
