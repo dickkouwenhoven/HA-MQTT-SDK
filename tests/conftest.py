@@ -5,8 +5,8 @@ from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
 class MockMQTTClient(PahoMQTTClient):
 	def __init__(self):
-		self.published = []
-		self.subscribed = []
+		self.published: list[tuple] = []
+		self.subscribed: list[str] = []
 		self.callback = None
 		self.last_will = None
 
@@ -44,6 +44,27 @@ class MockMQTTClient(PahoMQTTClient):
 				payload
 			)
 
+	def test_sensor_not_subscribed(
+    	mqtt_client_sync,
+	):
+    	from ha_mqtt_sdk.core.entity_manager import EntityManager
+
+    	manager = EntityManager(
+        	mqtt_client_sync,
+        	MQTTSettings(
+            	discovery_prefix="homeassistant"
+        	),
+    	)
+
+    	entity = manager.create_entity(
+        	domain=HADomain.SENSOR,
+        	name="Temp",
+        	unique_id="temp_1",
+    	)
+
+    	manager.register(entity)
+
+    	assert mqtt_client_sync.subscribed == []
 
 class AsyncMockMQTTClient(AsyncMQTTClient):
 	def __init__(self):
@@ -79,7 +100,7 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
 	):
 		self.last_will = (topic, payload)
 
-	def simulate_message(self, topic, payload):
+	async def simulate_message(self, topic, payload):
 		if self.callback:
 			self.callback(
 				topic,
