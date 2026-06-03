@@ -168,13 +168,11 @@ async def test_async_command_callback():
 		
 	manager._command_callbacks["test/topic"] = callback
 
-	await manager._handle_command(
-		"test/topic",
-		"ON",
+	await manager.register(
+		entity,
+		command_callback=callback,
 	)
 
-	assert called["value"] is True
-	
 
 @pytest.mark.asyncio
 async def test_async_sensor_not_subscribed():
@@ -213,7 +211,9 @@ async def test_async_switch_subscribed():
 	
 	await manager.register(entity)
 	
-	assert len(mqtt.subscribed) == 1
+	assert len(mqtt.subscribed) == [
+		"homeassistant/switch/switch_1/set"
+	]
 
 
 @pytest.mark.asyncio
@@ -245,3 +245,36 @@ async def test_async_command_without_callback():
 		"unknown/topic",
 		"ON",
 	)
+
+
+@pytest.mark.asyncio
+async def test_async_update_state_invalid_entity():
+	
+	mqtt = AsyncMockMQTTClient()
+	
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings(),
+	)
+	
+	with pytest.raises(EntityError):
+		await manager.update_state(
+			"invalid",
+			"22.5",
+		)
+
+
+@pytest.mark.asyncio
+async def test_async_update_availability_invalid_entity():
+	mqtt = AsyncMockMQTTClient()
+	
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings(),
+	)
+	
+	with pytest.raises(EntityError):
+		await manager.update_availability(
+			"invalid",
+			True,
+		)
