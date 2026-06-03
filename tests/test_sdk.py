@@ -43,6 +43,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 
 		# Mock underlying paho publish
 		self.mqtt_client._client.publish = MagicMock()
+		self.mqtt_client._client.suscribe = MagicMock()
 		
 		LOGGER.info("Setup complete")
 
