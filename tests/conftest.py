@@ -45,26 +45,25 @@ class MockMQTTClient(PahoMQTTClient):
 			)
 
 	def test_sensor_not_subscribed(
-    	mqtt_client_sync,
+		mqtt_client_sync,
 	):
-    	from ha_mqtt_sdk.core.entity_manager import EntityManager
-
-    	manager = EntityManager(
-        	mqtt_client_sync,
-        	MQTTSettings(
-            	discovery_prefix="homeassistant"
-        	),
-    	)
-
-    	entity = manager.create_entity(
-        	domain=HADomain.SENSOR,
-        	name="Temp",
-        	unique_id="temp_1",
-    	)
-
-    	manager.register(entity)
-
-    	assert mqtt_client_sync.subscribed == []
+		from ha_mqtt_sdk.core.entity_manager import EntityManager
+		manager = EntityManager(
+			mqtt_client_sync,
+			MQTTSettings(
+				discovery_prefix="homeassistant"
+			),
+		)
+		
+		entity = manager.create_entity(
+			domain=HADomain.SENSOR,
+			name="Temp",
+			unique_id="temp_1",
+		)
+		
+		manager.register(entity)
+		
+		assert mqtt_client_sync.subscribed == []
 
 class AsyncMockMQTTClient(AsyncMQTTClient):
 	def __init__(self):
