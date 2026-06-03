@@ -177,9 +177,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		manager.register(entity)
 
     	# Should not subscribe to command topics
-		self.assertFalse(
-			self.mqtt_client._client.subscribe.called
-		)
+		self.mqtt_client._client.subscribe.assert_not_called()		
 
 if __name__ == "__main__":
 	unittest.main()
