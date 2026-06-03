@@ -161,6 +161,12 @@ async def test_async_command_callback():
 		)
 	)
 
+	entity = Entity(
+		domain=HADomain.SWITCH,
+		name="Switch",
+		unique_id="switch_1",
+	)
+
 	called = {"value": False}
 	
 	async def callback(topic, payload):
