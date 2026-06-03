@@ -217,7 +217,7 @@ async def test_async_switch_subscribed():
 	
 	await manager.register(entity)
 	
-	assert len(mqtt.subscribed) == [
+	assert mqtt.subscribed == [
 		"homeassistant/switch/switch_1/set"
 	]
 
