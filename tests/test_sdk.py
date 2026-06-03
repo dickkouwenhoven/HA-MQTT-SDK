@@ -158,7 +158,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		)	
 
 
-	def test_full_flow_sensor():
+	def test_full_flow_sensor(self):
 	
 		manager = EntityManager(
 			self.mqtt_client,
