@@ -86,3 +86,15 @@ def test_device_info_missing_identifiers():
 			unique_id="temp_1",
 			device_info={},
 		).validate()
+
+def test_device_info_identifier_not_tuple():
+	with pytest.raises(EntityError):
+		Entity(
+			domain=HADomain.SENSOR,
+			name="Temp",
+			unique_id="temp_1",
+			device_info={
+				"identifiers": ["abc"]
+			}
+		).validate()
+		
