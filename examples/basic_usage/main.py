@@ -5,12 +5,18 @@ Basic example showing how to use the HASDK.
 from ha_mqtt_sdk.core.entity_manager import EntityManager
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
+from ha_mqtt_sdk.mqtt import PahoMQTTClient
 
 
 class SimpleMQTT:
+	def __init__(self):
+		self.callback = None
+	
+	@staticmethod	
 	def publish(self, topic, payload, retain=False):
-		print(f"[MQTT PUBLISH] {topic} -> {payload}")
+		print(f"[MQTT PUBLISH] {topic} -> {payload} -> {retain}")
 
+	@staticmethod
 	def subscribe(self, topic):
 		print(f"[MQTT SUBSCRIBE] {topic}")
 
@@ -19,7 +25,9 @@ class SimpleMQTT:
 
 
 def main():
-	mqtt = SimpleMQTT()
+	mqtt = PahoMQTTClient(
+		config = mqtt_config
+	)
 
 	manager = EntityManager(
 		mqtt,
