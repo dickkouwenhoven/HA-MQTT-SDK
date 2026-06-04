@@ -19,7 +19,7 @@ from .topic_manager import (
 	build_state_topic,
 	build_command_topic,
 )
-from ..exceptions import BuilderError, EntityError
+from ..exceptions import EntityError
 
 
 _logger = get_logger(__name__)
