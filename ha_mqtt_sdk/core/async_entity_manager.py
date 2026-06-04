@@ -144,6 +144,10 @@ class AsyncEntityManager:
 				"Subscribed to command topic: %s",
 				topic,
 			)
+
+		if command_callback:
+			self._command_callbacks[topic] = command_callback
+			
 			
 
 	async def update_state(self, entity: Entity, state: Any) -> None:
