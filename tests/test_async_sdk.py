@@ -289,3 +289,36 @@ async def test_async_update_availability_invalid_entity():
 			"invalid",
 			True,
 		)
+
+
+@pytest.mark.asyncio
+async def test_async_set_command_callback():
+	
+	mqtt = AsyncMockMQTTClient()
+	
+	manager = AsyncEntityManager(
+		mqtt,
+		MQTTSettings()
+	)
+	
+	entity = Entity(
+		domain=HADomain.SWITCH,
+		name="Switch",
+		unique_id="switch_1",
+	)
+	
+	async def callback(topic, payload):
+		pass
+		
+	manager.set_command_callback(
+		entity,
+		callback,
+	)
+	
+	topic = build_command_topic(
+		entity.domain,
+		entity.unique_id,
+		"homeassistant",
+	)
+	
+	assert topic in manager._command_callbacks
