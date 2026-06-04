@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Home Assistant MQTT SDK for discovery, topics, and device management"
 readme = "README.md"
 requires-python = ">=3.13"
-license = {text = "MIT"}
+license = "MIT"
 
 authors = [
 	{ name = "Dick Kouwenhoven", email = "dick.kouwenhoven@planet.nl" }
@@ -28,7 +28,6 @@ classifiers = [
 	"Development Status :: 3 - Alpha",
 	"Intended Audience :: Developers",
 	"Topic :: Home Automation",
-	"License :: OSI Approved :: MIT License",
 	"Programming Language :: Python :: 3.13",
 	"Programming Language :: Python :: 3.14",
 ]
