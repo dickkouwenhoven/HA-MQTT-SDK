@@ -86,7 +86,7 @@ class AsyncEntityManager:
 		Args:
 			entity: Entity instance
 		"""
-
+		
 		if not isinstance(entity, Entity):
 			raise EntityError("Invalid entity")
 
