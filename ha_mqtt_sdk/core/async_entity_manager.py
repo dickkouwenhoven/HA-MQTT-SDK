@@ -177,6 +177,40 @@ class AsyncEntityManager:
 
 		await self._mqtt.publish(topic, payload, retain=True)
 
+	
+	def set_command_callback(
+		self,
+		entity: Entity,
+		callback: Callable[[str, str], None],
+	) -> None:
+		"""
+		Set or update command callback for an entity.
+
+		Args:
+		entity: Entity instance
+		callback: function(topic, payload)
+		"""
+
+		topic = build_command_topic(
+			entity.domain,
+			entity.unique_id,
+			self._settings.discovery_prefix,
+		)
+		
+		if not topic:
+			raise EntityError("Entity does not support commands")
+
+		if not callable(callback):
+			raise EntityError("callback must be callable")
+
+		self._command_callbacks[topic] = callback
+
+		_logger.debug(
+			"Command callback set for topic: %s",
+			entity.command_topic,
+		)
+		
+	
 	async def _handle_command(self, topic: str, payload: Any) -> None:
 
 		callback = self._command_callbacks.get(topic)
