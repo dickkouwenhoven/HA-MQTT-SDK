@@ -210,7 +210,7 @@ class AsyncEntityManager:
 
 		_logger.debug(
 			"Command callback set for topic: %s",
-			entity.command_topic,
+			topic,
 		)
 		
 	
