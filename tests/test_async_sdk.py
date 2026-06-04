@@ -172,12 +172,17 @@ async def test_async_command_callback():
 	async def callback(topic, payload):
 		called["value"] = True
 		
-	manager._command_callbacks["test/topic"] = callback
-
 	await manager.register(
 		entity,
 		command_callback=callback,
 	)
+
+	await manager._handle_command(
+		"homeassistant/switch/switch_1/set",
+		"ON",
+	)
+
+	assert called["value"] is True
 
 
 @pytest.mark.asyncio
