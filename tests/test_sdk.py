@@ -29,7 +29,7 @@ LOGGER = get_logger("test_sdk")
 
 class TestHomeAssistantSDK(unittest.TestCase):
 
-	def setup(self):
+	def setUp(self):
 		"""
 		Create mocked MQTT client.
 		"""
