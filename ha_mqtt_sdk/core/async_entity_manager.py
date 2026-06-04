@@ -181,7 +181,7 @@ class AsyncEntityManager:
 	def set_command_callback(
 		self,
 		entity: Entity,
-		callback: Callable[[str, str], None],
+		callback: Callable[[str, str], Awaitable[None]],
 	) -> None:
 		"""
 		Set or update command callback for an entity.
@@ -191,6 +191,12 @@ class AsyncEntityManager:
 		callback: function(topic, payload)
 		"""
 
+		if not isinstance(entity, Entity):
+			raise EntityError("Invalid entity")
+
+		if not callable(callback):
+			raise EntityError("callback must be callable")
+			
 		topic = build_command_topic(
 			entity.domain,
 			entity.unique_id,
@@ -199,9 +205,6 @@ class AsyncEntityManager:
 		
 		if not topic:
 			raise EntityError("Entity does not support commands")
-
-		if not callable(callback):
-			raise EntityError("callback must be callable")
 
 		self._command_callbacks[topic] = callback
 
