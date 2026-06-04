@@ -2,6 +2,8 @@ import pytest
 
 from unittest.mock import AsyncMock
 
+from ha_mqtt_sdk.builders.topic_manager import build_command_topic
+
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 
