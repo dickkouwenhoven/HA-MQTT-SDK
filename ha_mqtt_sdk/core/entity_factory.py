@@ -18,7 +18,6 @@ from typing import Any, Dict, Optional
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..utils.logger import get_logger
-from ..exceptions import EntityError
 
 _logger = get_logger(__name__)
 
