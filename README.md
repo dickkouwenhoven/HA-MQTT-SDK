@@ -1,6 +1,6 @@
 # Home Assistant MQTT SDK
 
-Python SDK voor Home Assistant MQTT integration.
+Python SDK for Home Assistant MQTT integration.
 
 **Features:**
 - Support for all HA device types
