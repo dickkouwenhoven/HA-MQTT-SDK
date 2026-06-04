@@ -153,7 +153,7 @@ class TestHomeAssistantSDK(unittest.TestCase):
 		# Update availability
 		manager.update_availability(entity, True)
 
-		# Ensure MQTT puvblish happened
+		# Ensure MQTT publish happened
 		self.assertTrue(
 			self.mqtt_client._client.publish.called
 		)	
