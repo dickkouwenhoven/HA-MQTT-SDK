@@ -46,7 +46,7 @@ def test_sensor_has_no_command_topic():
 	topic = build_command_topic(
 		HADomain.SENSOR,
 		"id1",
-		"hoemassistant",
+		"homeassistant",
 	)
 
 	assert topic == ""
