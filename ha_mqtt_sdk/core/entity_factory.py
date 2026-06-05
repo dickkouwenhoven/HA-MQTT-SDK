@@ -100,7 +100,7 @@ def build_registration(
 
 	entity.validate()
 
-	discovery_topic = buid_discovery_topic(
+	discovery_topic = build_discovery_topic(
 		entity.domain,
 		entity.unique_id,
 		discovery_prefix,
