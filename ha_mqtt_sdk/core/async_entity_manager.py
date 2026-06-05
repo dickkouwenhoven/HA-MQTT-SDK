@@ -218,7 +218,7 @@ class AsyncEntityManager:
 
 		_logger.debug(
 			"Command callback set for topic: %s",
-			topic,
+			registration.command_topic,
 		)
 		
 	
