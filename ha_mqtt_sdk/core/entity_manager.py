@@ -27,7 +27,7 @@ from typing import Any, Callable, Dict, Optional
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
-)
+
 from ..mqtt.paho_client import PahoMQTTClient
 from ..utils.logger import get_logger
 from ..exceptions import EntityError
