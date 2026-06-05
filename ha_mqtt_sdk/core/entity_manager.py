@@ -17,20 +17,16 @@ Used by:
 - ha_mqtt_sdk/core/sdk.py
 """
 
-from .entity_factory import create_entity as _create_entity
-from .entity_factory import build_registration
+from .entity_factory import (
+	create_entity as _create_entity,
+	build_registration
+)
 
 from typing import Any, Callable, Dict, Optional
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
-from ..builders.discovery_payload import build_discovery_payload
-from ..builders.topic_manager import (
-	build_discovery_topic,
-	build_state_topic,
-	build_command_topic,
-	build_availability_topic,
 )
 from ..mqtt.paho_client import PahoMQTTClient
 from ..utils.logger import get_logger
@@ -121,23 +117,18 @@ class EntityManager:
 		if not isinstance(entity, Entity):
 			raise EntityError("Invalid entity")
 
-		prefix = self._settings.discovery_prefix
+		registration = build_registration(
+			entity,
+			self._settings.discovery_prefix,
+		)
 
 		# -------------------------
 		# Discovery
 		# -------------------------
 
-		discovery_topic = build_discovery_topic(
-			entity.domain,
-			entity.unique_id,
-			prefix,
-		)
-
-		payload = build_discovery_payload(entity, self._settings.discovery_prefix)
-
 		self._mqtt.publish(
-			topic = discovery_topic,
-			payload = payload,
+			topic = registration.discovery_topic,
+			payload = registration.discovery_payload,
 			retain = True,
 		)
 
@@ -151,37 +142,31 @@ class EntityManager:
 		# Last Will and Testament
 		# ------------------------
 
-		availability_topic = build_availability_topic(
-			entity.domain,
-			entity.unique_id,
-			prefix,
-		)
-
 		if hasattr(self._mqtt, "set_last_will"):
-			self._mqtt.set_last_will(availability_topic)
+			self._mqtt.set_last_will(
+				registration.availability_topic
+			)
 			_logger.debug("Last will registered for: %s", entity.unique_id)
 
 		# -------------------------
 		# Command handling
 		# -------------------------
 
-		topic = build_command_topic(
-			entity.domain,
-			entity.unique_id,
-			self._settings.discovery_prefix,
-		)
-		
-		if topic:
-			self._mqtt.subscribe(topic)
+		if registration.command_topic:
+			self._mqtt.subscribe(
+				registration.command_topic
+			)
 	
 			_logger.debug(
 				"Subscribed to command topic: %s",
-				topic,
+				registration.command_topic,
 			)
 
 		# Register callback if provided
 		if command_callback:
-			self._command_callbacks[topic] = command_callback
+			self._command_callbacks[
+				registration.command_topic
+			] = command_callback
 
 
 	def update_state(
