@@ -18,6 +18,7 @@ Used by:
 """
 
 from .entity_factory import create_entity as _create_entity
+from .entity_factory import build_registration
 
 from typing import Any, Callable, Dict, Optional
 
