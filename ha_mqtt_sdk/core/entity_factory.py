@@ -1,25 +1,54 @@
 """
 entity_factory.py
 
-Share entity creation for both EntityManager and AsyncEntityManager.
+Share entity creation and registration preperation
+for both EntityManager and AsyncEntityManager.
 
 Responsibilities:
-- Validate inputs
-- Build topics
-- Construct and return an Entity instance
+- Create entities
+- Validate entities
+- Build discovery payloads
+- Build MQTT topic definitions
 
 Used by:
 - sdk/core/entity_manager.py
 - sdk/core/async_entity_manager.py
 """
 
+from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
+
+from ..builders.discovery_payload import build_discovery_payload
+
+from ..builders.topic_manager import (
+	build_discovery_topic,
+	build_state_topic,
+	build_command_topic,
+	build_availability_topic,
+)
+
 from ..utils.logger import get_logger
 
 _logger = get_logger(__name__)
+
+@dataclass(slots=True)
+class EntityRegistration:
+	"""
+	Pre-built MQTT registration information.
+
+	Shared by sync and async entity managers.
+	"""
+
+	discovery_topic: str
+	discovery_payload: Dict[str, Any]
+
+	state_topic: str
+	command_topic: str
+	availability_topic: str
+
 
 def create_entity(
 	domain: HADomain,
@@ -57,3 +86,53 @@ def create_entity(
 	_logger.debug("Entity created and validated: %s (%s)", name, domain.value)
 
 	return entity
+
+def build_registration(
+	entity: Entity,
+	discovery_prefix: str,
+) -> EntityRegistration:
+	"""
+	Build all MQTT topic and discovery payload
+	for an entity.
+
+	This function contains all share logic used by both EntityManager and AsyncEntityManager.
+	"""
+
+	entity.validate()
+
+	discovery_topic = buid_discovery_topic(
+		entity.domain,
+		entity.unique_id,
+		discovery_prefix,
+	)
+
+	discovery_payload = build_discovery_payload(
+		entity,
+		discovery_prefix,
+	)
+
+	state_topic = build_state_topic(
+		entity.domain,
+		entity.unique_id,
+		discovery_prefix,
+	)
+
+	command_topic = build_command_topic(
+		entity.domain,
+		entity.unique_id,
+		discovery_prefix,
+	)
+
+	availability_topic = build_availability_topic(
+		entity.domain,
+		entity.unique_id,
+		discovery_prefix,
+	)
+
+	return EntityRegistration(
+		discovery_topic=discovery_topic,
+		discovery_payload=discovery_payload,
+		state_topic=state_topic,
+		command_topic=command_topic,
+		availability_topic=availability_topic,
+	)
