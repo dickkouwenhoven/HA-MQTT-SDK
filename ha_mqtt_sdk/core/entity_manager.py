@@ -185,14 +185,13 @@ class EntityManager:
 		if not isinstance(entity, Entity):
 			raise EntityError("Invalid entity")
 
-		topic = build_state_topic(
-			entity.domain,
-			entity.unique_id,
+		registration = build_registration(
+			entity,
 			self._settings.discovery_prefix,
 		)
-		
+
 		self._mqtt.publish(
-			topic = topic,
+			topic = registration.state_topic,
 			payload = state,
 			retain = False,
 		)
@@ -221,16 +220,15 @@ class EntityManager:
 		if not isinstance(entity, Entity):
 			raise EntityError("Invalid entity")
 
-		topic = build_availability_topic(
-			entity.domain,
-			entity.unique_id,
+		registration = build_registration(
+			entity,
 			self._settings.discovery_prefix,
 		)
 
 		payload = "online" if online else "offline"
 
 		self._mqtt.publish(
-			topic = topic,
+			topic = registration.availability_topic,
 			payload = payload,
 			retain = True, # IMPORTANT for HA
 		)
@@ -254,19 +252,20 @@ class EntityManager:
 		callback: function(topic, payload)
 		"""
 
-		topic = build_command_topic(
-			entity.domain,
-			entity.unique_id,
+		registration = build_registration(
+			entity,
 			self._settings.discovery_prefix,
 		)
 		
-		if not topic:
+		if not registration.command_topic:
 			raise EntityError("Entity does not support commands")
 
 		if not callable(callback):
 			raise EntityError("callback must be callable")
 
-		self._command_callbacks[topic] = callback
+		self._command_callbacks[
+			registration.command_topic
+		] = callback
 
 		_logger.debug(
 			"Command callback set for topic: %s",
