@@ -8,18 +8,15 @@ Used for asyncio-based integrations.
 
 from typing import Optional, Dict, Any, Callable, Awaitable
 
-from .entity_factory import create_entity as _create_entity
+from .entity_factory import (
+	create_entity as _create_entity,
+	build_registration,
+)
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
-from ..builders.discovery_payload import build_discovery_payload
-from ..builders.topic_manager import (
-	build_discovery_topic,
-	build_command_topic,
-	build_availability_topic,
-	build_state_topic,
-)
+
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
 from ..exceptions  import ValidationError, EntityError
@@ -94,18 +91,16 @@ class AsyncEntityManager:
 		# Discovery
 		# -----------------------------
 
-		topic = build_discovery_topic(
-			entity.domain,
-			entity.unique_id,
-			self._settings.discovery_prefix,
-		)
-
-		payload = build_discovery_payload(
+		registration = build_registration(
 			entity,
 			self._settings.discovery_prefix,
 		)
-
-		await self._mqtt.publish(topic, payload, retain=True)
+			
+		await self._mqtt.publish(
+			topic = registration.discovery_topic,
+			payload = registration.discovery_payload, 
+			retain = True
+		)
 
 		_logger.info(
 			"Entity registered: %s (%s)",
@@ -117,66 +112,78 @@ class AsyncEntityManager:
 		# Last Will and Testament
 		# ------------------------
 
-		availability_topic = build_availability_topic(
-			entity.domain,
-			entity.unique_id,
-			self._settings.discovery_prefix,
-		)
-
 		if hasattr(self._mqtt, "set_last_will"):
-			self._mqtt.set_last_will(availability_topic)
+			self._mqtt.set_last_will(
+				registration.availability_topic
+			)
 			_logger.debug("Last will registered for: %s", entity.unique_id)
 
 		# ------------------------
 		# Command handling
 		# ------------------------
 
-		topic = build_command_topic(
-			entity.domain,
-			entity.unique_id,
-			self._settings.discovery_prefix,
-		)
-
-		if topic:
-			await self._mqtt.subscribe(topic)
+		if registration.command_topic:
+			await self._mqtt.subscribe(
+				registration.command_topic
+			)
 
 			_logger.debug(
 				"Subscribed to command topic: %s",
-				topic,
+				registeration.command_topic,
 			)
 
 		if command_callback:
-			self._command_callbacks[topic] = command_callback
+			self._command_callbacks[
+				registration.command_topic
+			] = command_callback
 			
 			
 
 	async def update_state(self, entity: Entity, state: Any) -> None:
+		
 		if not isinstance(entity, Entity):
 			raise EntityError("Invalid entity")
 			
-		topic = build_state_topic(
-			entity.domain,
-			entity.unique_id,
+		registration = build_registration(
+			entity,
 			self._settings.discovery_prefix,
 		)
+		
+		await self._mqtt.publish(
+			topic= registration.state_topic,
+			payload = state,
+			retain = False,
+		)
 
-		await self._mqtt.publish(topic, state)
+		_logger.debug(
+			"State updated: %s -> %s",
+			entity.unique_id,
+			state,
+		)
 
 	async def update_availability(self, entity: Entity, online: bool) -> None:
 
 		if not isinstance(entity, Entity):
 			raise EntityError("Invalid entity")
 			
-		topic = build_availability_topic(
-			entity.domain,
-			entity.unique_id,
+		registration = build_registration(
+			entity,
 			self._settings.discovery_prefix,
 		)
-
+		
 		payload = "online" if online else "offline"
 
-		await self._mqtt.publish(topic, payload, retain=True)
-
+		await self._mqtt.publish(
+			topic = registration.availability_topic,
+			payload = payload,
+			retain = True
+		)
+		
+		_logger.debug(
+			"Availability updated: %s -> %s",
+			entity.unique_id,
+			payload,
+		)
 	
 	def set_command_callback(
 		self,
@@ -196,17 +203,18 @@ class AsyncEntityManager:
 
 		if not callable(callback):
 			raise EntityError("callback must be callable")
-			
-		topic = build_command_topic(
-			entity.domain,
-			entity.unique_id,
+
+		registration = build_registration(
+			entity,
 			self._settings.discovery_prefix,
 		)
-		
-		if not topic:
+			
+		if not registration.command_topic:
 			raise EntityError("Entity does not support commands")
 
-		self._command_callbacks[topic] = callback
+		self._command_callbacks[
+			registration.command_topic
+		] = callback
 
 		_logger.debug(
 			"Command callback set for topic: %s",
