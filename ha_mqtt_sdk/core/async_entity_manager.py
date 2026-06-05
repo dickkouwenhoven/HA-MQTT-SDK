@@ -129,7 +129,7 @@ class AsyncEntityManager:
 
 			_logger.debug(
 				"Subscribed to command topic: %s",
-				registeration.command_topic,
+				registration.command_topic,
 			)
 
 		if command_callback:
