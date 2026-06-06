@@ -2,10 +2,10 @@
 Basic example showing how to use the HASDK.
 """
 
-from ha_mqtt_sdk.core.entity_manager import EntityManager
-from ha_mqtt_sdk.config.domains import HADomain
-from ha_mqtt_sdk.config.mqtt import MQTTSettings
-from ha_mqtt_sdk.mqtt import PahoMQTTClient
+from ha_mqtt_sdk import EntityManager
+from ha_mqtt_sdk import HADomain
+from ha_mqtt_sdk import MQTTSettings
+from ha_mqtt_sdk import PahoMQTTClient
 
 
 class SimpleMQTT:
@@ -25,32 +25,34 @@ class SimpleMQTT:
 
 
 def main():
-	mqtt = PahoMQTTClient(
+	mqtt_config = MQTTSettings(
+		host="localhost",
+		port=1883,
+	)
+	
+	client = PahoMQTTClient(
 		config = mqtt_config
 	)
 
-	manager = EntityManager(
-		mqtt,
-		MQTTSettings(
-			discovery_prefix="homeassistant"
-		)
+	manager = HASDK(
+		mqtt_client=client,
 	)
 
 	# Create entity
-	entity = manager.create_entity(
+	light = Entity(
 		domain=HADomain.LIGHT,
 		name="Demo Lamp",
 		unique_id="demo_lamp"
 	)
 
 	# Register in HA
-	manager.register(entity)
+	manager.register(light)
 
 	# Set availability
-	manager.update_availability(entity, True)
+	manager.update_availability(light, True)
 
 	# Send state
-	manager.update_state(entity, "ON")
+	manager.update_state(light, "ON")
 
 
 if __name__ == "__main__":
