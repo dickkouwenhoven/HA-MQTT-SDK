@@ -1,118 +1,363 @@
 # Home Assistant MQTT SDK
 
-Python SDK for Home Assistant MQTT integration.
+Production-ready Python SDK for integrating devices and applications with Home Assistant through MQTT Discovery.
 
-**Features:**
-- Support for all HA device types
-- Factory functions for entities and discovery payloads
-- Topic management and MQTT publish helpers
-- Central logging (dual-mode: use existing logger or own logger)
-- Full validation from required and optional fields
-- Testable and Docker-ready
+The SDK simplifies Home Assistant MQTT integration by automatically handling:
 
-**Installation:**
+* MQTT Discovery payload generation
+* MQTT topic management
+* Entity registration
+* State updates
+* Availability updates
+* Command handling
+* Sync and Async MQTT clients
+
+---
+
+# Features
+
+* Home Assistant MQTT Discovery support
+* Automatic MQTT topic generation
+* Entity validation
+* Availability management
+* Command callback handling
+* Sync MQTT support using Paho MQTT
+* Async MQTT support using aiomqtt
+* Dependency injection support
+* Docker support
+* Extensive test coverage
+* Production-ready architecture
+
+---
+
+# Requirements
+
+* Python 3.13+
+* MQTT Broker (Mosquitto recommended)
+* Home Assistant with MQTT integration enabled
+
+---
+
+# Installation
+
+Install from PyPI:
 
 ```bash
 pip install ha_mqtt_sdk
+```
 
-Usage:
+Or install from source:
 
-from ha_mqtt_sdk.models.entity import make_entity
+```bash
+git clone https://github.com/dickkouwenhoven/HA-MQTT-SDK.git
+
+cd HA-MQTT-SDK
+
+pip install -e .
+```
+
+---
+
+# Quick Start
+
+## MQTT Configuration
+
+```python
+from ha_mqtt_sdk.config.mqtt import MQTTSettings
+
+mqtt_config = MQTTSettings(
+    host="localhost",
+    port=1883,
+)
+```
+
+---
+
+## Create MQTT Client
+
+```python
+from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
+
+client = PahoMQTTClient(mqtt_config)
+```
+
+---
+
+## Create SDK Instance
+
+```python
+from ha_mqtt_sdk.core.sdk import HASDK
+
+sdk = HASDK(
+    mqtt_client=client,
+)
+```
+
+---
+
+# Sync Example
+
+## Create Entity
+
+```python
+from ha_mqtt_sdk.models.entity import Entity
 from ha_mqtt_sdk.config.domains import HADomain
-from ha_mqtt_sdk.mqtt.mqtt_client import MQTTClient
 
-# Creation of an Entity
-sensor = make_entity(HADomain.SENSOR, "Temperature Sensor", state_topic="sensor/temp")
+sensor = Entity(
+    domain=HADomain.SENSOR,
+    name="Temperature",
+    unique_id="temp_1",
+)
+```
 
-# MQTT client
-client = MQTTClient(host="localhost")
-client.publish_discovery("homeassistant/sensor/temp/config", sensor)
+## Register Entity
 
-Projectstructure:
+```python
+sdk.register(sensor)
+```
 
-HA-MQTT-SDK/
-├── README.md
-├── .gitignore
-├── .env.example
-├── setup.py
-├── pyproject.toml
-├── pytest.ini
-├── requirements.txt
-├── requirements-dev.txt
-├── Dockerfile
-├── docker-compose.yml
-├── LICENSE
-├── mosquitto.conf
-├── setup.py
-├── pyproject.toml
-├── .github
-│   └── workflows/
-│       └── ci.yml
-├── examples
-│   └── basic_usage/
-│       ├── README.md
-│       └── main.py
+Home Assistant will automatically discover the entity through MQTT Discovery.
+
+---
+
+## Update State
+
+```python
+sdk.update_state(
+    sensor,
+    {
+        "temperature": 22.5
+    }
+)
+```
+
+---
+
+## Register Command Callback
+
+```python
+def handle_command(topic, payload):
+    print(
+        f"Command received: {topic} -> {payload}"
+    )
+
+sdk.on_command(
+    sensor,
+    handle_command,
+)
+```
+
+---
+
+# Async Example
+
+## Create Async MQTT Client
+
+```python
+from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
+
+client = AsyncMQTTClient(mqtt_config)
+```
+
+## Create Async Entity Manager
+
+```python
+from ha_mqtt_sdk.core.async_entity_manager import AsyncEntityManager
+
+manager = AsyncEntityManager(
+    client,
+    mqtt_config,
+)
+```
+
+## Create Entity
+
+```python
+from ha_mqtt_sdk.models.entity import Entity
+from ha_mqtt_sdk.config.domains import HADomain
+
+entity = Entity(
+    domain=HADomain.SWITCH,
+    name="Relay",
+    unique_id="relay_1",
+)
+```
+
+## Register Entity
+
+```python
+await manager.register(entity)
+```
+
+## Update State
+
+```python
+await manager.update_state(
+    entity,
+    "ON",
+)
+```
+
+## Update Availability
+
+```python
+await manager.update_availability(
+    entity,
+    True,
+)
+```
+
+---
+
+# Supported Entity Domains
+
+The SDK supports Home Assistant entity domains through:
+
+```python
+from ha_mqtt_sdk.config.domains import HADomain
+```
+
+Examples include:
+
+```python
+HADomain.SENSOR
+HADomain.SWITCH
+HADomain.LIGHT
+HADomain.BINARY_SENSOR
+```
+
+The complete list is maintained in:
+
+```text
+ha_mqtt_sdk/config/domains.py
+```
+
+---
+
+# Architecture
+
+```text
+Home Assistant
+        │
+        ▼
+ MQTT Discovery
+        │
+        ▼
+     HASDK
+        │
+ ┌──────┴──────┐
+ ▼             ▼
+Sync       Async
+Manager    Manager
+ │             │
+ ▼             ▼
+Paho MQTT   aiomqtt
+```
+
+---
+
+# Project Structure
+
+```text
+HA-MQTT-SDK
+├── examples/
 ├── ha_mqtt_sdk/
-│   ├── __init__.py
-│   ├── exceptions.py
+│   ├── builders/
+│   ├── config/
+│   ├── core/
+│   ├── models/
+│   ├── mqtt/
+│   ├── utils/
+│   ├── validators/
 │   ├── plugin_interface.py
 │   ├── plugin_manager.py
-│   ├── builders/
-│   │   ├── __init__.py
-│   │   ├── discovery_payload.py
-│   │   └── topic_manager.py
-│   ├── config/
-│   │   ├── __init__.py
-│   │   ├── domains.py
-│   │   ├── mqtt.py
-│   │   └── device_fields.py
-│   ├── core/
-│   │   ├── __init__.py
-│   │   ├── async_entity_manager.py
-│   │   ├── entity_factory.py
-│   │   ├── entity_manager.py
-│   │   └── sdk.py
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── device_info.py
-│   │   ├── entity.py
-│   ├── mqtt/
-│   │   ├── __init__.py
-│   │   ├── async_client.py
-│   │   ├── base.py
-│   │   └── paho_client.py
-│   └── utils/
-│       ├── __init__.py
-│       └── logger.py
-└── tests/
-    ├── __init__.py
-    ├── conftest.py
-    ├── test_async_sdk.py
-    ├── test_discovery_payload.py
-    ├── test_entity.py
-    ├── test_entity_manager.py
-    ├── test_sdk.py
-    └── test_topic_manager.py
+│   └── exceptions.py
+├── tests/
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
+└── README.md
+```
 
-🚀 Usage
-Start everything:
-docker-compose up --build
-🔍 Wat happens?
+---
 
-Mosquitto broker start
+# Docker
 
-SDK container will be build
+The repository includes a complete Docker environment for development and testing.
 
-Tests runs automatically
+Build and start:
 
-MQTT communication is tested against real broker
+```bash
+docker compose up --build
+```
 
-🧪 Optional: Live debug mode
+This starts:
 
-If you want to test interactively:
+* MQTT Broker (Mosquitto)
+* SDK container
+* Automated test execution
 
-command: tail -f /dev/null
+---
 
-Then:
+# Testing
 
-docker exec -it ha_mqtt_sdk bash
+Run all tests:
+
+```bash
+pytest
+```
+
+Run with coverage:
+
+```bash
+pytest --cov=ha_mqtt_sdk
+```
+
+---
+
+# Logging
+
+The SDK uses a centralized logging system.
+
+Example:
+
+```python
+from ha_mqtt_sdk.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+logger.info("SDK started")
+```
+
+---
+
+# Development
+
+Install development dependencies:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run tests:
+
+```bash
+pytest
+```
+
+---
+
+# License
+
+MIT License
+
+See the LICENSE file for details.
+
+---
+
+# Author
+
+Dick Kouwenhoven
+
+GitHub:
+https://github.com/dickkouwenhoven/HA-MQTT-SDK
