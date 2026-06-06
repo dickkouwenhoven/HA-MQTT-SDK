@@ -63,7 +63,7 @@ pip install -e .
 ## MQTT Configuration
 
 ```python
-from ha_mqtt_sdk.config.mqtt import MQTTSettings
+from ha_mqtt_sdk import MQTTSettings
 
 mqtt_config = MQTTSettings(
     host="localhost",
@@ -76,7 +76,7 @@ mqtt_config = MQTTSettings(
 ## Create MQTT Client
 
 ```python
-from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
+from ha_mqtt_sdk import PahoMQTTClient
 
 client = PahoMQTTClient(mqtt_config)
 ```
@@ -86,7 +86,7 @@ client = PahoMQTTClient(mqtt_config)
 ## Create SDK Instance
 
 ```python
-from ha_mqtt_sdk.core.sdk import HASDK
+from ha_mqtt_sdk import HASDK
 
 sdk = HASDK(
     mqtt_client=client,
@@ -100,8 +100,8 @@ sdk = HASDK(
 ## Create Entity
 
 ```python
-from ha_mqtt_sdk.models.entity import Entity
-from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk import Entity
+from ha_mqtt_sdk import HADomain
 
 sensor = Entity(
     domain=HADomain.SENSOR,
@@ -154,7 +154,7 @@ sdk.on_command(
 ## Create Async MQTT Client
 
 ```python
-from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
+from ha_mqtt_sdk import AsyncMQTTClient
 
 client = AsyncMQTTClient(mqtt_config)
 ```
@@ -162,7 +162,7 @@ client = AsyncMQTTClient(mqtt_config)
 ## Create Async Entity Manager
 
 ```python
-from ha_mqtt_sdk.core.async_entity_manager import AsyncEntityManager
+from ha_mqtt_sdk import AsyncEntityManager
 
 manager = AsyncEntityManager(
     client,
@@ -173,8 +173,8 @@ manager = AsyncEntityManager(
 ## Create Entity
 
 ```python
-from ha_mqtt_sdk.models.entity import Entity
-from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk import Entity
+from ha_mqtt_sdk import HADomain
 
 entity = Entity(
     domain=HADomain.SWITCH,
@@ -214,7 +214,7 @@ await manager.update_availability(
 The SDK supports Home Assistant entity domains through:
 
 ```python
-from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk import HADomain
 ```
 
 Examples include:
@@ -322,7 +322,7 @@ The SDK uses a centralized logging system.
 Example:
 
 ```python
-from ha_mqtt_sdk.utils.logger import get_logger
+from ha_mqtt_sdk import get_logger
 
 logger = get_logger(__name__)
 
