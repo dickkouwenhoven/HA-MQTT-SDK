@@ -76,7 +76,7 @@ def _validate_json_value(
         return
                 
     try:
-        json.dumps(payload)
+        json.dumps(value)
 
     except (
         TypeError,
