@@ -12,7 +12,7 @@ Used by:
 - ha_mqtt_sdk/builders/discovery_payload.py
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 
 from .device_info import DeviceInfo
 from ..config.domains import HADomain
@@ -30,7 +30,7 @@ class Entity:
 		name: str,
 		unique_id: str,
 		device_info: Optional[DeviceInfo] = None,
-		extra: Optional[Dict[str, Any]] = None,
+		extra: Optional[dict[str, Any]] = None,
 	):
 		self.domain = domain
 		self.name = name
@@ -54,7 +54,7 @@ class Entity:
 		self._validate_schema()
 
 
-	def to_dict(self) -> Dict[str, Any]:
+	def to_dict(self) -> dict[str, Any]:
 		payload = {
 			"name": self.name,
 			"unique_id": self.unique_id,
