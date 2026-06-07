@@ -42,10 +42,7 @@ def _build_device_block(entity: Entity) -> Dict[str, Any]:
 	_validate_entity(entity)
 	entity.validate()
 	
-	if not entity.device_info:
-		return {}
-
-	return dict(entity.device_info)
+	return entity.device_info or {}
 
 
 # ---------------------------------------------------------------------------
