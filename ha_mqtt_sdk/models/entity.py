@@ -124,12 +124,12 @@ class Entity:
 				f"device_info {field_name} must be a tuple"
 			)
 
-		if len(item) != 2:
+		if len(items) != 2:
 			raise EntityError(
 				f"device_info {field_name} must contain 2 values"
 			)
 			
-		key, value = item
+		key, value = items
 
 		if (
 			not isinstance(key, str)
