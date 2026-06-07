@@ -27,7 +27,7 @@ class PahoMQTTClient(BaseMQTTClient):
 			client_id=config.client_id,
 		)
 		self._callbacks: Dict[str, Callable] = {}
-		self._message_callback: Optional[Callable] = None
+		self._message_callback: Optional[Callable] | None = None
 
 		self._reconnect_delay = config.reconnect_delay_min
 		self._connected = False
