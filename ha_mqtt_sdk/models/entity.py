@@ -13,7 +13,7 @@ Used by:
 """
 
 # from typing import Optional, Dict, Any
-from typing import Optional
+from typing import Optional, Dict
 
 from .device_info import DeviceInfo
 from ..config.domains import HADomain
