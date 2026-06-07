@@ -33,9 +33,6 @@ Usage:
 
 from .utils.logger import get_logger
 
-# Central SDK logger
-LOGGER = get_logger(__name__)
-
 # Top-level imports for SDK users
 from .core.sdk import HASDK
 
@@ -49,6 +46,9 @@ from .config.mqtt import MQTTSettings
 
 from .mqtt.paho_client import PahoMQTTClient
 from .mqtt.async_client import AsyncMQTTClient
+
+# Central SDK logger
+LOGGER = get_logger(__name__)
 
 __version__ = "1.0.0"
 
