@@ -2,6 +2,7 @@ import pytest
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
+from ha_mqtt_sdk.config.domains import HADomain
 
 class MockMQTTClient(PahoMQTTClient):
 	def __init__(self):
