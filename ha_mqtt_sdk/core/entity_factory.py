@@ -54,8 +54,8 @@ def create_entity(
 	domain: HADomain,
 	name: str,
 	unique_id: str,
-	device_info: Optional[dict[str,Any]] = None,
-	extra: Optional[dict[str, Any]] = None,
+	device_info: Optional[dict[str,Any]] | None = None,
+	extra: Optional[dict[str, Any]] | None = None,
 ) -> Entity:
 	"""
 	Build an Entity with automatic topic generation.
