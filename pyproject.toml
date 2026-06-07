@@ -40,7 +40,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
 	"pytest",
-	"pytest-cov"
+	"pytest-cov",
+	"ruff",
 ]
 
 [project.urls]
@@ -62,16 +63,22 @@ include-package-data = true
 # -------------------------
 # Optional dev tools
 # -------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+	"E",
+	"F",
+	"I",
+	"UP",
+	"B",	
+]
 
 [tool.pytest.ini_options]
 pythonpath=["."]
 testpaths = ["tests"]
-
-[tool.black]
-line-length = 88
-
-[tool.isort]
-profile = "black"
 
 [tool.coverage.run]
 source = ["ha_mqtt_sdk"]
