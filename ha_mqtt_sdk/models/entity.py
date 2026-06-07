@@ -12,8 +12,10 @@ Used by:
 - ha_mqtt_sdk/builders/discovery_payload.py
 """
 
-from typing import Optional, Dict, Any
+# from typing import Optional, Dict, Any
+from typing import Optional
 
+from .device_info import DeviceInfo
 from ..config.domains import HADomain
 from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from ..utils.logger import get_logger
@@ -28,7 +30,8 @@ class Entity:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		device_info: Optional[Dict[str, Any]] = None,
+		# device_info: Optional[Dict[str, Any]] = None,
+		device_info: Optional[DeviceInfo] = None,
 		extra: Optional[Dict[str, Any]] = None,
 	):
 		self.domain = domain
