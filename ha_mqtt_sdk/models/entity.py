@@ -81,6 +81,11 @@ class Entity:
 				f"device_info {field_name} must be a set of (str, str) tuples"
 			)
 
+		if not items:
+			raise EntityError(
+				f"device_info {field_name} cannot be empty"
+			)
+
 		for item in items:
 			if (
 				not isinstance(item, tuple)
@@ -107,7 +112,42 @@ class Entity:
 				raise EntityError(
 					f"device_info {field_name} value must be a non-empty string"
 				)
-				
+
+	
+	def _validate_tuple_pair(
+		self,
+		items: tuple[str, str],
+		field_name: str,
+	) -> None:
+		if not isinstance(items, tuple):
+			raise EntityError(
+				f"device_info {field_name} must be a tuple"
+			)
+
+		if len(item) != 2:
+			raise EntityError(
+				f"device_info {field_name} must contain 2 values"
+			)
+			
+		key, value = item
+
+		if (
+			not isinstance(key, str)
+			or not key.strip()
+		):
+			raise EntityError(
+				f"device_info {field_name} key must be a non-empty string"
+			)
+
+		if (
+			not isinstance(value, str)
+			or not value.strip()
+		):
+			raise EntityError(
+				f"device_info {field_name} value must be a non-empty string"
+			)
+
+
 	def _validate_basic(self) -> None:
 		"""Basic type and value validation"""
 
@@ -152,6 +192,12 @@ class Entity:
 				self._validate_tuple_collection(
 					self.device_info["connections"],
 					"connections",
+				)
+
+			if "via_device"in self.device_info:
+				self._validate_ruple_pair(
+					self.device_info["via_device"],
+					"via_device",
 				)
 
 			# How to handle via_device, because it is tuple[str, str]?
