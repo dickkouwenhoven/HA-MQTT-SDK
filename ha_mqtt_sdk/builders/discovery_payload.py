@@ -10,7 +10,7 @@ Used by:
 - sdk/core/entity_manager.py
 """
 
-from typing import Dict, Any
+from typing import Any
 
 from ..models.entity import Entity
 from ..validators.payload_validator import validate_discovery_payload 
@@ -34,7 +34,7 @@ def _validate_entity(entity: Entity) -> None:
 		raise EntityError("Invalid entity")
 
 
-def _build_device_block(entity: Entity) -> Dict[str, Any]:
+def _build_device_block(entity: Entity) -> dict[str, Any]:
 	"""
 	Build device block for HA.
 	"""
@@ -52,7 +52,7 @@ def _build_device_block(entity: Entity) -> Dict[str, Any]:
 def build_discovery_payload(
 	entity: Entity,
 	prefix: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
 	"""
 	Build full Home Assistant MQTT discovery payload.
 
@@ -72,7 +72,7 @@ def build_discovery_payload(
 	# Base payload
 	# ------------------------------------------------------
 	
-	payload: Dict[str, Any] = {
+	payload: dict[str, Any] = {
 		"name": entity.name,
 		"unique_id": entity.unique_id,
 		"state_topic": build_state_topic(
