@@ -73,12 +73,12 @@ class Entity:
 
 	def _validate_tuple_collection(
 		self,
-		items: list[tuple[str, str]],
+		items: set[tuple[str, str]],
 		field_name: str,
 	) -> None:
-		if not isinstance(items, list):
+		if not isinstance(items, set):
 			raise EntityError(
-				f"device_info {field_name} must be a list"
+				f"device_info {field_name} must be a set of (str, str) tuples"
 			)
 
 		for item in items:
