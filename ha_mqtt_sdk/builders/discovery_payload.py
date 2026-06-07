@@ -105,7 +105,7 @@ def build_discovery_payload(
 	)
 
 	if command_topic:
-		payload["command_topic"] = command_topic,
+		payload["command_topic"] = command_topic
 
 	# ------------------------------------------------------
 	# Optional device block
