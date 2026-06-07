@@ -96,6 +96,9 @@ class HASDK:
 		Used by:
 		- user code
 		"""
+		if not isinstance(entity, Entity):
+			raise SDKError("Invalid entity")
+		
 		if not isinstance(payload, dict):
 			raise SDKError("Payload must be dict")
 
@@ -108,6 +111,9 @@ class HASDK:
 		Used by:
 		- user code (Dirigera integration)
 		"""
+		if not isinstance(entity, Entity):
+			raise SDKError("Invalid entity")
+		
 		if not callable(callback):
 			raise SDKError("Callback must be callable")
 
