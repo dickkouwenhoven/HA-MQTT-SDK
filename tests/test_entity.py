@@ -71,9 +71,9 @@ def test_valid_device_info():
 		name="Temp",
 		unique_id="temp_1",
 		device_info={
-			"identifiers": [
+			"identifiers": {
 				("ha_mqtt_sdk", "device_1")
-			],
+			},
 			"manufacturer": "Example",
 		},
 	).validate()
