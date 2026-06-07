@@ -18,4 +18,5 @@ __all__ = [
 	"build_discovery_topic",
 	"build_state_topic",
 	"build_command_topic",
+	"build_discovery_payload",
 ]
