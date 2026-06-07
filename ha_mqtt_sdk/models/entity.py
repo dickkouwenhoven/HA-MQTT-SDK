@@ -29,7 +29,6 @@ class Entity:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		# device_info: Optional[Dict[str, Any]] = None,
 		device_info: Optional[DeviceInfo] = None,
 		extra: Optional[Dict[str, Any]] = None,
 	):
@@ -98,12 +97,12 @@ class Entity:
 					"device_info must be a dictionary"
 				)
 			
-			identifiers = self.device_info.get("identifiers")
-
-			if not identifiers:
+			if "identifiers" not in self.device_info:
 				raise EntityError(
 					"device_info requires identifiers"
 				)
+			
+			identifiers = self.device_info[identifiers"]
 
 			if not isinstance(identifiers, list):
 				raise EntityError(
