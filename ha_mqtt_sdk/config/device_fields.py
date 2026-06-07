@@ -5,14 +5,14 @@ Contains the default set of fields for each device type.
 Imports HADomain from domains.py for single source of truth.
 """
 
-from typing import Set, Dict
+# from typing import Set, Dict
 from .domains import HADomain
 
 # ---------------------------------------------------------------------------
 # Generic fields applied to most devices
 # ---------------------------------------------------------------------------
 
-COMMON_FIELDS: Set[str] = {
+COMMON_FIELDS: set[str] = {
 	"availability",
 	"availability_topic",
 	"availability_mode",
@@ -29,7 +29,7 @@ COMMON_FIELDS: Set[str] = {
 	"retain",
 }
 
-STATE_FIELDS: Set[str] = {
+STATE_FIELDS: set[str] = {
 	"state_topic",
 	"value_template",
 	"state_class",
@@ -37,7 +37,7 @@ STATE_FIELDS: Set[str] = {
 	"force_update",
 }
 
-COMMAND_FIELDS: Set[str] = {
+COMMAND_FIELDS: set[str] = {
 	"command_topic",
 	"payload_on",
 	"payload_off",
@@ -50,7 +50,7 @@ COMMAND_FIELDS: Set[str] = {
 # Each HADomain maps to a dict with required and optional fields
 # ---------------------------------------------------------------------------
 
-ALLOWED_FIELDS_PER_DOMAIN: Dict[HADomain, Dict[str, Set[str]]] = {
+ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
 
 	HADomain.ALARM_CONTROL_PANEL: {
 		"required": {"name", "command_topic", "unique_id"},
