@@ -5,7 +5,7 @@ Contains the default set of fields for each device type.
 Imports HADomain from domains.py for single source of truth.
 """
 
-from typing import Set, Dict
+from typing import Set, dict
 from .domains import HADomain
 
 # ---------------------------------------------------------------------------
