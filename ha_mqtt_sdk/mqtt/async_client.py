@@ -25,11 +25,11 @@ class AsyncMQTTClient(BaseMQTTClient):
 		self._config = config
 		self._logger = get_logger(__name__)
 		self._callbacks: Dict[str, Callable] = {}
-		self._message_callback: Optional[Callable] = None
-		self._client: Optional[aiomqtt.Client] = None
-		self._listen_task: Optional[asyncio.Task] = None
+		self._message_callback: Optional[Callable] | None = None
+		self._client: Optional[aiomqtt.Client] | None = None
+		self._listen_task: Optional[asyncio.Task] | None = None
 		self._shutdown = False
-		self._lwt_topic: Optional[str] = None
+		self._lwt_topic: Optional[str] | None = None
 		self._lwt_payload: str = "offline"
 
 	# -------------------------
