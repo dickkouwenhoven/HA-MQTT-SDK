@@ -162,7 +162,7 @@ class Entity:
 				"sw_version",
 				"hw_version",
 				"suggested_area",
-				"configuration",
+				"configuration_url",
 				"serial_number",
 				"model_id",
 			)
