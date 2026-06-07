@@ -6,7 +6,7 @@ Async version of EntityManager.
 Used for asyncio-based integrations.
 """
 
-from typing import Optional, Dict, Any, Callable, Awaitable
+from typing import Optional, Any, Callable, Awaitable
 
 from .entity_factory import (
 	create_entity as _create_entity,
@@ -40,7 +40,7 @@ class AsyncEntityManager:
 				
 		self._mqtt = mqtt_client
 		self._settings = mqtt_settings
-		self._command_callbacks: Dict[str, Callable[[str, str], Awaitable[None]]] = {}
+		self._command_callbacks: dict[str, Callable[[str, str], Awaitable[None]]] = {}
 		self._mqtt.set_message_callback(self._handle_command)
 
 	def create_entity(
@@ -48,8 +48,8 @@ class AsyncEntityManager:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		device_info: Optional[Dict[str, Any]] = None,
-		extra: Optional[Dict[str, Any]] = None,
+		device_info: Optional[dict[str, Any]] = None,
+		extra: Optional[dict[str, Any]] = None,
 	) -> Entity:
 		"""
 		Create an Entity with automatic topic generation.
