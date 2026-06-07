@@ -252,6 +252,12 @@ class EntityManager:
 		callback: function(topic, payload)
 		"""
 
+		if not isinstance(entity, Entity):
+			raise EntityError("Invalid entity")
+
+		if not callable(callback):
+			raise EntityError("callback must be callable")
+		
 		registration = build_registration(
 			entity,
 			self._settings.discovery_prefix,
@@ -259,9 +265,6 @@ class EntityManager:
 		
 		if not registration.command_topic:
 			raise EntityError("Entity does not support commands")
-
-		if not callable(callback):
-			raise EntityError("callback must be callable")
 
 		self._command_callbacks[
 			registration.command_topic
