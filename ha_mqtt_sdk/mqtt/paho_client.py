@@ -8,7 +8,7 @@ Used by:
 import json
 import threading
 import time
-from typing import Callable, Any, Dict, Optional
+from typing import Callable, Any, dict, Optional
 
 import paho.mqtt.client as mqtt
 
