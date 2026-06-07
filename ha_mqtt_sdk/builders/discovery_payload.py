@@ -39,6 +39,9 @@ def _build_device_block(entity: Entity) -> Dict[str, Any]:
 	Build device block for HA.
 	"""
 
+	_validate_entity(entity)
+	entity.validate()
+	
 	device = entity.device_info
 
 	if not device:
