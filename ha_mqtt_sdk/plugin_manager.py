@@ -4,7 +4,7 @@ plugin_manager.py
 Manages integration plugins.
 """
 
-from typing import Dict
+from typing import dict
 
 from .plugin_interface import IntegrationPlugin
 
