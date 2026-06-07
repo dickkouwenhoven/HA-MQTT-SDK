@@ -15,7 +15,7 @@ Used by:
 - End users of the SDK
 """
 
-from typing import Optional, Callable, Any
+from typing import Optional, Callable
 
 from ..mqtt import (
 	BaseMQTTClient,
