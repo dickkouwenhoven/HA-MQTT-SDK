@@ -16,7 +16,7 @@ Used by:
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
@@ -43,7 +43,7 @@ class EntityRegistration:
 	"""
 
 	discovery_topic: str
-	discovery_payload: Dict[str, Any]
+	discovery_payload: dict[str, Any]
 
 	state_topic: str
 	command_topic: str
@@ -54,8 +54,8 @@ def create_entity(
 	domain: HADomain,
 	name: str,
 	unique_id: str,
-	device_info: Optional[Dict[str,Any]] = None,
-	extra: Optional[Dict[str, Any]] = None,
+	device_info: Optional[dict[str,Any]] = None,
+	extra: Optional[dict[str, Any]] = None,
 ) -> Entity:
 	"""
 	Build an Entity with automatic topic generation.
