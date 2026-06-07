@@ -3,10 +3,10 @@ Basic example showing how to use the HASDK.
 """
 
 from ha_mqtt_sdk import (
-	HADomain,
-	HASDK,
-	MQTTSettings,
 	Entity,
+	HASDK,
+	HADomain,
+	MQTTSettings,
 	PahoMQTTClient,
 )
 
