@@ -1,7 +1,7 @@
 from typing import TypedDict
 
 class DeviceInfo(TypedDict, total=False):
-    identifiers: list[tuple[str, str]] | None = None
+    identifiers: set[tuple[str, str]] | None = None
     
     manufacturer: str | None = None
     model: str | None = None
