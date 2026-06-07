@@ -102,7 +102,7 @@ class Entity:
 					"device_info requires identifiers"
 				)
 			
-			identifiers = self.device_info[identifiers"]
+			identifiers = self.device_info["identifiers"]
 
 			if not isinstance(identifiers, list):
 				raise EntityError(
