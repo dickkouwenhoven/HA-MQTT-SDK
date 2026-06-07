@@ -22,7 +22,7 @@ from .entity_factory import (
 	build_registration
 )
 
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Optional
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
@@ -64,7 +64,7 @@ class EntityManager:
 		self._settings = mqtt_settings
 
 		# Mapping command_topic -> callback
-		self._command_callbacks: Dict[str, Callable[[str, str], None]] = {}
+		self._command_callbacks: dict[str, Callable[[str, str], None]] = {}
 
 		# Register global MQTT message handler
 		self._mqtt.set_message_callback(self._handle_command)
@@ -78,8 +78,8 @@ class EntityManager:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		device_info: Optional[Dict[str,Any]] = None,
-		extra: Optional[Dict[str, Any]] = None,
+		device_info: Optional[dict[str,Any]] = None,
+		extra: Optional[dict[str, Any]] = None,
 	) -> Entity:
 		"""
 		Create an Entity with automatic topic generation.
