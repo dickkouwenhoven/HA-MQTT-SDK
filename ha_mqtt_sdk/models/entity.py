@@ -71,6 +71,43 @@ class Entity:
 	# Internal validation
 	# -----------------------------------------------------------------------
 
+	def _validate_tuple_collection(
+		self,
+		items: list[tuple[str, str]],
+		field_name: str,
+	) -> None:
+		if not isinstance(items, list):
+			raise EntityError(
+				f"device_info {field_name} must be a list"
+			)
+
+		for item in items:
+			if (
+				not isinstance(item, tuple)
+				or len(item) != 2
+			):
+				raise EntityError(
+					f"device_info {field_name} must contain 2-item tuples"
+				)
+			
+			key, value = item
+
+			if (
+				not isinstance(key, str)
+				or not key.strip()
+			):
+				raise EntityError(
+					f"device_info {field_name} key must be a non-empty string"
+				)
+
+			if (
+				not isinstance(value, str)
+				or not value.strip()
+			):
+				raise EntityError(
+					f"device_info {field_name} value must be a non-empty string"
+				)
+				
 	def _validate_basic(self) -> None:
 		"""Basic type and value validation"""
 
@@ -97,46 +134,27 @@ class Entity:
 					"device_info must be a dictionary"
 				)
 			
-			if "identifiers" not in self.device_info:
+			if not any(
+				key in self.device_info
+				for key in ("identifiers", "connections")
+			):
 				raise EntityError(
-					"device_info requires identifiers"
+					"At least one of 'identifiers' or 'connections' must be provided"
 				)
 			
-			identifiers = self.device_info["identifiers"]
-
-			if not isinstance(identifiers, list):
-				raise EntityError(
-					"device_info identifiers must be a list"
+			if "identifiers" in self.device_info:
+				self._validate_tuple_collection(
+					self.device_info["identifiers"],
+					"identifiers",
 				)
 
-			for identifier in identifiers:
+			if "connections"in self.device_info:
+				self._validate_tuple_collection(
+					self.device_info["connections"],
+					"connections",
+				)
 
-				if (
-					not isinstance(identifier, tuple)
-					or len(identifier) != 2
-				):
-					raise EntityError(
-						"device_info identifiers must contain 2-item tuples"
-					)
-
-				domain, value = identifier
-
-				if (
-					not isinstance(domain, str)
-					or not domain.strip()
-				):
-					raise EntityError(
-						"device_info identifier domain must be a non-empty string"
-					)
-
-				if (
-					not isinstance(value, str)
-					or not value.strip()
-				):
-					raise EntityError(
-						"device_info identifier value must be a non-empty string"
-					)
-
+			# How to handle via_device, because it is tuple[str, str]?
 			string_fields = (
 				"manufacturer",
 				"model",
@@ -144,6 +162,9 @@ class Entity:
 				"sw_version",
 				"hw_version",
 				"suggested_area",
+				"configuration",
+				"serial_number",
+				"model_id",
 			)
 
 			for field in string_fields:
