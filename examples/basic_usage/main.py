@@ -2,7 +2,7 @@
 Basic example showing how to use the HASDK.
 """
 
-from ha_mqtt_sdk import EntityManager, HADomain, MQTTSettings, PahoMQTTClient
+from ha_mqtt_sdk import HADomain, MQTTSettings, PahoMQTTClient
 
 
 class SimpleMQTT:
