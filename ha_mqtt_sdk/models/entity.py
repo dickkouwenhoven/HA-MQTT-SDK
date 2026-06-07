@@ -12,8 +12,7 @@ Used by:
 - ha_mqtt_sdk/builders/discovery_payload.py
 """
 
-# from typing import Optional, Dict, Any
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 
 from .device_info import DeviceInfo
 from ..config.domains import HADomain
