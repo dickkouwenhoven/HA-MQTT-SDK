@@ -8,15 +8,16 @@ Used by:
 import json
 import threading
 import time
-from typing import Any
 from collections.abc import Callable
+from typing import Any
 
 import paho.mqtt.client as mqtt
 
-from .base import BaseMQTTClient
 from ..config.mqtt import MQTTSettings
-from ..utils.logger import get_logger
 from ..exceptions import MQTTError, ValidationError
+from ..utils.logger import get_logger
+from .base import BaseMQTTClient
+
 
 class PahoMQTTClient(BaseMQTTClient):
 	def __init__(self, config: MQTTSettings):
