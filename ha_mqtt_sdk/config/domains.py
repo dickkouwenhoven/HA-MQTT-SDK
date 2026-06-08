@@ -4,10 +4,10 @@ Home Assistant Domains - Complete MQTT Coverage
 Single source of truth for all supported HA domains.
 """
 
-from enum import Enum
+from enum import StrEnum
 
 
-class HADomain(str, Enum):
+class HADomain(StrEnum):
 	ALARM_CONTROL_PANEL = "alarm_control_panel"
 	BINARY_SENSOR = "binary_sensor"
 	BUTTON = "button"
