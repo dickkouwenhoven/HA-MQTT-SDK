@@ -23,7 +23,7 @@ jobs:
 
         - name: Run Ruff
           run: |
-            ruff check . --fix
+            ruff check .
 
         - name: Check formatting
           run: |
