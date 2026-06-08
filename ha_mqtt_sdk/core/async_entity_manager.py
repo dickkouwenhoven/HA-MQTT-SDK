@@ -11,7 +11,7 @@ from typing import Any
 
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
-from ..exceptions  import EntityError, ValidationError
+from ..exceptions import EntityError, ValidationError
 from ..models.entity import Entity
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
