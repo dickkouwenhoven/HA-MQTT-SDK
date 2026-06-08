@@ -10,7 +10,7 @@ Used by:
 
 import asyncio
 import json
-from typing import Any, Dict
+from typing import Any
 from collections.abc import Callable
 
 import aiomqtt
