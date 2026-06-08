@@ -8,6 +8,7 @@ This module is fully independent of the MQTT transport layer.
 Used by:
 - sdk/core/entity_manager.py
 """
+
 from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 # from ..config.domains import HADomain
 # from ..exceptions import BuilderError
