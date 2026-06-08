@@ -6,7 +6,8 @@ Async version of EntityManager.
 Used for asyncio-based integrations.
 """
 
-from typing import Optional, Any, Callable, Awaitable
+from typing import Any, Optional
+from collections.abc import Callable, Awaitable
 
 from .entity_factory import (
 	create_entity as _create_entity,
