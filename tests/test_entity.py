@@ -1,7 +1,9 @@
 import pytest
-from ha_mqtt_sdk.models.entity import Entity
+
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.exceptions import EntityError, SchemaError
+from ha_mqtt_sdk.models.entity import Entity
+
 
 def test_valid_entity():
 	entity = Entity(
