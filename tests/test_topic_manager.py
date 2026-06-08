@@ -1,14 +1,14 @@
 import pytest
 
 from ha_mqtt_sdk.builders.topic_manager import (
-	build_state_topic,
+	build_availability_topic,
 	build_command_topic,
 	build_discovery_topic,
-	build_availability_topic,
+	build_state_topic,	
 )
 from ha_mqtt_sdk.config.domains import HADomain
-
 from ha_mqtt_sdk.exceptions import BuilderError
+
 
 def test_state_topic():
 	topic = build_state_topic(
