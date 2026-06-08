@@ -13,16 +13,13 @@ Verifies:
 import unittest
 from unittest.mock import MagicMock
 
+from ha_mqtt_sdk.builders.discovery_payload import build_discovery_payload
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
-
-from ha_mqtt_sdk.models.entity import Entity
 from ha_mqtt_sdk.core.entity_manager import EntityManager
-
-from ha_mqtt_sdk.builders.discovery_payload import build_discovery_payload
-
-from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 from ha_mqtt_sdk.exceptions import EntityError
+from ha_mqtt_sdk.models.entity import Entity
+from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 from ha_mqtt_sdk.utils.logger import get_logger
 
 LOGGER = get_logger("test_sdk")
