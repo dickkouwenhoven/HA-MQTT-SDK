@@ -15,7 +15,7 @@ Used by:
 - End users of the SDK
 """
 
-from typing import Optional, Callable
+from collections.abc import Callable
 
 from ..mqtt import (
 	BaseMQTTClient,
@@ -30,8 +30,8 @@ from ..exceptions import SDKError
 class HASDK:
 	def __init__(
 		self,
-		mqtt_config: Optional[MQTTSettings] | None = None,
-		mqtt_client: Optional[BaseMQTTClient] | None = None,
+		mqtt_config: MQTTSettings | None = None,
+		mqtt_client: BaseMQTTClient | None = None,
 		mqtt_settings: MQTTSettings | None = None,
 	):
 		"""
