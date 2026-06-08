@@ -14,7 +14,7 @@ from typing import Any
 from ..exceptions import EntityError
 from ..models.entity import Entity
 from ..utils.logger import get_logger
-from ..validators.payload_validator import validate_discovery_payload 
+from ..validators.payload_validator import validate_discovery_payload
 from .topic_manager import (
 	build_command_topic,
 	build_state_topic,
