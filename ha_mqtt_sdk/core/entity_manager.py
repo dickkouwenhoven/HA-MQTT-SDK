@@ -27,7 +27,7 @@ from ..models.entity import Entity
 from ..mqtt.paho_client import PahoMQTTClient
 from ..utils.logger import get_logger
 from .entity_factory import build_registration
-from .entity_factory import create_entity as _create_entity,
+from .entity_factory import create_entity as _create_entity
 
 _logger = get_logger(__name__)
 
