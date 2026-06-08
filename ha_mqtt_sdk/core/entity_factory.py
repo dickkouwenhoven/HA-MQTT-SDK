@@ -16,7 +16,7 @@ Used by:
 """
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
