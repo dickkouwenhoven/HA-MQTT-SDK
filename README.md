@@ -97,6 +97,17 @@ sdk = HASDK(
 
 # Sync Example
 
+## Create Device Info
+```python
+device_info: DeviceInfo = {
+    "identifiers": {
+        ("serial", "ABC123")
+    },
+    "manufacturer": "IKEA",
+    "model": "DIRIGERA",
+}
+```
+
 ## Create Entity
 
 ```python
