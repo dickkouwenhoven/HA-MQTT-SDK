@@ -8,7 +8,8 @@ Used by:
 import json
 import threading
 import time
-from typing import Callable, Any, Dict, Optional
+from typing import Any
+from collections.abc import Callable
 
 import paho.mqtt.client as mqtt
 
@@ -26,8 +27,8 @@ class PahoMQTTClient(BaseMQTTClient):
 			mqtt.CallbackAPIVersion.VERSION2,
 			client_id=config.client_id,
 		)
-		self._callbacks: Dict[str, Callable] = {}
-		self._message_callback: Optional[Callable] | None = None
+		self._callbacks: dict[str, Callable] = {}
+		self._message_callback: Callable | None = None
 
 		self._reconnect_delay = config.reconnect_delay_min
 		self._connected = False
