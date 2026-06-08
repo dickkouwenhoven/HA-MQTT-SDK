@@ -194,8 +194,8 @@ class Entity:
 					"connections",
 				)
 
-			if "via_device"in self.device_info:
-				self._validate_ruple_pair(
+			if "via_device" in self.device_info:
+				self._validate_tuple_pair(
 					self.device_info["via_device"],
 					"via_device",
 				)
