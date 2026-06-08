@@ -1,23 +1,18 @@
-import pytest
-
 from unittest.mock import AsyncMock
 
-from ha_mqtt_sdk.builders.topic_manager import build_command_topic
+import pytest
 
+from ha_mqtt_sdk.builders.topic_manager import build_command_topic
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
-
-from ha_mqtt_sdk.models.entity import Entity
-
 from ha_mqtt_sdk.core.async_entity_manager import (
 	AsyncEntityManager,
 )
-
+from ha_mqtt_sdk.exceptions import EntityError, MQTTError
+from ha_mqtt_sdk.models.entity import Entity
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
-from ha_mqtt_sdk.exceptions import MQTTError, EntityError
 from .conftest import AsyncMockMQTTClient
-
 
 # ------------------------------------
 # MQTT client tests
