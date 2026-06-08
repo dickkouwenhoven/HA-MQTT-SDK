@@ -5,7 +5,7 @@ Defines interface for SDK plugins (integrations).
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, List
+from typing import Any
 
 from .models.entity import Entity
 
@@ -13,7 +13,7 @@ from .models.entity import Entity
 class IntegrationPlugin(ABC):
 
 	@abstractmethod
-	def map_device(self, data: Any, entity_manager) -> List[Entity]:
+	def map_device(self, data: Any, entity_manager) -> list[Entity]:
 		"""Map device data to entities"""
 		pass
 
