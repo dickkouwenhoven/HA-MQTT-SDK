@@ -7,8 +7,8 @@ Contains:
 - MQTT settings
 """
 
-from .domains import HADomain
 from .device_fields import ALLOWED_FIELDS_PER_DOMAIN
+from .domains import HADomain
 from .mqtt import MQTTSettings
 
 __all__ = [
