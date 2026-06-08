@@ -52,9 +52,9 @@ class TestHomeAssistantSDK(unittest.TestCase):
 	def test_entity_creation_valid(self):
 		
 		entity = Entity(
-    		domain=HADomain.SENSOR,
-    		name="Temperature Sensor",
-    		unique_id="temp_sensor_1",
+			domain=HADomain.SENSOR,
+			name="Temperature Sensor",
+			unique_id="temp_sensor_1",
 		)
 
 		entity.validate()
