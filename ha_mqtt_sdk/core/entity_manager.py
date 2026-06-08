@@ -22,7 +22,8 @@ from .entity_factory import (
 	build_registration
 )
 
-from typing import Any, Callable, Optional
+from typing import Any
+from collections.abc import Callable
 
 from ..models.entity import Entity
 from ..config.domains import HADomain
@@ -78,8 +79,8 @@ class EntityManager:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		device_info: Optional[dict[str,Any]] | None = None,
-		extra: Optional[dict[str, Any]] | None = None,
+		device_info: dict[str,Any] | None = None,
+		extra: dict[str, Any] | None = None,
 	) -> Entity:
 		"""
 		Create an Entity with automatic topic generation.
@@ -99,7 +100,7 @@ class EntityManager:
 	def register(
 		self,
 		entity: Entity,
-		command_callback: Optional[Callable[[str, str], None]] | None = None,
+		command_callback: Callable[[str, str], None] | None = None,
 	) -> None:
 		"""
 		Register entity in Home Assistant via MQTT discovery.
