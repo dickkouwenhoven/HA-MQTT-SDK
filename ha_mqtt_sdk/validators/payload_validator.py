@@ -5,9 +5,8 @@ Payload validation utilities.
 from __future__ import annotations
 
 import json
-
-from typing import Any
 from collections.abc import Mapping
+from typing import Any
 
 from ..config.domains import HADomain
 from ..exceptions import ValidationError
