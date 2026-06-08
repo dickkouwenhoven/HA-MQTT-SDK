@@ -18,18 +18,15 @@ Used by:
 from dataclasses import dataclass
 from typing import Any
 
-from ..models.entity import Entity
-from ..config.domains import HADomain
-
 from ..builders.discovery_payload import build_discovery_payload
-
 from ..builders.topic_manager import (
+	build_availability_topic,
+	build_command_topic,
 	build_discovery_topic,
 	build_state_topic,
-	build_command_topic,
-	build_availability_topic,
 )
-
+from ..config.domains import HADomain
+from ..models.entity import Entity
 from ..utils.logger import get_logger
 
 _logger = get_logger(__name__)
