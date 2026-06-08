@@ -9,6 +9,7 @@ This module:
 Used by:
 - sdk/core/entity_manager.py
 """
+from typing import Any
 from .topic_manager import (
 	build_command_topic,
 	build_state_topic,
@@ -17,7 +18,6 @@ from ..exceptions import EntityError
 from ..models.entity import Entity
 from ..utils.logger import get_logger
 from ..validators.payload_validator import validate_discovery_payload 
-from typing import Any
 
 _logger = get_logger(__name__)
 
