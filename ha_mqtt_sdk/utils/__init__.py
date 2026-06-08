@@ -12,7 +12,7 @@ Design principles:
 - Maintain backward compatibility for SDK users
 """
 
-from .logger import setup_logger, get_logger
+from .logger import get_logger, setup_logger
 
 __all__ = [
 	"setup_logger",
