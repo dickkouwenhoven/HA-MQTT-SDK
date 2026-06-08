@@ -9,7 +9,6 @@ Used by:
 """
 
 import os
-from typing import Optional
 from ..exceptions import MQTTError
 
 class MQTTSettings:
