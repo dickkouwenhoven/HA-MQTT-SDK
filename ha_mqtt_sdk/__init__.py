@@ -13,6 +13,7 @@ Exports:
 - HASDK
 - Entity
 - HADomain
+- create_device_info
 
 Usage:
     from ha_mqtt_sdk import HASDK
@@ -27,12 +28,15 @@ Usage:
 	
 	from ha_mqtt_sdk import PahoMQTTClient
 	from ha_mqtt_sdk import AsyncMQTTClient
+
+	from ha_mqtt_sdk import create_device_info
 	
 	from ha_mqtt_sdk import get_logger	
 """
 from .config.domains import HADomain
 from .config.mqtt import MQTTSettings
 from .core.async_entity_manager import AsyncEntityManager
+from .core.device_factory import create_device_info
 from .core.entity_manager import EntityManager
 from .core.sdk import HASDK
 from .models.entity import Entity
@@ -54,5 +58,6 @@ __all__ = [
 	"MQTTSettings",
 	"PahoMQTTClient",
 	"AsyncMQTTClient",
+	"create_device_info",
 	"get_logger"
 ]
