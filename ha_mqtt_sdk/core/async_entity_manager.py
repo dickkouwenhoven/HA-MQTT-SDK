@@ -19,7 +19,7 @@ from .entity_factory import (
 	build_registration,
 )
 from .entity_factory import (
-	create_entity as _create_entity,	
+	create_entity as _create_entity,
 )
 
 _logger = get_logger(__name__)
