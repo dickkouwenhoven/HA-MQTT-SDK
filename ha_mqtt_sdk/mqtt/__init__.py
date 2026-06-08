@@ -7,8 +7,8 @@ Provides:
 - Async implementation
 """
 
-from .base import BaseMQTTClient
 from .async_client import AsyncMQTTClient
+from .base import BaseMQTTClient
 
 # Optional Paho import
 try:
