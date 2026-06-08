@@ -1,5 +1,6 @@
 from typing import TypedDict
 
+
 class DeviceInfo(TypedDict, total=False):
     identifiers: set[tuple[str, str]] | None
     
