@@ -10,7 +10,8 @@ Used by:
 
 import asyncio
 import json
-from typing import Callable, Any, Dict, Optional
+from typing import Any, Dict
+from collections.abc import Callable
 
 import aiomqtt
 
@@ -25,11 +26,11 @@ class AsyncMQTTClient(BaseMQTTClient):
 		self._config = config
 		self._logger = get_logger(__name__)
 		self._callbacks: Dict[str, Callable] = {}
-		self._message_callback: Optional[Callable] | None = None
-		self._client: Optional[aiomqtt.Client] | None = None
-		self._listen_task: Optional[asyncio.Task] | None = None
+		self._message_callback: Callable | None = None
+		self._client: aiomqtt.Client | None = None
+		self._listen_task: asyncio.Task | None = None
 		self._shutdown = False
-		self._lwt_topic: Optional[str] | None = None
+		self._lwt_topic: str | None = None
 		self._lwt_payload: str = "offline"
 
 	# -------------------------
