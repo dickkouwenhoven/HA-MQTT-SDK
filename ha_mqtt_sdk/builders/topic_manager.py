@@ -10,6 +10,7 @@ Used by:
 """
 
 from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
+
 # from ..config.domains import HADomain
 # from ..exceptions import BuilderError
 
