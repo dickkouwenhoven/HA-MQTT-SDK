@@ -3,9 +3,9 @@ Basic example showing how to use the HASDK.
 """
 
 from ha_mqtt_sdk import (
+	HASDK,
 	Entity,
 	HADomain,
-	HASDK,
 	MQTTSettings,
 	PahoMQTTClient,
 )
