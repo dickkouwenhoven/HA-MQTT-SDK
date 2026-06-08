@@ -14,11 +14,11 @@ Used by:
 
 from typing import Any
 
-from .device_info import DeviceInfo
-from ..config.domains import HADomain
 from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
-from ..utils.logger import get_logger
+from ..config.domains import HADomain
 from ..exceptions import EntityError, SchemaError
+from ..utils.logger import get_logger
+from .device_info import DeviceInfo
 
 _logger = get_logger(__name__)
 
