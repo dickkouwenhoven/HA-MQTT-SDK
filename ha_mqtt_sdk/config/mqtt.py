@@ -9,8 +9,8 @@ Used by:
 """
 
 import os
-
 from ..exceptions import MQTTError
+
 
 class MQTTSettings:
 	def __init__(
