@@ -9,6 +9,7 @@ Used by:
 """
 
 import os
+
 from ..exceptions import MQTTError
 
 
