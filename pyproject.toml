@@ -76,9 +76,6 @@ select = [
 	"B",	
 ]
 
-[tool.ruff.format]
-indent-style = "tab"
-
 [tool.pytest.ini_options]
 pythonpath=["."]
 testpaths = ["tests"]
