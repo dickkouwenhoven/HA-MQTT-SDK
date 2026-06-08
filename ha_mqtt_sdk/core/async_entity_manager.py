@@ -6,7 +6,7 @@ Async version of EntityManager.
 Used for asyncio-based integrations.
 """
 
-from typing import Any, Optional
+from typing import Any
 from collections.abc import Callable, Awaitable
 
 from .entity_factory import (
@@ -49,8 +49,8 @@ class AsyncEntityManager:
 		domain: HADomain,
 		name: str,
 		unique_id: str,
-		device_info: Optional[dict[str, Any]] | None = None,
-		extra: Optional[dict[str, Any]] | None = None,
+		device_info: dict[str, Any] | None = None,
+		extra: dict[str, Any] | None = None,
 	) -> Entity:
 		"""
 		Create an Entity with automatic topic generation.
@@ -70,9 +70,7 @@ class AsyncEntityManager:
 	async def register(
 		self,
 		entity: Entity,
-		command_callback: Optional[
-			Callable[[str, str], Awaitable[None]]
-		] | None = None
+		command_callback: Callable[[str, str], Awaitable[None]] | None = None
 	) -> None:
 		"""
 		Register entity in Home Assistant via MQTT discovery.
