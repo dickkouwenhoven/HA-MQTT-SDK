@@ -25,7 +25,7 @@ class AsyncMQTTClient(BaseMQTTClient):
 	def __init__(self, config: MQTTSettings):
 		self._config = config
 		self._logger = get_logger(__name__)
-		self._callbacks: Dict[str, Callable] = {}
+		self._callbacks: dict[str, Callable] = {}
 		self._message_callback: Callable | None = None
 		self._client: aiomqtt.Client | None = None
 		self._listen_task: asyncio.Task | None = None
