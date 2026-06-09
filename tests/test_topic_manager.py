@@ -108,8 +108,10 @@ def test_topic_are_built_correctly(
     builder,
     expected,
 ):
-    assert builder(
-        HADomain.SENSOR,
-        "id1",
-        "homeassistant",
-    ) == expected
+    assert (
+        builder(
+            HADomain.SENSOR,
+            "id1",
+            "homeassistant",
+        ) == expected
+    )
