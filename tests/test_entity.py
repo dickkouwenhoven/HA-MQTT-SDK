@@ -73,9 +73,9 @@ def test_valid_device_info():
 		name="Temp",
 		unique_id="temp_1",
 		device_info={
-			"identifiers": {
+			"identifiers": [
 				("ha_mqtt_sdk", "device_1")
-			},
+			],
 			"manufacturer": "Example",
 		},
 	).validate()
@@ -156,9 +156,9 @@ def test_valid_connections():
 		name="Temp",
 		unique_id="temp_1",
 		device_info={
-			"connections": {
+			"connections": [
 				("mac", "AA:BB:CC:DD:EE:FF")
-			},
+			],
 		},
 	).validate()
 
@@ -179,9 +179,9 @@ def test_valid_via_device():
 		name="Temp",
 		unique_id="temp_1",
 		device_info={
-			"identifiers": {
+			"identifiers": [
 				("ha_mqtt_sdk", "device_1")
-			},
+			],
 			"via_device": (
 				"ha_mqtt_sdk",
 				"gateway_1",
