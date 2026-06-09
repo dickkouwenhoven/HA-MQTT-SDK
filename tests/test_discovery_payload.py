@@ -96,7 +96,7 @@ def test_payload_contains_all_sections(
 	mqtt_settings: MQTTSettings,
 ):
 	entity = Entity(
-		domain=HADomain.SENSOR,
+		domain=HADomain.ALARM_CONTROL_PANEL,
 		name="Temp",
 		unique_id="temp_1",
 		device_info={
