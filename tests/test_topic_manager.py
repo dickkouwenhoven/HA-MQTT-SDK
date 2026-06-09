@@ -34,6 +34,7 @@ def test_availability_topic():
         "id1",
         "homeassistant",
     )
+
     assert topic == (
         "homeassistant/sensor/id1/availability"
     )
