@@ -59,9 +59,9 @@ def test_payload_contains_device_block(
 		name = "Temp",
 		unique_id = "temp_1",
 		device_info={
-			"identifiers": {
+			"identifiers": [
 				("ha_mqtt_sdk", "device_1")
-			},
+			],
 			"manufacturer": "Example",
 		},
 	)
