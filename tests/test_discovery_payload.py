@@ -39,7 +39,7 @@ def test_payload_contains_command_topic(
 	mqtt_settings: MQTTSettings,
 ):
 	entity = Entity(
-		domain = HADomain.SENSOR,
+		domain = HADomain.ALARM_CONTROL_PANEL,
 		name = "Temp",
 		unique_id = "temp_1",
 	)
@@ -49,7 +49,7 @@ def test_payload_contains_command_topic(
 		mqtt_settings.discovery_prefix,
 	)
 
-	assert "command_topic"in payload
+	assert "command_topic" in payload
 
 def test_payload_contains_device_block(
 	mqtt_settings: MQTTSettings,
