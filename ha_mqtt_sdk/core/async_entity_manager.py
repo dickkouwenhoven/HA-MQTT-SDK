@@ -16,214 +16,195 @@ from ..models.entity import Entity
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
 from .entity_factory import (
-	build_registration,
+    build_registration,
 )
 from .entity_factory import (
-	create_entity as _create_entity,
+    create_entity as _create_entity,
 )
 
 _logger = get_logger(__name__)
 
+
 class AsyncEntityManager:
-	def __init__(self, mqtt_client: AsyncMQTTClient, mqtt_settings: MQTTSettings):
+    def __init__(self, mqtt_client: AsyncMQTTClient, mqtt_settings: MQTTSettings):
 
-		if not isinstance(
-			mqtt_client,
-			AsyncMQTTClient,
-		):
-			raise ValidationError("mqtt_client must inherit from AsyncMQTTClient")
+        if not isinstance(
+            mqtt_client,
+            AsyncMQTTClient,
+        ):
+            raise ValidationError("mqtt_client must inherit from AsyncMQTTClient")
 
-		if not isinstance(
-			mqtt_settings,
-			MQTTSettings
-		):
-			raise ValidationError("mqtt_settings must be MQTTSettings")
-				
-		self._mqtt = mqtt_client
-		self._settings = mqtt_settings
-		self._command_callbacks: dict[str, Callable[[str, str], Awaitable[None]]] = {}
-		self._mqtt.set_message_callback(self._handle_command)
+        if not isinstance(mqtt_settings, MQTTSettings):
+            raise ValidationError("mqtt_settings must be MQTTSettings")
 
-	def create_entity(
-		self,
-		domain: HADomain,
-		name: str,
-		unique_id: str,
-		device_info: dict[str, Any] | None = None,
-		extra: dict[str, Any] | None = None,
-	) -> Entity:
-		"""
-		Create an Entity with automatic topic generation.
+        self._mqtt = mqtt_client
+        self._settings = mqtt_settings
+        self._command_callbacks: dict[str, Callable[[str, str], Awaitable[None]]] = {}
+        self._mqtt.set_message_callback(self._handle_command)
 
-		Used by:
-		- SDK users (async path)
-		"""
+    def create_entity(
+        self,
+        domain: HADomain,
+        name: str,
+        unique_id: str,
+        device_info: dict[str, Any] | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> Entity:
+        """
+        Create an Entity with automatic topic generation.
 
-		return _create_entity(
-			domain=domain,
-			name=name,
-			unique_id=unique_id,
-			device_info=device_info,
-			extra=extra,
-		)
+        Used by:
+        - SDK users (async path)
+        """
 
-	async def register(
-		self,
-		entity: Entity,
-		command_callback: Callable[[str, str], Awaitable[None]] | None = None
-	) -> None:
-		"""
-		Register entity in Home Assistant via MQTT discovery.
+        return _create_entity(
+            domain=domain,
+            name=name,
+            unique_id=unique_id,
+            device_info=device_info,
+            extra=extra,
+        )
 
-		Also:
-		- Sets Last Will and Testament for availability
-		- Subscribes to command topic (if applicable)
+    async def register(
+        self, entity: Entity, command_callback: Callable[[str, str], Awaitable[None]] | None = None
+    ) -> None:
+        """
+        Register entity in Home Assistant via MQTT discovery.
 
-		Args:
-			entity: Entity instance
-		"""
-		
-		if not isinstance(entity, Entity):
-			raise EntityError("Invalid entity")
+        Also:
+        - Sets Last Will and Testament for availability
+        - Subscribes to command topic (if applicable)
 
-		# -----------------------------
-		# Discovery
-		# -----------------------------
+        Args:
+                entity: Entity instance
+        """
 
-		registration = build_registration(
-			entity,
-			self._settings.discovery_prefix,
-		)
-			
-		await self._mqtt.publish(
-			topic = registration.discovery_topic,
-			payload = registration.discovery_payload, 
-			retain = True
-		)
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
 
-		_logger.info(
-			"Entity registered: %s (%s)",
-			entity.name,
-			entity.domain.value,
-		)
+        # -----------------------------
+        # Discovery
+        # -----------------------------
 
-		# ------------------------
-		# Last Will and Testament
-		# ------------------------
+        registration = build_registration(
+            entity,
+            self._settings.discovery_prefix,
+        )
 
-		if hasattr(self._mqtt, "set_last_will"):
-			self._mqtt.set_last_will(
-				registration.availability_topic
-			)
-			_logger.debug("Last will registered for: %s", entity.unique_id)
+        await self._mqtt.publish(
+            topic=registration.discovery_topic, payload=registration.discovery_payload, retain=True
+        )
 
-		# ------------------------
-		# Command handling
-		# ------------------------
+        _logger.info(
+            "Entity registered: %s (%s)",
+            entity.name,
+            entity.domain.value,
+        )
 
-		if registration.command_topic:
-			await self._mqtt.subscribe(
-				registration.command_topic
-			)
+        # ------------------------
+        # Last Will and Testament
+        # ------------------------
 
-			_logger.debug(
-				"Subscribed to command topic: %s",
-				registration.command_topic,
-			)
+        if hasattr(self._mqtt, "set_last_will"):
+            self._mqtt.set_last_will(registration.availability_topic)
+            _logger.debug("Last will registered for: %s", entity.unique_id)
 
-		if command_callback:
-			self._command_callbacks[
-				registration.command_topic
-			] = command_callback
-			
-			
+        # ------------------------
+        # Command handling
+        # ------------------------
 
-	async def update_state(self, entity: Entity, state: Any) -> None:
-		
-		if not isinstance(entity, Entity):
-			raise EntityError("Invalid entity")
-			
-		registration = build_registration(
-			entity,
-			self._settings.discovery_prefix,
-		)
-		
-		await self._mqtt.publish(
-			topic= registration.state_topic,
-			payload = state,
-			retain = False,
-		)
+        if registration.command_topic:
+            await self._mqtt.subscribe(registration.command_topic)
 
-		_logger.debug(
-			"State updated: %s -> %s",
-			entity.unique_id,
-			state,
-		)
+            _logger.debug(
+                "Subscribed to command topic: %s",
+                registration.command_topic,
+            )
 
-	async def update_availability(self, entity: Entity, online: bool) -> None:
+        if command_callback:
+            self._command_callbacks[registration.command_topic] = command_callback
 
-		if not isinstance(entity, Entity):
-			raise EntityError("Invalid entity")
-			
-		registration = build_registration(
-			entity,
-			self._settings.discovery_prefix,
-		)
-		
-		payload = "online" if online else "offline"
+    async def update_state(self, entity: Entity, state: Any) -> None:
 
-		await self._mqtt.publish(
-			topic = registration.availability_topic,
-			payload = payload,
-			retain = True
-		)
-		
-		_logger.debug(
-			"Availability updated: %s -> %s",
-			entity.unique_id,
-			payload,
-		)
-	
-	def set_command_callback(
-		self,
-		entity: Entity,
-		callback: Callable[[str, str], Awaitable[None]],
-	) -> None:
-		"""
-		Set or update command callback for an entity.
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
 
-		Args:
-		entity: Entity instance
-		callback: function(topic, payload)
-		"""
+        registration = build_registration(
+            entity,
+            self._settings.discovery_prefix,
+        )
 
-		if not isinstance(entity, Entity):
-			raise EntityError("Invalid entity")
+        await self._mqtt.publish(
+            topic=registration.state_topic,
+            payload=state,
+            retain=False,
+        )
 
-		if not callable(callback):
-			raise EntityError("callback must be callable")
+        _logger.debug(
+            "State updated: %s -> %s",
+            entity.unique_id,
+            state,
+        )
 
-		registration = build_registration(
-			entity,
-			self._settings.discovery_prefix,
-		)
-			
-		if not registration.command_topic:
-			raise EntityError("Entity does not support commands")
+    async def update_availability(self, entity: Entity, online: bool) -> None:
 
-		self._command_callbacks[
-			registration.command_topic
-		] = callback
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
 
-		_logger.debug(
-			"Command callback set for topic: %s",
-			registration.command_topic,
-		)
-		
-	
-	async def _handle_command(self, topic: str, payload: Any) -> None:
+        registration = build_registration(
+            entity,
+            self._settings.discovery_prefix,
+        )
 
-		callback = self._command_callbacks.get(topic)
+        payload = "online" if online else "offline"
 
-		if callback:
-			await callback(topic, payload)
+        await self._mqtt.publish(
+            topic=registration.availability_topic, payload=payload, retain=True
+        )
+
+        _logger.debug(
+            "Availability updated: %s -> %s",
+            entity.unique_id,
+            payload,
+        )
+
+    def set_command_callback(
+        self,
+        entity: Entity,
+        callback: Callable[[str, str], Awaitable[None]],
+    ) -> None:
+        """
+        Set or update command callback for an entity.
+
+        Args:
+        entity: Entity instance
+        callback: function(topic, payload)
+        """
+
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
+
+        if not callable(callback):
+            raise EntityError("callback must be callable")
+
+        registration = build_registration(
+            entity,
+            self._settings.discovery_prefix,
+        )
+
+        if not registration.command_topic:
+            raise EntityError("Entity does not support commands")
+
+        self._command_callbacks[registration.command_topic] = callback
+
+        _logger.debug(
+            "Command callback set for topic: %s",
+            registration.command_topic,
+        )
+
+    async def _handle_command(self, topic: str, payload: Any) -> None:
+
+        callback = self._command_callbacks.get(topic)
+
+        if callback:
+            await callback(topic, payload)

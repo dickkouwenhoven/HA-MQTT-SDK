@@ -17,28 +17,28 @@ MessageCallback = Callable[[str, str], None]
 
 
 class BaseMQTTClient(ABC):
-	"""
-	Base MQTT transport interface.
+    """
+    Base MQTT transport interface.
 
-	All MQTT transport implementations must inherit from this class.
-	"""
+    All MQTT transport implementations must inherit from this class.
+    """
 
-	@abstractmethod
-	def connect(self) -> None:
-		"""Establish connection to the MQTT broker."""
+    @abstractmethod
+    def connect(self) -> None:
+        """Establish connection to the MQTT broker."""
 
-	@abstractmethod
-	def disconnect(self) -> None:
-		"""Disconnect from the MQTT broker."""
+    @abstractmethod
+    def disconnect(self) -> None:
+        """Disconnect from the MQTT broker."""
 
-	@abstractmethod
-	def publish(self, topic: str, payload: str, retain: bool = False) -> None:
-		"""Publish a message to a topic."""
+    @abstractmethod
+    def publish(self, topic: str, payload: str, retain: bool = False) -> None:
+        """Publish a message to a topic."""
 
-	@abstractmethod
-	def subscribe(self, topic: str, callback: MessageCallback) -> None:
-		"""Subscribe to a topic and register a message callback."""
+    @abstractmethod
+    def subscribe(self, topic: str, callback: MessageCallback) -> None:
+        """Subscribe to a topic and register a message callback."""
 
-	@abstractmethod
-	def set_message_callback(self, callback: MessageCallback) -> None:
-		"""Register a global message handler."""
+    @abstractmethod
+    def set_message_callback(self, callback: MessageCallback) -> None:
+        """Register a global message handler."""

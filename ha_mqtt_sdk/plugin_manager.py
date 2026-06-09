@@ -8,12 +8,11 @@ from .plugin_interface import IntegrationPlugin
 
 
 class PluginManager:
+    def __init__(self):
+        self._plugins: dict[str, IntegrationPlugin] = {}
 
-	def __init__(self):
-		self._plugins: dict[str, IntegrationPlugin] = {}
+    def register_plugin(self, name: str, plugin: IntegrationPlugin):
+        self._plugins[name] = plugin
 
-	def register_plugin(self, name: str, plugin: IntegrationPlugin):
-		self._plugins[name] = plugin
-
-	def get_plugin(self, name: str) -> IntegrationPlugin:
-		return self._plugins[name]
+    def get_plugin(self, name: str) -> IntegrationPlugin:
+        return self._plugins[name]

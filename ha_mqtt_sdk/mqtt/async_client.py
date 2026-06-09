@@ -22,154 +22,151 @@ from .base import BaseMQTTClient
 
 
 class AsyncMQTTClient(BaseMQTTClient):
-	def __init__(self, config: MQTTSettings):
-		self._config = config
-		self._logger = get_logger(__name__)
-		self._callbacks: dict[str, Callable] = {}
-		self._message_callback: Callable | None = None
-		self._client: aiomqtt.Client | None = None
-		self._listen_task: asyncio.Task | None = None
-		self._shutdown = False
-		self._lwt_topic: str | None = None
-		self._lwt_payload: str = "offline"
+    def __init__(self, config: MQTTSettings):
+        self._config = config
+        self._logger = get_logger(__name__)
+        self._callbacks: dict[str, Callable] = {}
+        self._message_callback: Callable | None = None
+        self._client: aiomqtt.Client | None = None
+        self._listen_task: asyncio.Task | None = None
+        self._shutdown = False
+        self._lwt_topic: str | None = None
+        self._lwt_payload: str = "offline"
 
-	# -------------------------
-	# LWT
-	# -------------------------
+    # -------------------------
+    # LWT
+    # -------------------------
 
-	def set_last_will(self, topic: str, payload: str = "offline") -> None:
-		"""
-		Register a Last Will and Testament message.
+    def set_last_will(self, topic: str, payload: str = "offline") -> None:
+        """
+        Register a Last Will and Testament message.
 
-		Must be called before connect().
+        Must be called before connect().
 
-		Args:
-			topic: Availability topic for the device
-			payload: Payload published on ungraceful disconnect (default: "offline")
-		"""
-		self._lwt_topic = topic
-		self._lwt_payload = payload
-		self._logger.debug("Last will configured for topic: %s", topic)
+        Args:
+                topic: Availability topic for the device
+                payload: Payload published on ungraceful disconnect (default: "offline")
+        """
+        self._lwt_topic = topic
+        self._lwt_payload = payload
+        self._logger.debug("Last will configured for topic: %s", topic)
 
-	# -------------------------
-	# Connection
-	# -------------------------
+    # -------------------------
+    # Connection
+    # -------------------------
 
-	async def connect(self) -> None:
-		self._logger.info("Connecting (async) to MQTT broker")
-		self._shutdown = False
-		await self._start_connection()
+    async def connect(self) -> None:
+        self._logger.info("Connecting (async) to MQTT broker")
+        self._shutdown = False
+        await self._start_connection()
 
-	async def _start_connection(self) -> None:
-		"""
-		Build the aiomqtt client and start the listener task.
-		Extracted so reconnect can call it too.
-		"""
-		will = None
-		if self._lwt_topic:
-			will = aiomqtt.Will(
-				topic=self._lwt_topic,
-				payload=self._lwt_payload,
-				retain=True,
-			)
+    async def _start_connection(self) -> None:
+        """
+        Build the aiomqtt client and start the listener task.
+        Extracted so reconnect can call it too.
+        """
+        will = None
+        if self._lwt_topic:
+            will = aiomqtt.Will(
+                topic=self._lwt_topic,
+                payload=self._lwt_payload,
+                retain=True,
+            )
 
-		self._client = aiomqtt.Client(
-			hostname=self._config.host,
-			port=self._config.port,
-			username=self._config.username,
-			password=self._config.password,
-			keepalive=self._config.keepalive,
-			will=will,
-		)
+        self._client = aiomqtt.Client(
+            hostname=self._config.host,
+            port=self._config.port,
+            username=self._config.username,
+            password=self._config.password,
+            keepalive=self._config.keepalive,
+            will=will,
+        )
 
-		await self._client.__aenter__()
-		self._listen_task = asyncio.create_task(self._listen())
-		self._logger.info("Connected (async) to MQTT broker")
+        await self._client.__aenter__()
+        self._listen_task = asyncio.create_task(self._listen())
+        self._logger.info("Connected (async) to MQTT broker")
 
-	async def disconnect(self) -> None:
-		self._shutdown = True
+    async def disconnect(self) -> None:
+        self._shutdown = True
 
-		if self._listen_task:
-			self._listen_task.cancel()
-			try:
-				await self._listen_task
-			except asyncio.CancelledError:
-				pass
+        if self._listen_task:
+            self._listen_task.cancel()
+            try:
+                await self._listen_task
+            except asyncio.CancelledError:
+                pass
 
-		if self._client:
-			await self._client.__aexit__(None, None, None)
+        if self._client:
+            await self._client.__aexit__(None, None, None)
 
-	# -------------------------
-	# Publish / Subscribe
-	# -------------------------
+    # -------------------------
+    # Publish / Subscribe
+    # -------------------------
 
-	async def publish(self, topic: str, payload: Any, retain: bool = False) -> None:
-		if not self._client:
-			raise MQTTError("Client is not connected")
+    async def publish(self, topic: str, payload: Any, retain: bool = False) -> None:
+        if not self._client:
+            raise MQTTError("Client is not connected")
 
-		message = payload if isinstance(payload, str) else json.dumps(payload)
-		await self._client.publish(topic, message, retain=retain)
+        message = payload if isinstance(payload, str) else json.dumps(payload)
+        await self._client.publish(topic, message, retain=retain)
 
-	async def subscribe(self, topic: str) -> None:
-		if not self._client:
-			raise MQTTError("Client is not connected")
+    async def subscribe(self, topic: str) -> None:
+        if not self._client:
+            raise MQTTError("Client is not connected")
 
-		self._logger.debug("Subscribing to topic: %s", topic)
-		await self._client.subscribe(topic)
+        self._logger.debug("Subscribing to topic: %s", topic)
+        await self._client.subscribe(topic)
 
-	def set_message_callback(self, callback: Callable[[str, Any], None]) -> None:
-		self._message_callback = callback
+    def set_message_callback(self, callback: Callable[[str, Any], None]) -> None:
+        self._message_callback = callback
 
-	# -------------------------
-	# Internal
-	# -------------------------
+    # -------------------------
+    # Internal
+    # -------------------------
 
-	async def _listen(self) -> None:
-		"""
-		Single long-running task that routes all incoming messages.
-		Triggers reconnect loop on unexpected disconnect.
-		"""
-		try:
-			async for msg in self._client.messages:
-				topic = str(msg.topic)
-				payload = msg.payload.decode()
+    async def _listen(self) -> None:
+        """
+        Single long-running task that routes all incoming messages.
+        Triggers reconnect loop on unexpected disconnect.
+        """
+        try:
+            async for msg in self._client.messages:
+                topic = str(msg.topic)
+                payload = msg.payload.decode()
 
-			self._logger.debug("Received message on %s: %s", topic, payload)
+            self._logger.debug("Received message on %s: %s", topic, payload)
 
-			if self._message_callback:
-				try:
-					await self._message_callback(topic, payload)
-				except Exception as e:
-					self._logger.error(
-						"Error in message callback for %s: %s", topic, e
-					)
-		except asyncio.CancelledError:
-			raise
-		except Exception as e:
-			self._logger.warning("Listener dropped with error: %s", e)
-			if not self._shutdown and self._config.reconnect:
-				asyncio.create_task(self._reconnect_loop())
+            if self._message_callback:
+                try:
+                    await self._message_callback(topic, payload)
+                except Exception as e:
+                    self._logger.error("Error in message callback for %s: %s", topic, e)
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:
+            self._logger.warning("Listener dropped with error: %s", e)
+            if not self._shutdown and self._config.reconnect:
+                asyncio.create_task(self._reconnect_loop())
 
-	async def _reconnect_loop(self) -> None:
-		"""
-		Async reconnect with exponential backoff.
-		"""
-		delay = self._config.reconnect_delay_min
+    async def _reconnect_loop(self) -> None:
+        """
+        Async reconnect with exponential backoff.
+        """
+        delay = self._config.reconnect_delay_min
 
-		while not self._shutdown:
-			self._logger.info("Reconnecting in %.1fs...", delay)
-			await asyncio.sleep(delay)
+        while not self._shutdown:
+            self._logger.info("Reconnecting in %.1fs...", delay)
+            await asyncio.sleep(delay)
 
-			try:
-				await self._start_connection()
+            try:
+                await self._start_connection()
 
-				# Re-subscribe to all known topics
-				for topic in self._callbacks:
-					await self._client.subscribe(topic)
+                # Re-subscribe to all known topics
+                for topic in self._callbacks:
+                    await self._client.subscribe(topic)
 
-				self._logger.info("Reconnected successfully")
-				return
-			except Exception as e:
-				self._logger.warning("Reconnect attempt failed: %s", e)
-				delay = min(delay * 2, self._config.reconnect_delay_max)
-
+                self._logger.info("Reconnected successfully")
+                return
+            except Exception as e:
+                self._logger.warning("Reconnect attempt failed: %s", e)
+                delay = min(delay * 2, self._config.reconnect_delay_max)

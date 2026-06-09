@@ -23,6 +23,7 @@ def validate_json_serializable(
         path="payload",
     )
 
+
 def _validate_json_value(
     value: Any,
     path: str,
@@ -64,16 +65,14 @@ def _validate_json_value(
     if isinstance(value, Mapping):
         for key, item in value.items():
             if not isinstance(key, str):
-                raise ValidationError(
-                    f"{path}: JSON object keys must be strings"
-                )
+                raise ValidationError(f"{path}: JSON object keys must be strings")
 
             _validate_json_value(
                 item,
                 f"{path}.{key}",
             )
         return
-                
+
     try:
         json.dumps(value)
 
@@ -82,11 +81,9 @@ def _validate_json_value(
         ValueError,
     ) as err:
         raise ValidationError(
-            f"{path}: value of type "
-            f"{type(value).__name__} "
-            f"is not JSON serializable"
+            f"{path}: value of type {type(value).__name__} is not JSON serializable"
         ) from err
-        
+
 
 def validate_discovery_payload(
     payload: Mapping[str, Any],
@@ -97,39 +94,27 @@ def validate_discovery_payload(
     """
 
     if not isinstance(payload, Mapping):
-        raise ValidationError(
-            "Discovery payload must be a mapping"
-        )
+        raise ValidationError("Discovery payload must be a mapping")
 
     if not payload:
-        raise ValidationError(
-            "Discovery payload cannot be empty"
-        )
+        raise ValidationError("Discovery payload cannot be empty")
 
     validate_json_serializable(payload)
 
     unique_id = payload.get("unique_id")
 
     if not unique_id:
-        raise ValidationError(
-            "Discovery payload requires unique_id"
-        )
+        raise ValidationError("Discovery payload requires unique_id")
 
     name = payload.get("name")
 
     if not name:
-        raise ValidationError(
-            "Discovery payload requires name"
-        )
+        raise ValidationError("Discovery payload requires name")
 
     state_topic = payload.get("state_topic")
 
     if not state_topic:
-        raise ValidationError(
-            "Discovery payload requires state_topic"
-        )
+        raise ValidationError("Discovery payload requires state_topic")
 
     if not isinstance(state_topic, str):
-        raise ValidationError(
-            "state_topic must be a string"
-        )
+        raise ValidationError("state_topic must be a string")

@@ -24,156 +24,137 @@ from ha_mqtt_sdk.utils.logger import get_logger
 
 LOGGER = get_logger("test_sdk")
 
+
 class TestHomeAssistantSDK(unittest.TestCase):
+    def setUp(self):
+        """
+        Create mocked MQTT client.
+        """
+        config = MQTTSettings(
+            host="localhost",
+            port=1883,
+        )
 
-	def setUp(self):
-		"""
-		Create mocked MQTT client.
-		"""
-		config = MQTTSettings(
-			host="localhost",
-			port=1883,
-		)
-			
-		self.mqtt_client = PahoMQTTClient(config)
+        self.mqtt_client = PahoMQTTClient(config)
 
-		# Mock underlying paho publish
-		self.mqtt_client._client.publish = MagicMock()
-		self.mqtt_client._client.subscribe = MagicMock()
-		
-		LOGGER.info("Setup complete")
+        # Mock underlying paho publish
+        self.mqtt_client._client.publish = MagicMock()
+        self.mqtt_client._client.subscribe = MagicMock()
 
-	# ------------------------------------
-	# Entity tests
-	# ------------------------------------
-	def test_entity_creation_valid(self):
-		
-		entity = Entity(
-			domain=HADomain.SENSOR,
-			name="Temperature Sensor",
-			unique_id="temp_sensor_1",
-		)
+        LOGGER.info("Setup complete")
 
-		entity.validate()
-		
-		self.assertEqual(entity.name, "Temperature Sensor")
-		self.assertEqual(entity.unique_id, "temp_sensor_1")
+    # ------------------------------------
+    # Entity tests
+    # ------------------------------------
+    def test_entity_creation_valid(self):
 
-	def test_entity_creation_invalid_name(self):
-		
-		with self.assertRaises(EntityError):
+        entity = Entity(
+            domain=HADomain.SENSOR,
+            name="Temperature Sensor",
+            unique_id="temp_sensor_1",
+        )
 
-			entity = Entity(
-				domain=HADomain.SENSOR,
-				name="",
-				unique_id="temp_sensor_1",
-			)
-			entity.validate()
-	
-	def test_discovery_payload(self):
+        entity.validate()
 
-		entity = Entity(
-			domain=HADomain.LIGHT,
-			name="Living Room Light",
-			unique_id="livingroom_light_1",			
-		)
-		
-		payload = build_discovery_payload(
-			entity, 
-			"homeassistant",
-		)
-		
-		self.assertEqual(payload["name"], "Living Room Light")
-		self.assertIn("command_topic", payload)
+        self.assertEqual(entity.name, "Temperature Sensor")
+        self.assertEqual(entity.unique_id, "temp_sensor_1")
 
-	# -----------------------------------
-	# MQTT publish
-	# -----------------------------------
-	
-	def test_mqtt_publish(self):
-	
-		topic = "homeassistant/test_sensor/config"
-		
-		payload = {
-			"name": "Test Sensor", 
-			"unique_id": "test_sensor"
-		}
-		
-		self.mqtt_client.publish(topic, payload)
-		
-		self.mqtt_client._client.publish.assert_called_once()
-		
-		args, kwargs = self.mqtt_client._client.publish.call_args
-		
-		self.assertEqual(args[0], topic)
-		self.assertIn("Test Sensor", args[1])
+    def test_entity_creation_invalid_name(self):
 
-	# -----------------------------------
-	# Logger
-	# -----------------------------------
-	
-	def test_logger_dual_mode(self):
-		# Should use existing logger
-		custom_logger = get_logger("custom_test_logger")
-		self.assertEqual(
-			custom_logger.name,
-			"custom_test_logger"
-		)
+        with self.assertRaises(EntityError):
+            entity = Entity(
+                domain=HADomain.SENSOR,
+                name="",
+                unique_id="temp_sensor_1",
+            )
+            entity.validate()
 
-	# -----------------------------------
-	# Full flow
-	# -----------------------------------
+    def test_discovery_payload(self):
 
-	def test_full_flow(self):
-	
-		manager = EntityManager(
-			self.mqtt_client,
-			MQTTSettings(
-				discovery_prefix = "homeassistant"
-			)
-		)
+        entity = Entity(
+            domain=HADomain.LIGHT,
+            name="Living Room Light",
+            unique_id="livingroom_light_1",
+        )
 
-		# Create entity
-		entity = manager.create_entity(
-			domain = HADomain.LIGHT,
-			name = "Lamp",
-			unique_id = "lamp_1",
-		)
+        payload = build_discovery_payload(
+            entity,
+            "homeassistant",
+        )
 
-		# Register entity
-		manager.register(entity)
+        self.assertEqual(payload["name"], "Living Room Light")
+        self.assertIn("command_topic", payload)
 
-		# Update state
-		manager.update_state(entity, "ON")
+    # -----------------------------------
+    # MQTT publish
+    # -----------------------------------
 
-		# Update availability
-		manager.update_availability(entity, True)
+    def test_mqtt_publish(self):
 
-		# Ensure MQTT publish happened
-		self.assertTrue(
-			self.mqtt_client._client.publish.called
-		)	
+        topic = "homeassistant/test_sensor/config"
 
+        payload = {"name": "Test Sensor", "unique_id": "test_sensor"}
 
-	def test_full_flow_sensor(self):
-	
-		manager = EntityManager(
-			self.mqtt_client,
-			MQTTSettings(
-				discovery_prefix="homeassistant"
-			)
-		)
-	
-		entity = manager.create_entity(
-			domain=HADomain.SENSOR,
-			name="Temperature",
-			unique_id="temp_1",
-		)
-	
-		manager.register(entity)
+        self.mqtt_client.publish(topic, payload)
 
-		# Should not subscribe to command topics
-		self.mqtt_client._client.subscribe.assert_not_called()		
+        self.mqtt_client._client.publish.assert_called_once()
+
+        args, kwargs = self.mqtt_client._client.publish.call_args
+
+        self.assertEqual(args[0], topic)
+        self.assertIn("Test Sensor", args[1])
+
+    # -----------------------------------
+    # Logger
+    # -----------------------------------
+
+    def test_logger_dual_mode(self):
+        # Should use existing logger
+        custom_logger = get_logger("custom_test_logger")
+        self.assertEqual(custom_logger.name, "custom_test_logger")
+
+    # -----------------------------------
+    # Full flow
+    # -----------------------------------
+
+    def test_full_flow(self):
+
+        manager = EntityManager(self.mqtt_client, MQTTSettings(discovery_prefix="homeassistant"))
+
+        # Create entity
+        entity = manager.create_entity(
+            domain=HADomain.LIGHT,
+            name="Lamp",
+            unique_id="lamp_1",
+        )
+
+        # Register entity
+        manager.register(entity)
+
+        # Update state
+        manager.update_state(entity, "ON")
+
+        # Update availability
+        manager.update_availability(entity, True)
+
+        # Ensure MQTT publish happened
+        self.assertTrue(self.mqtt_client._client.publish.called)
+
+    def test_full_flow_sensor(self):
+
+        manager = EntityManager(self.mqtt_client, MQTTSettings(discovery_prefix="homeassistant"))
+
+        entity = manager.create_entity(
+            domain=HADomain.SENSOR,
+            name="Temperature",
+            unique_id="temp_1",
+        )
+
+        manager.register(entity)
+
+        # Should not subscribe to command topics
+        self.mqtt_client._client.subscribe.assert_not_called()
+
 
 if __name__ == "__main__":
-	unittest.main()
+    unittest.main()

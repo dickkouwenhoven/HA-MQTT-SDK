@@ -11,13 +11,12 @@ from .models.entity import Entity
 
 
 class IntegrationPlugin(ABC):
+    @abstractmethod
+    def map_device(self, data: Any, entity_manager) -> list[Entity]:
+        """Map device data to entities"""
+        pass
 
-	@abstractmethod
-	def map_device(self, data: Any, entity_manager) -> list[Entity]:
-		"""Map device data to entities"""
-		pass
-
-	@abstractmethod
-	def handle_command(self, topic: str, payload: Any):
-		"""Handle incoming command"""
-		pass
+    @abstractmethod
+    def handle_command(self, topic: str, payload: Any):
+        """Handle incoming command"""
+        pass
