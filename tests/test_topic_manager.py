@@ -33,8 +33,7 @@ def test_availability_topic():
         HADomain.SENSOR,
         "id1",
         "homeassistant",
-    )
-    
+    )    
     assert topic == (
         "homeassistant/sensor/id1/availability"
     )
@@ -45,8 +44,7 @@ def test_discovery_topic():
         HADomain.SENSOR,
         "id1",
         "homeassistant",
-    )
-    
+    )    
     assert topic == (
         "homeassistant/sensor/id1/config"
     )
@@ -57,8 +55,7 @@ def test_sensor_has_no_command_topic():
         HADomain.SENSOR,
         "id1",
         "homeassistant",
-    )
-    
+    )    
     assert topic == ""
 
 
@@ -86,7 +83,6 @@ def test_empty_prefix_uses_default():
         "id1",
         "",
     )
-
     assert topic == "homeassistant/sensor/id1/state"
 
 
@@ -96,7 +92,6 @@ def test_none_prefix_uses_default():
         "id1",
         None,
     )
-
     assert topic == "homeassistant/sensor/id1/state"
 
 
