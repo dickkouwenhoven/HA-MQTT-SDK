@@ -34,7 +34,9 @@ def test_availability_topic():
         "id1",
         "homeassistant",
     )
-    assert topic.endswith("/availability")
+    assert topic == (
+        "homeassistant/sensor/id1/availability"
+    )
 
 
 def test_discovery_topic():
@@ -43,7 +45,9 @@ def test_discovery_topic():
         "id1",
         "homeassistant",
     )
-    assert "config" in topic
+    assert topic == (
+        "homeassistant/sensor/id1/config"
+    )
 
 
 def test_sensor_has_no_command_topic():
@@ -63,3 +67,45 @@ def test_invalid_domain():
             "id1",
             "homeassistant",
         )
+
+
+def test_empty_unique_id():
+    with pytest.raise(BuilderError):
+        build_state_topic(
+            HADomain.SENSOR,
+            "",
+            "homeassistant",
+        )
+
+
+def test_empty_prefix():
+    with pytest.raise(BuilderError):
+        build_state_topic(
+            HADomain.SENSOR,
+            "id1",
+            "",
+        )
+
+@pytest.mark.parametrize(
+    "builder,expected",
+    [
+        (
+            build_state_topic,
+            "homeassistant/sensor/id1/state",
+        ),
+        (
+            build_availability_topic,
+            "homeassistant/sensor/id1/availability",
+        ),
+    ],
+)
+def test_topic_are_built_correctly(
+    builder,
+    expected,
+):
+    assert builder(
+        HADomain.SENSOR,
+        "id1",
+        "homeassistant",
+    ) == expected
+     
