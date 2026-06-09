@@ -23,8 +23,11 @@ def _validate_unique_id(unique_id: str) -> None:
     if not unique_id or not isinstance(unique_id, str):
         raise BuilderError("unique_id must be a non-empty string")
 
+
 def _validate_prefix(prefix: str) -> None:
-    if not isinstance(prefix, str) and not None:
+    if prefix == None:
+        return
+    if not isinstance(prefix, str):
         raise BuilderError("prefix must be a string")
 
 # ---------------------------------------------------------------------------
