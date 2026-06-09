@@ -123,7 +123,7 @@ def test_payload_keeps_state_topic_after_build(
 	mqtt_settings: MQTTSettings,
 ):
 	entity = Entity(
-		domain=HADomain.SENSOR,
+		domain=HADomain.ALARM_CONTROL_PANEL,
 		name="Temp",
 		unique_id="temp_1",
 	)
