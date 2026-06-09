@@ -3,60 +3,54 @@ Basic example showing how to use the HASDK.
 """
 
 from ha_mqtt_sdk import (
-	HASDK,
-	Entity,
-	HADomain,
-	MQTTSettings,
-	PahoMQTTClient,
+    HASDK,
+    Entity,
+    HADomain,
+    MQTTSettings,
+    PahoMQTTClient,
 )
 
 
 class SimpleMQTT:
-	def __init__(self):
-		self.callback = None
-	
-	@staticmethod	
-	def publish(self, topic, payload, retain=False):
-		print(f"[MQTT PUBLISH] {topic} -> {payload} -> {retain}")
+    def __init__(self):
+        self.callback = None
 
-	@staticmethod
-	def subscribe(self, topic):
-		print(f"[MQTT SUBSCRIBE] {topic}")
+    @staticmethod
+    def publish(self, topic, payload, retain=False):
+        print(f"[MQTT PUBLISH] {topic} -> {payload} -> {retain}")
 
-	def set_message_callback(self, cb):
-		self.callback = cb
+    @staticmethod
+    def subscribe(self, topic):
+        print(f"[MQTT SUBSCRIBE] {topic}")
+
+    def set_message_callback(self, cb):
+        self.callback = cb
 
 
 def main():
-	mqtt_config = MQTTSettings(
-		host="localhost",
-		port=1883,
-	)
-	
-	client = PahoMQTTClient(
-		config = mqtt_config
-	)
+    mqtt_config = MQTTSettings(
+        host="localhost",
+        port=1883,
+    )
 
-	manager = HASDK(
-		mqtt_client=client,
-	)
+    client = PahoMQTTClient(config=mqtt_config)
 
-	# Create entity
-	light = Entity(
-		domain=HADomain.LIGHT,
-		name="Demo Lamp",
-		unique_id="demo_lamp"
-	)
+    manager = HASDK(
+        mqtt_client=client,
+    )
 
-	# Register in HA
-	manager.register(light)
+    # Create entity
+    light = Entity(domain=HADomain.LIGHT, name="Demo Lamp", unique_id="demo_lamp")
 
-	# Set availability
-	manager.update_availability(light, True)
+    # Register in HA
+    manager.register(light)
 
-	# Send state
-	manager.update_state(light, "ON")
+    # Set availability
+    manager.update_availability(light, True)
+
+    # Send state
+    manager.update_state(light, "ON")
 
 
 if __name__ == "__main__":
-	main()
+    main()

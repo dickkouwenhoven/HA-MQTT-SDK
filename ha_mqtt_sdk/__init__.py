@@ -1,7 +1,7 @@
 """
 Home Assistant MQTT SDK - Core Package
 
-This is the main package initializer for the SDK. 
+This is the main package initializer for the SDK.
 It exposes the top-level API for external SDK users.
 
 Responsibilities:
@@ -18,23 +18,24 @@ Exports:
 
 Usage:
     from ha_mqtt_sdk import HASDK
-	
-	from ha_mqtt_sdk import EntityManager
-	from ha_mqtt_sdk import AsyncEntityManager
-	
-	from ha_mqtt_sdk import Entity
-	
-	from ha_mqtt_sdk import HADomain
-	from ha_mqtt_sdk import MQTTSettings
-	
-	from ha_mqtt_sdk import PahoMQTTClient
-	from ha_mqtt_sdk import AsyncMQTTClient
 
-	from ha_mqtt_sdk import DeviceInfo
-	from ha_mqtt_sdk import create_device_info
-	
-	from ha_mqtt_sdk import get_logger	
+        from ha_mqtt_sdk import EntityManager
+        from ha_mqtt_sdk import AsyncEntityManager
+
+        from ha_mqtt_sdk import Entity
+
+        from ha_mqtt_sdk import HADomain
+        from ha_mqtt_sdk import MQTTSettings
+
+        from ha_mqtt_sdk import PahoMQTTClient
+        from ha_mqtt_sdk import AsyncMQTTClient
+
+        from ha_mqtt_sdk import DeviceInfo
+        from ha_mqtt_sdk import create_device_info
+
+        from ha_mqtt_sdk import get_logger
 """
+
 from .config.domains import HADomain
 from .config.mqtt import MQTTSettings
 from .core.async_entity_manager import AsyncEntityManager
@@ -53,15 +54,15 @@ LOGGER = get_logger(__name__)
 __version__ = "1.0.0"
 
 __all__ = [
-	"HASDK",
-	"EntityManager",
-	"AsyncEntityManager",
-	"Entity",
-	"HADomain",
-	"MQTTSettings",
-	"PahoMQTTClient",
-	"AsyncMQTTClient",
-	"DeviceInfo",
-	"create_device_info",
-	"get_logger"
+    "HASDK",
+    "EntityManager",
+    "AsyncEntityManager",
+    "Entity",
+    "HADomain",
+    "MQTTSettings",
+    "PahoMQTTClient",
+    "AsyncMQTTClient",
+    "DeviceInfo",
+    "create_device_info",
+    "get_logger",
 ]

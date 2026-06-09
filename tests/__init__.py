@@ -12,4 +12,3 @@ Notes:
 - Tests are executed via unittest or pytest
 - No runtime logic should be placed here
 """
-

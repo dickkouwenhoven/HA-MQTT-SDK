@@ -7,118 +7,113 @@ from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
 
 class MockMQTTClient(PahoMQTTClient):
-	def __init__(self):
-		self.published: list[tuple] = []
-		self.subscribed: list[str] = []
-		self.callback = None
-		self.last_will = None
+    def __init__(self):
+        self.published: list[tuple] = []
+        self.subscribed: list[str] = []
+        self.callback = None
+        self.last_will = None
 
-	def publish(
-		self,
-		topic,
-		payload,
-		retain = False,
-	):
-		self.published.append((topic, payload, retain))
+    def publish(
+        self,
+        topic,
+        payload,
+        retain=False,
+    ):
+        self.published.append((topic, payload, retain))
 
-	def subscribe(
-		self,
-		topic,
-	):
-		self.subscribed.append(topic)
+    def subscribe(
+        self,
+        topic,
+    ):
+        self.subscribed.append(topic)
 
-	def set_message_callback(
-		self,
-		callback,
-	):
-		self.callback = callback
+    def set_message_callback(
+        self,
+        callback,
+    ):
+        self.callback = callback
 
-	def set_last_will(
-		self,
-		topic,
-		payload="offline",
-	):
-		self.last_will = (topic, payload)
+    def set_last_will(
+        self,
+        topic,
+        payload="offline",
+    ):
+        self.last_will = (topic, payload)
 
-	def simulate_message(self, topic, payload):
-		if self.callback:
-			self.callback(
-				topic,
-				payload
-			)
+    def simulate_message(self, topic, payload):
+        if self.callback:
+            self.callback(topic, payload)
 
-	def test_sensor_not_subscribed(
-		mqtt_client_sync,
-	):
-		from ha_mqtt_sdk.core.entity_manager import EntityManager
-		manager = EntityManager(
-			mqtt_client_sync,
-			MQTTSettings(
-				discovery_prefix="homeassistant"
-			),
-		)
-		
-		entity = manager.create_entity(
-			domain=HADomain.SENSOR,
-			name="Temp",
-			unique_id="temp_1",
-		)
-		
-		manager.register(entity)
-		
-		assert mqtt_client_sync.subscribed == []
+    def test_sensor_not_subscribed(
+        mqtt_client_sync,
+    ):
+        from ha_mqtt_sdk.core.entity_manager import EntityManager
+
+        manager = EntityManager(
+            mqtt_client_sync,
+            MQTTSettings(discovery_prefix="homeassistant"),
+        )
+
+        entity = manager.create_entity(
+            domain=HADomain.SENSOR,
+            name="Temp",
+            unique_id="temp_1",
+        )
+
+        manager.register(entity)
+
+        assert mqtt_client_sync.subscribed == []
+
 
 class AsyncMockMQTTClient(AsyncMQTTClient):
-	def __init__(self):
-		self.published = []
-		self.subscribed = []
-		self.callback = None
-		self.last_will = None
+    def __init__(self):
+        self.published = []
+        self.subscribed = []
+        self.callback = None
+        self.last_will = None
 
-	async def publish(
-		self,
-		topic,
-		payload,
-		retain = False,
-	):
-		self.published.append((topic, payload, retain))
+    async def publish(
+        self,
+        topic,
+        payload,
+        retain=False,
+    ):
+        self.published.append((topic, payload, retain))
 
-	async def subscribe(
-		self,
-		topic,
-	):
-		self.subscribed.append(topic)
+    async def subscribe(
+        self,
+        topic,
+    ):
+        self.subscribed.append(topic)
 
-	def set_message_callback(
-		self,
-		callback,
-	):
-		self.callback = callback
+    def set_message_callback(
+        self,
+        callback,
+    ):
+        self.callback = callback
 
-	def set_last_will(
-		self,
-		topic,
-		payload="offline",
-	):
-		self.last_will = (topic, payload)
+    def set_last_will(
+        self,
+        topic,
+        payload="offline",
+    ):
+        self.last_will = (topic, payload)
 
-	async def simulate_message(self, topic, payload):
-		if self.callback:
-			self.callback(
-				topic,
-				payload
-			)
-			
+    async def simulate_message(self, topic, payload):
+        if self.callback:
+            self.callback(topic, payload)
+
+
 @pytest.fixture
 def mqtt_client_sync():
-	return MockMQTTClient()
+    return MockMQTTClient()
+
 
 @pytest.fixture
 def mqtt_client_async():
-	return AsyncMockMQTTClient()
+    return AsyncMockMQTTClient()
+
 
 @pytest.fixture
 def mqtt_settings():
-	return MQTTSettings(
-		discovery_prefix="homeassistant"
-	)
+    return MQTTSettings(discovery_prefix="homeassistant")
