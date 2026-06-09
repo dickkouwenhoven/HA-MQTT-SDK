@@ -100,9 +100,9 @@ def test_payload_contains_all_sections(
 		name="Temp",
 		unique_id="temp_1",
 		device_info={
-			"identifiers": {
+			"identifiers": [
 				("ha_mqtt_sdk", "device_1")
-			},
+			],
 		},
 		extra={
 			"device_class": "temperature",
