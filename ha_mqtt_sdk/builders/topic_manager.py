@@ -48,7 +48,7 @@ def build_discovery_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
     _validate_prefix(prefix)
 
     # Fall back on default prefix if empty string or None
-    if prefix == "" or prefix == None:
+    if prefix == "" or prefix is None:
         prefix = "homeassistant"
 
     return f"{prefix}/{domain.value}/{unique_id}/config"
@@ -67,7 +67,7 @@ def build_state_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
     _validate_prefix(prefix)
 
     # Fall back on default prefix if empty string or None
-    if prefix == "" or prefix == None:
+    if prefix == "" or prefix is None:
         prefix = "homeassistant"
 
     schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
