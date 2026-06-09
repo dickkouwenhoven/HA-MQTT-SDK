@@ -113,5 +113,6 @@ def test_topic_are_built_correctly(
             HADomain.SENSOR,
             "id1",
             "homeassistant",
-        ) == expected
+        )
+        == expected
     )
