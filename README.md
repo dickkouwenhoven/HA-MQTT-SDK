@@ -100,9 +100,9 @@ sdk = HASDK(
 ## Create Device Info
 ```python
 device_info: DeviceInfo = {
-    "identifiers": {
+    "identifiers": [
         ("serial", "ABC123")
-    },
+    ],
     "manufacturer": "IKEA",
     "model": "DIRIGERA",
 }
@@ -184,9 +184,9 @@ manager = AsyncEntityManager(
 ## Create Device Info
 ```python
 device_info: DeviceInfo = {
-    "identifiers": {
+    "identifiers": [
         ("serial", "ABC123")
-    },
+    ],
     "manufacturer": "IKEA",
     "model": "DIRIGERA",
 }
