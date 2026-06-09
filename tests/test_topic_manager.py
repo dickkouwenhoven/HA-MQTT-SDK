@@ -70,7 +70,7 @@ def test_invalid_domain():
 
 
 def test_empty_unique_id():
-    with pytest.raise(BuilderError):
+    with pytest.raises(BuilderError):
         build_state_topic(
             HADomain.SENSOR,
             "",
@@ -79,7 +79,7 @@ def test_empty_unique_id():
 
 
 def test_empty_prefix():
-    with pytest.raise(BuilderError):
+    with pytest.raises(BuilderError):
         build_state_topic(
             HADomain.SENSOR,
             "id1",
