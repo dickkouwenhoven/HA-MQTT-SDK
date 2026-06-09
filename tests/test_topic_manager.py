@@ -33,7 +33,7 @@ def test_availability_topic():
         HADomain.SENSOR,
         "id1",
         "homeassistant",
-    )    
+    )
     assert topic == (
         "homeassistant/sensor/id1/availability"
     )
@@ -44,7 +44,7 @@ def test_discovery_topic():
         HADomain.SENSOR,
         "id1",
         "homeassistant",
-    )    
+    )
     assert topic == (
         "homeassistant/sensor/id1/config"
     )
@@ -55,7 +55,7 @@ def test_sensor_has_no_command_topic():
         HADomain.SENSOR,
         "id1",
         "homeassistant",
-    )    
+    )
     assert topic == ""
 
 
@@ -117,4 +117,3 @@ def test_topic_are_built_correctly(
         "id1",
         "homeassistant",
     ) == expected
-    
