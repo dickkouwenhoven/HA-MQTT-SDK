@@ -25,7 +25,7 @@ def _validate_unique_id(unique_id: str) -> None:
 
 
 def _validate_prefix(prefix: str) -> None:
-    if prefix == None:
+    if prefix is None:
         return
     if not isinstance(prefix, str):
         raise BuilderError("prefix must be a string")
