@@ -23,6 +23,9 @@ def _validate_unique_id(unique_id: str) -> None:
     if not unique_id or not isinstance(unique_id, str):
         raise BuilderError("unique_id must be a non-empty string")
 
+def _validate_prefix(prefix: str) -> None:
+    if not isinstance(prefix, str):
+        raise BuilderError("prefix must be a string")
 
 # ---------------------------------------------------------------------------
 # Public functions
@@ -39,6 +42,11 @@ def build_discovery_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
 
     _validate_domain(domain)
     _validate_unique_id(unique_id)
+    _validate_prefix(prefix)
+
+    # Fall back on default prefix if empty string or None
+    if prefix == "" or prefix == None:
+        prefix = "homeassistant"
 
     return f"{prefix}/{domain.value}/{unique_id}/config"
 
@@ -53,6 +61,11 @@ def build_state_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
 
     _validate_domain(domain)
     _validate_unique_id(unique_id)
+    _validate_prefix(prefix)
+
+    # Fall back on default prefix if empty string or None
+    if prefix == "" or prefix == None:
+        prefix = "homeassistant"
 
     schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
 
