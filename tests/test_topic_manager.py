@@ -34,9 +34,7 @@ def test_availability_topic():
         "id1",
         "homeassistant",
     )
-    assert topic == (
-        "homeassistant/sensor/id1/availability"
-    )
+    assert topic == "homeassistant/sensor/id1/availability"
 
 
 def test_discovery_topic():
@@ -45,9 +43,7 @@ def test_discovery_topic():
         "id1",
         "homeassistant",
     )
-    assert topic == (
-        "homeassistant/sensor/id1/config"
-    )
+    assert topic == "homeassistant/sensor/id1/config"
 
 
 def test_sensor_has_no_command_topic():
