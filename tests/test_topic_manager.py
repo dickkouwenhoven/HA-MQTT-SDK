@@ -78,13 +78,14 @@ def test_empty_unique_id():
         )
 
 
-def test_empty_prefix():
-    with pytest.raises(BuilderError):
-        build_state_topic(
-            HADomain.SENSOR,
-            "id1",
-            "",
-        )
+def test_empty_prefix_uses_default():
+    topic = build_state_topic(
+        HADomain.SENSOR,
+        "id1",
+        "",
+    )
+
+    assert topic == "homeassistant/sensor/id1/state"
 
 @pytest.mark.parametrize(
     "builder,expected",
