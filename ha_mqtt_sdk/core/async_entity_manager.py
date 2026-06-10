@@ -98,7 +98,7 @@ class AsyncEntityManager:
             raise EntityError("Invalid entity")
 
         if entity.unique_id in self._entities:
-            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
+            raise EntityError(f"Entity with unique_id '{entity.unique_id}' is already registered")
 
         registration = build_registration(
             entity,
@@ -276,8 +276,14 @@ class AsyncEntityManager:
             )
             return
 
-        if callback:
+        try:
             await callback(topic, payload)
+        except Exception as e:
+            _logger.erro(
+                "Error handling command for %s: %s",
+                topic,
+                str(e),
+            )
 
     def is_registered(
         self,
