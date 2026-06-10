@@ -177,9 +177,7 @@ class EntityManager:
             raise EntityError("Invalid entity")
 
         if entity.unique_id not in self._entities:
-            raise EntityError(
-                f"Entity '{entity.unique_id}' is not registered"
-            )
+            raise EntityError(f"Entity '{entity.unique_id}' is not registered")
 
         registration = build_registration(
             entity,
@@ -217,9 +215,7 @@ class EntityManager:
             raise EntityError("Invalid entity")
 
         if entity.unique_id not in self._entities:
-            raise EntityError(
-                f"Entity '{entity.unique_id}' is not registered"
-            )
+            raise EntityError(f"Entity '{entity.unique_id}' is not registered")
 
         registration = build_registration(
             entity,
@@ -260,9 +256,7 @@ class EntityManager:
             raise EntityError("callback must be callable")
 
         if entity.unique_id not in self._entities:
-            raise EntityError(
-                f"Entity '{entity.unique_id}' is not registered"
-            )
+            raise EntityError(f"Entity '{entity.unique_id}' is not registered")
  
         registration = build_registration(
             entity,
