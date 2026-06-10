@@ -512,4 +512,3 @@ def test_unregister_twice_fails(
 
     with pytest.raises(EntityError):
         manager.unregister(entity)
-
