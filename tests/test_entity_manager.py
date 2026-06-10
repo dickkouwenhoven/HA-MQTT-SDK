@@ -377,3 +377,81 @@ def test_update_state_unregistered_entity_fails(
             entity,
             25,
         )
+
+
+def test_get_entity(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    manager.register(entity)
+
+    result = manager.get_entity("temp_1")
+
+    assert result is entity
+
+
+def test_get_entity_not_found(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    assert manager.get_entity("unknown") is None
+
+
+def test_get_entity_not_found(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    assert manager.get_entity("unknown") is None
+
+
+def test_get_entity_invalid_unique_id(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    with pytest.raises(EntityError):
+        manager.get_entity("")
+
+
+def test_unregister_entity(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    manager.register(entity)
+
+    assert manager.is_registered(entity)
+
+    manager.unregister(entity)
+
+    assert not manager.is_registered(entity)
