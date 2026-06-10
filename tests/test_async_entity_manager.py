@@ -12,7 +12,7 @@ from ha_mqtt_sdk.exceptions import EntityError
 
 
 def test_create_entity(mqtt_client_sync):
-    manager = EntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
