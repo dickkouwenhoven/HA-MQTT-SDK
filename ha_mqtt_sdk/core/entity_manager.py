@@ -257,7 +257,7 @@ class EntityManager:
 
         if entity.unique_id not in self._entities:
             raise EntityError(f"Entity '{entity.unique_id}' is not registered")
- 
+
         registration = build_registration(
             entity,
             self._settings.discovery_prefix,
@@ -322,7 +322,6 @@ class EntityManager:
             raise EntityError("Invalid entity")
 
         return entity.unique_id in self._entities
-
 
     def get_entity(
         self,
