@@ -60,6 +60,7 @@ class EntityManager:
 
         # Mapping command_topic -> callback
         self._command_callbacks: dict[str, Callable[[str, str], None]] = {}
+        self._entities: dict[str, Entity] = {}
 
         # Register global MQTT message handler
         self._mqtt.set_message_callback(self._handle_command)
@@ -112,6 +113,11 @@ class EntityManager:
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
+        if entity.unique_id in self._entities:
+            raise EntityError(
+                f"Entity with unique_id '{entity.unique_id}' is already registered"
+            )
+        
         registration = build_registration(
             entity,
             self._settings.discovery_prefix,
@@ -126,6 +132,8 @@ class EntityManager:
             payload=registration.discovery_payload,
             retain=True,
         )
+
+        self._entities[entity.unique_id] = entity
 
         _logger.info(
             "Entity registered: %s (%s)",
@@ -297,3 +305,10 @@ class EntityManager:
                 topic,
                 str(e),
             )
+
+
+    def is_registered(
+        self,
+        entity: Entity,
+    ) -> bool:
+        return entity.unique_id in self._entities
