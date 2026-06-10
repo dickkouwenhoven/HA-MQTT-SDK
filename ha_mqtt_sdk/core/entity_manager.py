@@ -359,6 +359,26 @@ class EntityManager:
         if entity.unique_id not in self._entities:
             raise EntityError(f"Entity '{entity.unique_id}' is not registered")
 
+        registration = build_registration(
+            entity,
+            self._settings.discovery_prefix,
+        )
+        
+        # Remove entity from Home Assistant
+        self._mqtt.publish(
+            topic=registration.discovery_topic,
+            payload="",
+            retain=True,
+        )
+
+        # Remove callback
+        if registration.command_topic:
+            self._command_callbacks.pop(
+                registration.command_topic,
+                None,
+            )
+
+        # Remove entity from registry
         del self._entities[entity.unique_id]
 
         _logger.info(
