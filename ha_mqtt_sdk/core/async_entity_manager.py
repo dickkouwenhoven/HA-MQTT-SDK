@@ -84,7 +84,7 @@ class AsyncEntityManager:
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
-        if entity.unique_id in self._entties:
+        if entity.unique_id in self._entities:
             raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
 
         # -----------------------------
@@ -136,7 +136,7 @@ class AsyncEntityManager:
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
-        if entity.unique_id not in self._entities:
+        if entity.unique_id in self._entities:
             raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
 
         registration = build_registration(
