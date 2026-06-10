@@ -225,35 +225,31 @@ class AsyncEntityManager:
         if callback:
             await callback(topic, payload)
 
-
-
     def is_registered(
         self,
         entity: Entity,
     )-> bool:
-        
+
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
         return entity.unique_id in self._entities
 
-
     def get_entity(
         self,
         unique_id: str,
     ) -> Entity | None:
-        
+
         if not isinstance(unique_id, str) or not unique_id.strip():
             raise EntityError("unique_id must be a non-empty string")
 
         return self._entities.get(unique_id)
 
-
     async def unregister(
         self,
         entity: Entity,
     ) -> None:
-        
+
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
