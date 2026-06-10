@@ -296,7 +296,7 @@ def test_update_availability_topic(
 ):
     manager = EntityManager(
         mqtt_client_sync,
-        MQTTSEttings(
+        MQTTSettings(
             discovery_prefix="homeassistant"
         ),
     )
