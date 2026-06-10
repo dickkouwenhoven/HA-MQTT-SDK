@@ -124,7 +124,7 @@ def build_availability_topic(
     domain: HADomain,
     unique_id: str,
     prefix: str,
-):
+) -> str:
     _validate_domain(domain)
     _validate_unique_id(unique_id)
     prefix = _normalize_prefix(prefix)
