@@ -364,6 +364,7 @@ class EntityManager:
             self._settings.discovery_prefix,
         )
 
+
         # Remove entity from Home Assistant
         self._mqtt.publish(
             topic=registration.discovery_topic,
