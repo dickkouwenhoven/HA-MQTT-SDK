@@ -444,3 +444,72 @@ def test_unregister_entity(
     manager.unregister(entity)
 
     assert not manager.is_registered(entity)
+
+
+def test_unregister_publishes_empty_discovery(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    manager.register(entity)
+    manager.unregister(entity)
+
+    topic, payload, retain = mqtt_client_sync.published[-1]
+
+    assert topic.endswith("/config")
+    assert payload == ""
+    assert retain is True
+
+
+def test_unregister_removes_entity(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    manager.register(entity)
+
+    assert manager.is_registered(entity)
+
+    manager.unregister(entity)
+
+    assert not manager.is_registered(entity)
+
+
+def test_unregister_twice_fails(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    manager.register(entity)
+    manager.unregister(entity)
+
+    with pytest.raises(EntityError):
+        manager.unregister(entity)
+
