@@ -228,7 +228,7 @@ class AsyncEntityManager:
     def is_registered(
         self,
         entity: Entity,
-    )-> bool:
+    ) -> bool:
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
@@ -257,7 +257,7 @@ class AsyncEntityManager:
             raise EntityError(f"Entity '{entity.unique_id}' is not registered")
 
         registration = build_registration(entity, self._settings.discovery_prefix)
-        
+
         await self._mqtt.publish(topic=registration.discovery_topic, payload="", retain=True)
 
         if registration.command_topic:
