@@ -24,6 +24,7 @@ def test_create_entity(mqtt_client_async):
     assert entity.domain == HADomain.SENSOR
 
 
+@pytest.mark.asyncio
 def test_register_entity(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
@@ -33,11 +34,12 @@ def test_register_entity(mqtt_client_async):
         unique_id="switch_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     assert len(mqtt_client_async.published) > 0
 
 
+@pytest.mark.asyncio
 def test_command_subscription(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
@@ -47,7 +49,7 @@ def test_command_subscription(mqtt_client_async):
         unique_id="switch_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     expected_topic = build_command_topic(
         entity.domain,
@@ -58,6 +60,7 @@ def test_command_subscription(mqtt_client_async):
     assert expected_topic in mqtt_client_async.subscribed
 
 
+@pytest.mark.asyncio
 def test_update_state(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
@@ -67,12 +70,13 @@ def test_update_state(mqtt_client_async):
         unique_id="temp_1",
     )
 
-    manager.register(entity)
-    manager.update_state(entity, 25)
+    await manager.register(entity)
+    await manager.update_state(entity, 25)
 
     assert mqtt_client_async.published[-1][1] == 25
 
 
+@pytest.mark.asyncio
 def test_update_availability(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
@@ -82,8 +86,8 @@ def test_update_availability(mqtt_client_async):
         unique_id="temp_1",
     )
 
-    manager.register(entity)
-    manager.update_availability(entity, True)
+    await manager.register(entity)
+    await manager.update_availability(entity, True)
 
     topic, payload, retain = mqtt_client_async.published[-1]
 
@@ -91,6 +95,7 @@ def test_update_availability(mqtt_client_async):
     assert retain is True
 
 
+@pytest.mark.asyncio
 def test_command_callback_execution(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
@@ -102,10 +107,10 @@ def test_command_callback_execution(mqtt_client_async):
 
     called = {"value": False}
 
-    def callback(topic, payload):
+    async def callback(topic, payload):
         called["value"] = True
 
-    manager.register(entity, command_callback=callback)
+    await manager.register(entity, command_callback=callback)
 
     # Simulate MQTT message
     expected_topic = build_command_topic(
@@ -114,11 +119,12 @@ def test_command_callback_execution(mqtt_client_async):
         "homeassistant",
     )
 
-    mqtt_client_async.simulate_message(expected_topic, "ON")
+    await mqtt_client_async.simulate_message(expected_topic, "ON")
 
     assert called["value"] is True
 
 
+@pytest.mark.asyncio
 def test_sensor_has_no_command_subscription(
     mqtt_client_async,
 ):
@@ -130,39 +136,42 @@ def test_sensor_has_no_command_subscription(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     assert mqtt_client_async.subscribed == []
 
 
+@pytest.mark.asyncio
 def test_register_invalid_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     with pytest.raises(EntityError):
-        manager.register("invalid")
+        await manager.register("invalid")
 
 
+@pytest.mark.asyncio
 def test_update_state_invalid_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     with pytest.raises(EntityError):
-        manager.update_state(
+        await manager.update_state(
             "invalid",
             25,
         )
 
 
+@pytest.mark.asyncio
 def test_update_availability_invalid_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     with pytest.raises(EntityError):
-        manager.update_availability(
+        await manager.update_availability(
             "invalid",
             True,
         )
@@ -186,6 +195,7 @@ def test_set_callback_on_sensor_fails(
         )
 
 
+@pytest.mark.asyncio
 def test_duplicate_unique_id_fails(
     mqtt_client_async,
 ):
@@ -203,12 +213,13 @@ def test_duplicate_unique_id_fails(
         unique_id="temp_1",
     )
 
-    manager.register(entity1)
+    await manager.register(entity1)
 
     with pytest.raises(EntityError):
-        manager.register(entity2)
+        await manager.register(entity2)
 
 
+@pytest.mark.asyncio
 def test_replace_command_callback(
     mqtt_client_async,
 ):
@@ -223,13 +234,13 @@ def test_replace_command_callback(
     first_called = {"value": False}
     second_called = {"value": False}
 
-    def callback_1(topic, payload):
+    async def callback_1(topic, payload):
         first_called["value"] = True
 
-    def callback_2(topic, payload):
+    asyn def callback_2(topic, payload):
         second_called["value"] = True
 
-    manager.register(
+    await manager.register(
         entity,
         command_callback=callback_1,
     )
@@ -245,12 +256,13 @@ def test_replace_command_callback(
         "homeassistant",
     )
 
-    mqtt_client_async.simulate_message(expected_topic, "ON")
+    await mqtt_client_async.simulate_message(expected_topic, "ON")
 
     assert first_called["value"] is False
     assert second_called["value"] is True
 
 
+@pytest.mark.asyncio
 def test_update_state_topic(
     mqtt_client_async,
 ):
@@ -265,8 +277,8 @@ def test_update_state_topic(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
-    manager.update_state(
+    await manager.register(entity)
+    await manager.update_state(
         entity,
         25,
     )
@@ -283,6 +295,7 @@ def test_update_state_topic(
     assert payload == 25
 
 
+@pytest.mark.asyncio
 def test_update_availability_topic(
     mqtt_client_async,
 ):
@@ -297,8 +310,8 @@ def test_update_availability_topic(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
-    manager.update_availability(
+    await manager.register(entity)
+    await manager.update_availability(
         entity,
         True,
     )
@@ -316,6 +329,7 @@ def test_update_availability_topic(
     assert retain is True
 
 
+@pytest.mark.asyncio
 def test_register_publishers_discovery_payload(
     mqtt_client_async,
 ):
@@ -330,7 +344,7 @@ def test_register_publishers_discovery_payload(
         unique_id="switch_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     topic, payload, retain = mqtt_client_async.published[0]
 
@@ -341,6 +355,7 @@ def test_register_publishers_discovery_payload(
     assert payload["unique_id"] == "switch_1"
 
 
+@pytest.mark.asyncio
 def test_register_same_entity_twice_fails(
     mqtt_client_async,
 ):
@@ -352,12 +367,13 @@ def test_register_same_entity_twice_fails(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     with pytest.raises(EntityError):
-        manager.register(entity)
+        await manager.register(entity)
 
 
+@pytest.mark.asyncio
 def test_update_state_unregistered_entity_fails(
     mqtt_client_async,
 ):
@@ -373,12 +389,13 @@ def test_update_state_unregistered_entity_fails(
     )
 
     with pytest.raises(EntityError):
-        manager.update_state(
+        await manager.update_state(
             entity,
             25,
         )
 
 
+@pytest.mark.asyncio
 def test_get_entity(
     mqtt_client_async,
 ):
@@ -393,7 +410,7 @@ def test_get_entity(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     result = manager.get_entity("temp_1")
 
@@ -423,6 +440,7 @@ def test_get_entity_invalid_unique_id(
         manager.get_entity("")
 
 
+@pytest.mark.asyncio
 def test_unregister_entity(
     mqtt_client_async,
 ):
@@ -437,15 +455,16 @@ def test_unregister_entity(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     assert manager.is_registered(entity)
 
-    manager.unregister(entity)
+    await manager.unregister(entity)
 
     assert not manager.is_registered(entity)
 
 
+@pytest.mark.asyncio
 def test_unregister_publishes_empty_discovery(
     mqtt_client_async,
 ):
@@ -460,8 +479,8 @@ def test_unregister_publishes_empty_discovery(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
-    manager.unregister(entity)
+    await manager.register(entity)
+    await manager.unregister(entity)
 
     topic, payload, retain = mqtt_client_async.published[-1]
 
@@ -470,6 +489,7 @@ def test_unregister_publishes_empty_discovery(
     assert retain is True
 
 
+@pytest.mark.asyncio
 def test_unregister_removes_entity(
     mqtt_client_async,
 ):
@@ -484,15 +504,16 @@ def test_unregister_removes_entity(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
+    await manager.register(entity)
 
     assert manager.is_registered(entity)
 
-    manager.unregister(entity)
+    await manager.unregister(entity)
 
     assert not manager.is_registered(entity)
 
 
+@pytest.mark.asyncio
 def test_unregister_twice_fails(
     mqtt_client_async,
 ):
@@ -507,8 +528,39 @@ def test_unregister_twice_fails(
         unique_id="temp_1",
     )
 
-    manager.register(entity)
-    manager.unregister(entity)
+    await manager.register(entity)
+    await manager.unregister(entity)
 
     with pytest.raises(EntityError):
-        manager.unregister(entity)
+        await manager.unregister(entity)
+
+
+def test_update_state_unregistered_entity_fails(
+    mqtt_client_async,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    with pytest.raises(EntityError):
+        await manager.update_state(
+            entity,
+            25,
+        )
+
+
+@pytest.mark.asyncio
+def test_register_invalid_entity(
+    mqtt_client_async,
+):
+    manager = EntityManager(mqtt_client_sync, MQTTSettings())
+
+    with pytest.raises(EntityError):
+        await manager.register("invalid")
