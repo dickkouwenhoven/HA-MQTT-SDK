@@ -265,6 +265,7 @@ def test_update_state_topic(
         unique_id="temp_1",
     )
 
+    manager.register(entity)
     manager.update_state(
         entity,
         25,
@@ -296,6 +297,7 @@ def test_update_availability_topic(
         unique_id="temp_1",
     )
 
+    manager.register(entity)
     manager.update_availability(
         entity,
         True,
