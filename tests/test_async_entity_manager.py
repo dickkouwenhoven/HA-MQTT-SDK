@@ -40,7 +40,7 @@ async def test_register_entity(mqtt_client_async):
 
 
 @pytest.mark.asyncio
-def test_command_subscription(mqtt_client_async):
+async def test_command_subscription(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
