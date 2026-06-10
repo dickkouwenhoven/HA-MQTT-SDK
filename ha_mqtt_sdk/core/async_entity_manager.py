@@ -16,18 +16,21 @@ from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
-from .entity_factory import (
-    build_registration,
-)
-from .entity_factory import (
-    create_entity as _create_entity,
-)
+from .entity_factory import build_registration
+from .entity_factory import create_entity as _create_entity
 
 _logger = get_logger(__name__)
 
 
 class AsyncEntityManager:
     def __init__(self, mqtt_client: AsyncMQTTClient, mqtt_settings: MQTTSettings):
+        """
+        Initialize AsyncEntityManager.
+
+        Args:
+            mqtt_client: MQTT client implementation
+            mqtt_settings: MQTTSttings instance
+        """
 
         if not isinstance(
             mqtt_client,
@@ -40,9 +43,17 @@ class AsyncEntityManager:
 
         self._mqtt = mqtt_client
         self._settings = mqtt_settings
+
+        # Mapping command_topic -> callback
         self._command_callbacks: dict[str, Callable[[str, str], Awaitable[None]]] = {}
         self._entities: dict[str, Entity] = {}
+
+        # Register global MQTT message handler
         self._mqtt.set_message_callback(self._handle_command)
+
+    # ------------------------------------------
+    # PUBLIC API
+    # ------------------------------------------
 
     def create_entity(
         self,
@@ -76,9 +87,11 @@ class AsyncEntityManager:
         Also:
         - Sets Last Will and Testament for availability
         - Subscribes to command topic (if applicable)
+        - Registers callback for incoming commands
 
         Args:
                 entity: Entity instance
+                command_callback: Optional handler for commands
         """
 
         if not isinstance(entity, Entity):
@@ -87,14 +100,14 @@ class AsyncEntityManager:
         if entity.unique_id in self._entities:
             raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
 
-        # -----------------------------
-        # Discovery
-        # -----------------------------
-
         registration = build_registration(
             entity,
             self._settings.discovery_prefix,
         )
+
+        # ------------------------------
+        # Discovery
+        # ------------------------------
 
         await self._mqtt.publish(
             topic=registration.discovery_topic, payload=registration.discovery_payload, retain=True
@@ -128,16 +141,24 @@ class AsyncEntityManager:
                 registration.command_topic,
             )
 
+        # Register callback if provided
         if command_callback:
             self._command_callbacks[registration.command_topic] = command_callback
 
     async def update_state(self, entity: Entity, state: Any) -> None:
+        """
+        Publish state update to MQTT
+
+        Args:
+        entity: Entity instance
+        state: State value (string, number, or JSON serializable)
+        """
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
-        if entity.unique_id in self._entities:
-            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
+        if entity.unique_id not in self._entities:
+            raise EntityError(f"Entity '{entity.unique_id}' is not registered")
 
         registration = build_registration(
             entity,
@@ -158,11 +179,22 @@ class AsyncEntityManager:
 
     async def update_availability(self, entity: Entity, online: bool) -> None:
 
+        """
+        Publish availability (online/offline) to MQTT.
+
+        This control wheter the device is shown as available in Home Assistant.
+
+        
+        Args:
+        entity: Entity instance
+        online: True = online, False = offline
+        """
+
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
-        if entity.unique_id in self._entities:
-            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
+        if entity.unique_id not in self._entities:
+            raise EntityError(f"Entity with '{entity.unique_id}' is not registered")
 
         registration = build_registration(
             entity,
@@ -200,8 +232,8 @@ class AsyncEntityManager:
         if not callable(callback):
             raise EntityError("callback must be callable")
 
-        if entity.unique_id in self._entities:
-            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
+        if entity.unique_id not in self._entities:
+            raise EntityError(f"Entity '{entity.unique_id}' is not registered")
 
         registration = build_registration(
             entity,
@@ -218,9 +250,33 @@ class AsyncEntityManager:
             registration.command_topic,
         )
 
+    # ----------------------------
+    # Internal
+    # ----------------------------
+
     async def _handle_command(self, topic: str, payload: Any) -> None:
+        """
+        Internal MQTT message handler.
+
+        Called by MQTT client when a message is received.
+
+        Routes incoming commands to registered callbacks.
+        """
+
+        _logger.debug(
+            "Command received:%s -> %s",
+            topic,
+            payload,
+        )
 
         callback = self._command_callbacks.get(topic)
+
+        if not callback:
+            _logger.warning(
+                "No callback registered for topic: %s",
+                topic,
+            )
+            return
 
         if callback:
             await callback(topic, payload)
@@ -239,6 +295,15 @@ class AsyncEntityManager:
         self,
         unique_id: str,
     ) -> Entity | None:
+        """
+        Get registered entity by unique_id.
+
+        Args:
+        unique_id: Entity unique_id
+
+        Returns:
+        Entity instance or None
+        """
 
         if not isinstance(unique_id, str) or not unique_id.strip():
             raise EntityError("unique_id must be a non-empty string")
@@ -249,6 +314,12 @@ class AsyncEntityManager:
         self,
         entity: Entity,
     ) -> None:
+        """
+        Remove entity from manager registry.
+
+        Args:
+        entity: Entity instance
+        """
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
@@ -258,11 +329,14 @@ class AsyncEntityManager:
 
         registration = build_registration(entity, self._settings.discovery_prefix)
 
+        # Remove entity from Home Assistant
         await self._mqtt.publish(topic=registration.discovery_topic, payload="", retain=True)
 
+        # Remove callback
         if registration.command_topic:
             self._command_callbacks.pop(registration.command_topic, None)
 
+        # Remove entity from registry
         del self._entities[entity.unique_id]
 
         _logger.info(
