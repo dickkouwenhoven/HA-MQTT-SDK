@@ -327,4 +327,22 @@ class EntityManager:
         self,
         unique_id: str,
     ) -> Entity | None:
+        """
+        Get registered entity by unique_id.
+
+        Args:
+        unique_id: Entity unique_id
+
+        Returns:
+        Entity instance or None
+        """
+
+        if (
+            not isinstance(unique_id, str)
+            or not unique_id.strip()
+        ):
+            raise EntityError(
+                "unique_id must be a non-empty string"
+            )
+
         return self._entities.get(unique_id)
