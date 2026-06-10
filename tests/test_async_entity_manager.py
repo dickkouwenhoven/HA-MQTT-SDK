@@ -61,7 +61,7 @@ async def test_command_subscription(mqtt_client_async):
 
 
 @pytest.mark.asyncio
-def test_update_state(mqtt_client_async):
+async def test_update_state(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
@@ -77,7 +77,7 @@ def test_update_state(mqtt_client_async):
 
 
 @pytest.mark.asyncio
-def test_update_availability(mqtt_client_async):
+async def test_update_availability(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
@@ -96,7 +96,7 @@ def test_update_availability(mqtt_client_async):
 
 
 @pytest.mark.asyncio
-def test_command_callback_execution(mqtt_client_async):
+async def test_command_callback_execution(mqtt_client_async):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
@@ -125,7 +125,7 @@ def test_command_callback_execution(mqtt_client_async):
 
 
 @pytest.mark.asyncio
-def test_sensor_has_no_command_subscription(
+async def test_sensor_has_no_command_subscription(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
@@ -142,7 +142,7 @@ def test_sensor_has_no_command_subscription(
 
 
 @pytest.mark.asyncio
-def test_register_invalid_entity(
+async def test_register_invalid_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
@@ -152,7 +152,7 @@ def test_register_invalid_entity(
 
 
 @pytest.mark.asyncio
-def test_update_state_invalid_entity(
+async def test_update_state_invalid_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
@@ -165,7 +165,7 @@ def test_update_state_invalid_entity(
 
 
 @pytest.mark.asyncio
-def test_update_availability_invalid_entity(
+async def test_update_availability_invalid_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
@@ -196,7 +196,7 @@ def test_set_callback_on_sensor_fails(
 
 
 @pytest.mark.asyncio
-def test_duplicate_unique_id_fails(
+async def test_duplicate_unique_id_fails(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
@@ -220,7 +220,7 @@ def test_duplicate_unique_id_fails(
 
 
 @pytest.mark.asyncio
-def test_replace_command_callback(
+async def test_replace_command_callback(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
@@ -263,7 +263,7 @@ def test_replace_command_callback(
 
 
 @pytest.mark.asyncio
-def test_update_state_topic(
+async def test_update_state_topic(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -296,7 +296,7 @@ def test_update_state_topic(
 
 
 @pytest.mark.asyncio
-def test_update_availability_topic(
+async def test_update_availability_topic(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -330,7 +330,7 @@ def test_update_availability_topic(
 
 
 @pytest.mark.asyncio
-def test_register_publishers_discovery_payload(
+async def test_register_publishers_discovery_payload(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -356,7 +356,7 @@ def test_register_publishers_discovery_payload(
 
 
 @pytest.mark.asyncio
-def test_register_same_entity_twice_fails(
+async def test_register_same_entity_twice_fails(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
@@ -374,7 +374,7 @@ def test_register_same_entity_twice_fails(
 
 
 @pytest.mark.asyncio
-def test_update_state_unregistered_entity_fails(
+async def test_update_state_unregistered_entity_fails(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -396,7 +396,7 @@ def test_update_state_unregistered_entity_fails(
 
 
 @pytest.mark.asyncio
-def test_get_entity(
+async def test_get_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -441,7 +441,7 @@ def test_get_entity_invalid_unique_id(
 
 
 @pytest.mark.asyncio
-def test_unregister_entity(
+async def test_unregister_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -465,7 +465,7 @@ def test_unregister_entity(
 
 
 @pytest.mark.asyncio
-def test_unregister_publishes_empty_discovery(
+async def test_unregister_publishes_empty_discovery(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -490,7 +490,7 @@ def test_unregister_publishes_empty_discovery(
 
 
 @pytest.mark.asyncio
-def test_unregister_removes_entity(
+async def test_unregister_removes_entity(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
@@ -514,7 +514,7 @@ def test_unregister_removes_entity(
 
 
 @pytest.mark.asyncio
-def test_unregister_twice_fails(
+async def test_unregister_twice_fails(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(
