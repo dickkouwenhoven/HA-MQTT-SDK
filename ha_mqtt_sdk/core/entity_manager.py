@@ -23,6 +23,7 @@ from typing import Any
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
 from ..exceptions import EntityError
+from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt.paho_client import PahoMQTTClient
 from ..utils.logger import get_logger
@@ -74,7 +75,7 @@ class EntityManager:
         domain: HADomain,
         name: str,
         unique_id: str,
-        device_info: dict[str, Any] | None = None,
+        device_info: DeviceInfo | None = None,
         extra: dict[str, Any] | None = None,
     ) -> Entity:
         """
@@ -175,6 +176,10 @@ class EntityManager:
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
+        if entity.unique_id not in self._entities:
+            raise EntityError(
+                f"Entity '{entity.unique_id}' is not registered"
+
         registration = build_registration(
             entity,
             self._settings.discovery_prefix,
@@ -209,6 +214,11 @@ class EntityManager:
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
+
+        if entity.unique_id not in self._entities:
+            raise EntityError(
+                f"Entity '{entity.unique_id}' is not registered"
+            )
 
         registration = build_registration(
             entity,
@@ -248,6 +258,11 @@ class EntityManager:
         if not callable(callback):
             raise EntityError("callback must be callable")
 
+        if entity.unique_id not in self._entities:
+            raise EntityError(
+                f"Entity '{entity.unique_id}' is not registered"
+            )
+ 
         registration = build_registration(
             entity,
             self._settings.discovery_prefix,
@@ -308,4 +323,14 @@ class EntityManager:
         self,
         entity: Entity,
     ) -> bool:
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
+
         return entity.unique_id in self._entities
+
+
+    def get_entity(
+        self,
+        unique_id: str,
+    ) -> Entity | None:
+        return self._entities.get(unique_id)
