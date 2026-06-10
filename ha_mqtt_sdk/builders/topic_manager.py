@@ -30,7 +30,7 @@ def _normalize_prefix(prefix: str | None) -> str:
 
     if not isinstance(prefix, str):
         raise BuilderError("prefix must be a string")
-       
+
     if prefix == "":
         return "homeassistant"
 
