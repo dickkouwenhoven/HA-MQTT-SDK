@@ -337,13 +337,8 @@ class EntityManager:
         Entity instance or None
         """
 
-        if (
-            not isinstance(unique_id, str)
-            or not unique_id.strip()
-        ):
-            raise EntityError(
-                "unique_id must be a non-empty string"
-            )
+        if not isinstance(unique_id, str) or not unique_id.strip():
+            raise EntityError("unique_id must be a non-empty string")
 
         return self._entities.get(unique_id)
 
@@ -363,9 +358,7 @@ class EntityManager:
             raise EntityError("Invalid entity")
 
         if entity.unique_id not in self._entities:
-            raise EntityError(
-                f"Entity '{entity.unique_id}' is not registered"
-            )
+            raise EntityError(f"Entity '{entity.unique_id}' is not registered")
 
         del self._entities[entity.unique_id]
 
