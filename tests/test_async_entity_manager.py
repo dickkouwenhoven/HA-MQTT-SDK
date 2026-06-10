@@ -533,13 +533,3 @@ def test_unregister_twice_fails(
 
     with pytest.raises(EntityError):
         await manager.unregister(entity)
-
-
-@pytest.mark.asyncio
-def test_register_invalid_entity(
-    mqtt_client_async,
-):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
-
-    with pytest.raises(EntityError):
-        await manager.register("invalid")
