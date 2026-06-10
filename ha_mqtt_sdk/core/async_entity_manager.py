@@ -11,7 +11,8 @@ from typing import Any
 
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
-from ..exceptions import EntityError, ValidationError
+from ..exceptions import EntityError
+from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt.async_client import AsyncMQTTClient
 from ..utils.logger import get_logger
@@ -32,14 +33,15 @@ class AsyncEntityManager:
             mqtt_client,
             AsyncMQTTClient,
         ):
-            raise ValidationError("mqtt_client must inherit from AsyncMQTTClient")
+            raise EntityError("mqtt_client must inherit from AsyncMQTTClient")
 
         if not isinstance(mqtt_settings, MQTTSettings):
-            raise ValidationError("mqtt_settings must be MQTTSettings")
+            raise EntityError("mqtt_settings must be MQTTSettings")
 
         self._mqtt = mqtt_client
         self._settings = mqtt_settings
         self._command_callbacks: dict[str, Callable[[str, str], Awaitable[None]]] = {}
+        self._entities: dict[str, Entity] = {}
         self._mqtt.set_message_callback(self._handle_command)
 
     def create_entity(
@@ -47,7 +49,7 @@ class AsyncEntityManager:
         domain: HADomain,
         name: str,
         unique_id: str,
-        device_info: dict[str, Any] | None = None,
+        device_info: DeviceInfo | None = None,
         extra: dict[str, Any] | None = None,
     ) -> Entity:
         """
@@ -82,6 +84,9 @@ class AsyncEntityManager:
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
+        if entity.unique_id in self._entties:
+            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
+
         # -----------------------------
         # Discovery
         # -----------------------------
@@ -94,6 +99,8 @@ class AsyncEntityManager:
         await self._mqtt.publish(
             topic=registration.discovery_topic, payload=registration.discovery_payload, retain=True
         )
+
+        self._entities[entity.unique_id] = entity
 
         _logger.info(
             "Entity registered: %s (%s)",
@@ -129,6 +136,9 @@ class AsyncEntityManager:
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
 
+        if entity.unique_id not in self._entities:
+            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
+
         registration = build_registration(
             entity,
             self._settings.discovery_prefix,
@@ -150,6 +160,9 @@ class AsyncEntityManager:
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
+
+        if entity.unique_id in self._entties:
+            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
 
         registration = build_registration(
             entity,
@@ -187,6 +200,9 @@ class AsyncEntityManager:
         if not callable(callback):
             raise EntityError("callback must be callable")
 
+        if entity.unique_id in self._entties:
+            raise EntityError(f"Entity with unique_id '{entity.unique_id}'is already registered")
+
         registration = build_registration(
             entity,
             self._settings.discovery_prefix,
@@ -208,3 +224,52 @@ class AsyncEntityManager:
 
         if callback:
             await callback(topic, payload)
+
+
+
+    def is_registered(
+        self,
+        entity: Entity,
+    )-> bool:
+        
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
+
+        return entity.unique_id in self._entities
+
+
+    def get_entity(
+        self,
+        unique_id: str,
+    ) -> Entity | None:
+        
+        if not isinstance(unique_id, str) or not unique_id.strip():
+            raise EntityError("unique_id must be a non-empty string")
+
+        return self._entities.get(unique_id)
+
+
+    async def unregister(
+        self,
+        entity: Entity,
+    ) -> None:
+        
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
+
+        if entity.unique_id not in self._entities:
+            raise EntityError(f"Entity '{entity.unique_id}' is not registered")
+
+        registration = build_registration(entity, self._settings.discovery_prefix)
+        
+        await self._mqtt.publish(topic=registration.discovery_topic, payload="", retain=True)
+
+        if registration.command_topic:
+            self._command_callbacks.pop(registration.command_topic, None)
+
+        del self._entities[entity.unique_id]
+
+        _logger.info(
+            "Entity unregistered: %s",
+            entity.unique_id,
+        )
