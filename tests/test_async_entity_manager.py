@@ -11,8 +11,8 @@ from ha_mqtt_sdk.core.async_entity_manager import AsyncEntityManager
 from ha_mqtt_sdk.exceptions import EntityError
 
 
-def test_create_entity(mqtt_client_sync):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+def test_create_entity(mqtt_client_async):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -24,8 +24,8 @@ def test_create_entity(mqtt_client_sync):
     assert entity.domain == HADomain.SENSOR
 
 
-def test_register_entity(mqtt_client_sync):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+def test_register_entity(mqtt_client_async):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SWITCH,
@@ -35,11 +35,11 @@ def test_register_entity(mqtt_client_sync):
 
     manager.register(entity)
 
-    assert len(mqtt_client_sync.published) > 0
+    assert len(mqtt_client_async.published) > 0
 
 
-def test_command_subscription(mqtt_client_sync):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+def test_command_subscription(mqtt_client_async):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SWITCH,
@@ -55,11 +55,11 @@ def test_command_subscription(mqtt_client_sync):
         "homeassistant",
     )
 
-    assert expected_topic in mqtt_client_sync.subscribed
+    assert expected_topic in mqtt_client_async.subscribed
 
 
-def test_update_state(mqtt_client_sync):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+def test_update_state(mqtt_client_async):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -70,11 +70,11 @@ def test_update_state(mqtt_client_sync):
     manager.register(entity)
     manager.update_state(entity, 25)
 
-    assert mqtt_client_sync.published[-1][1] == 25
+    assert mqtt_client_async.published[-1][1] == 25
 
 
-def test_update_availability(mqtt_client_sync):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+def test_update_availability(mqtt_client_async):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -85,14 +85,14 @@ def test_update_availability(mqtt_client_sync):
     manager.register(entity)
     manager.update_availability(entity, True)
 
-    topic, payload, retain = mqtt_client_sync.published[-1]
+    topic, payload, retain = mqtt_client_async.published[-1]
 
     assert payload == "online"
     assert retain is True
 
 
-def test_command_callback_execution(mqtt_client_sync):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+def test_command_callback_execution(mqtt_client_async):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SWITCH,
@@ -114,15 +114,15 @@ def test_command_callback_execution(mqtt_client_sync):
         "homeassistant",
     )
 
-    mqtt_client_sync.simulate_message(expected_topic, "ON")
+    mqtt_client_async.simulate_message(expected_topic, "ON")
 
     assert called["value"] is True
 
 
 def test_sensor_has_no_command_subscription(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -132,22 +132,22 @@ def test_sensor_has_no_command_subscription(
 
     manager.register(entity)
 
-    assert mqtt_client_sync.subscribed == []
+    assert mqtt_client_async.subscribed == []
 
 
 def test_register_invalid_entity(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     with pytest.raises(EntityError):
         manager.register("invalid")
 
 
 def test_update_state_invalid_entity(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     with pytest.raises(EntityError):
         manager.update_state(
@@ -157,9 +157,9 @@ def test_update_state_invalid_entity(
 
 
 def test_update_availability_invalid_entity(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     with pytest.raises(EntityError):
         manager.update_availability(
@@ -169,9 +169,9 @@ def test_update_availability_invalid_entity(
 
 
 def test_set_callback_on_sensor_fails(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -187,9 +187,9 @@ def test_set_callback_on_sensor_fails(
 
 
 def test_duplicate_unique_id_fails(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     entity1 = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -212,7 +212,7 @@ def test_duplicate_unique_id_fails(
 def test_replace_command_callback(
     mqtt_client_sync,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     entity = manager.create_entity(
         domain=HADomain.SWITCH,
@@ -245,17 +245,17 @@ def test_replace_command_callback(
         "homeassistant",
     )
 
-    mqtt_client_sync.simulate_message(expected_topic, "ON")
+    mqtt_client_async.simulate_message(expected_topic, "ON")
 
     assert first_called["value"] is False
     assert second_called["value"] is True
 
 
 def test_update_state_topic(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(discovery_prefix="homeassistant"),
     )
 
@@ -271,7 +271,7 @@ def test_update_state_topic(
         25,
     )
 
-    topic, payload, retain = mqtt_client_sync.published[-1]
+    topic, payload, retain = mqtt_client_async.published[-1]
 
     expected_topic = build_state_topic(
         entity.domain,
@@ -284,10 +284,10 @@ def test_update_state_topic(
 
 
 def test_update_availability_topic(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(discovery_prefix="homeassistant"),
     )
 
@@ -303,7 +303,7 @@ def test_update_availability_topic(
         True,
     )
 
-    topic, payload, retain = mqtt_client_sync.published[-1]
+    topic, payload, retain = mqtt_client_async.published[-1]
 
     expected_topic = build_availability_topic(
         entity.domain,
@@ -317,10 +317,10 @@ def test_update_availability_topic(
 
 
 def test_register_publishers_discovery_payload(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(discovery_prefix="homeassistant"),
     )
 
@@ -332,7 +332,7 @@ def test_register_publishers_discovery_payload(
 
     manager.register(entity)
 
-    topic, payload, retain = mqtt_client_sync.published[0]
+    topic, payload, retain = mqtt_client_async.published[0]
 
     assert topic.endswith("/config")
     assert retain is True
@@ -342,9 +342,9 @@ def test_register_publishers_discovery_payload(
 
 
 def test_register_same_entity_twice_fails(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
-    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -359,10 +359,10 @@ def test_register_same_entity_twice_fails(
 
 
 def test_update_state_unregistered_entity_fails(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
@@ -380,10 +380,10 @@ def test_update_state_unregistered_entity_fails(
 
 
 def test_get_entity(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
@@ -401,10 +401,10 @@ def test_get_entity(
 
 
 def test_get_entity_not_found(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
@@ -412,10 +412,10 @@ def test_get_entity_not_found(
 
 
 def test_get_entity_invalid_unique_id(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
@@ -424,10 +424,10 @@ def test_get_entity_invalid_unique_id(
 
 
 def test_unregister_entity(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
@@ -447,10 +447,10 @@ def test_unregister_entity(
 
 
 def test_unregister_publishes_empty_discovery(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
@@ -463,7 +463,7 @@ def test_unregister_publishes_empty_discovery(
     manager.register(entity)
     manager.unregister(entity)
 
-    topic, payload, retain = mqtt_client_sync.published[-1]
+    topic, payload, retain = mqtt_client_async.published[-1]
 
     assert topic.endswith("/config")
     assert payload == ""
@@ -471,10 +471,10 @@ def test_unregister_publishes_empty_discovery(
 
 
 def test_unregister_removes_entity(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
@@ -494,10 +494,10 @@ def test_unregister_removes_entity(
 
 
 def test_unregister_twice_fails(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(
-        mqtt_client_sync,
+        mqtt_client_async,
         MQTTSettings(),
     )
 
