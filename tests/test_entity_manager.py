@@ -411,17 +411,6 @@ def test_get_entity_not_found(
     assert manager.get_entity("unknown") is None
 
 
-def test_get_entity_not_found(
-    mqtt_client_sync,
-):
-    manager = EntityManager(
-        mqtt_client_sync,
-        MQTTSettings(),
-    )
-
-    assert manager.get_entity("unknown") is None
-
-
 def test_get_entity_invalid_unique_id(
     mqtt_client_sync,
 ):
