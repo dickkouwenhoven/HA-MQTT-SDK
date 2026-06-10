@@ -115,8 +115,8 @@ class EntityManager:
 
         if entity.unique_id in self._entities:
             raise EntityError(f"Entity with unique_id '{entity.unique_id}' is already registered")
-        
-        registration = build_registration(
+
+            registration = build_registration(
             entity,
             self._settings.discovery_prefix,
         )
@@ -303,7 +303,6 @@ class EntityManager:
                 topic,
                 str(e),
             )
-
 
     def is_registered(
         self,
