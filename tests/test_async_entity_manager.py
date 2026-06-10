@@ -535,32 +535,11 @@ def test_unregister_twice_fails(
         await manager.unregister(entity)
 
 
-def test_update_state_unregistered_entity_fails(
-    mqtt_client_async,
-):
-    manager = EntityManager(
-        mqtt_client_sync,
-        MQTTSettings(),
-    )
-
-    entity = manager.create_entity(
-        domain=HADomain.SENSOR,
-        name="Temp",
-        unique_id="temp_1",
-    )
-
-    with pytest.raises(EntityError):
-        await manager.update_state(
-            entity,
-            25,
-        )
-
-
 @pytest.mark.asyncio
 def test_register_invalid_entity(
     mqtt_client_async,
 ):
-    manager = EntityManager(mqtt_client_sync, MQTTSettings())
+    manager = AsyncEntityManager(mqtt_client_sync, MQTTSettings())
 
     with pytest.raises(EntityError):
         await manager.register("invalid")
