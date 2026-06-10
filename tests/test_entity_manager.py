@@ -187,10 +187,7 @@ def test_set_callback_on_sensor_fails(
 def test_duplicate_unique_id_fails(
     mqtt_client_sync,
 ):
-    manager = EntityManager(
-        mqtt_client_sync,
-        MQTTSettings(),
-    )
+    manager = EntityManager(mqtt_client_sync, MQTTSettings())
 
     entity1 = manager.create_entity(
         domain=HADomain.SENSOR,
@@ -213,10 +210,7 @@ def test_duplicate_unique_id_fails(
 def test_replace_command_callback(
     mqtt_client_sync,
 ):
-    manager = EntityManager(
-        mqtt_client_sync,
-        MQTTSettings()
-    )
+    manager = EntityManager(mqtt_client_sync, MQTTSettings())
 
     entity = manager.create_entity(
         domain=HADomain.SWITCH,
@@ -263,9 +257,7 @@ def test_update_state_topic(
 ):
     manager = EntityManager(
         mqtt_client_sync,
-        MQTTSettings(
-            discovery_prefix="homeassistant"
-        ),
+        MQTTSettings(discovery_prefix="homeassistant"),
     )
 
     entity = manager.create_entity(
@@ -296,9 +288,7 @@ def test_update_availability_topic(
 ):
     manager = EntityManager(
         mqtt_client_sync,
-        MQTTSettings(
-            discovery_prefix="homeassistant"
-        ),
+        MQTTSettings(discovery_prefix="homeassistant"),
     )
 
     entity = manager.create_entity(
@@ -330,9 +320,7 @@ def test_register_publishers_discovery_payload(
 ):
     manager = EntityManager(
         mqtt_client_sync,
-        MQTTSettings(
-            discovery_prefix="homeassistant"
-        ),
+        MQTTSettings(discovery_prefix="homeassistant"),
     )
 
     entity = manager.create_entity(
@@ -355,10 +343,7 @@ def test_register_publishers_discovery_payload(
 def test_register_same_entity_twice_fails(
     mqtt_client_sync,
 ):
-    manager = EntityManager(
-        mqtt_client_sync,
-        MQTTSettings(),
-    )
+    manager = EntityManager(mqtt_client_sync, MQTTSettings())
 
     entity = manager.create_entity(
         domain=HADomain.SENSOR,
