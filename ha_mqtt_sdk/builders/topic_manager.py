@@ -97,6 +97,7 @@ def build_command_topic(
 
     _validate_domain(domain)
     _validate_unique_id(unique_id)
+    prefix = _normalize_prefix(prefix)
 
     schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
 
@@ -119,6 +120,7 @@ def build_availability_topic(
 ):
     _validate_domain(domain)
     _validate_unique_id(unique_id)
+    prefix = _normalize_prefix(prefix)
 
     schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
 
