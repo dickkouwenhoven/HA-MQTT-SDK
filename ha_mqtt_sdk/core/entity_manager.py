@@ -346,3 +346,30 @@ class EntityManager:
             )
 
         return self._entities.get(unique_id)
+
+
+    def unregister(
+        self,
+        entity: Entity,
+    ) -> None:
+        """
+        Remove entity from manager registry.
+
+        Args:
+        entity: Entity instance
+        """
+
+        if not isinstance(entity, Entity):
+            raise EntityError("Invalid entity")
+
+        if entity.unique_id not in self._entities:
+            raise EntityError(
+                f"Entity '{entity.unique_id}' is not registered"
+            )
+
+        del self._entities[entity.unique_id]
+
+        _logger.info(
+            "Entity unregistered: %s",
+            entity.unique_id,
+        )
