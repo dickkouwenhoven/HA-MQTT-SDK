@@ -342,7 +342,6 @@ class EntityManager:
 
         return self._entities.get(unique_id)
 
-
     def unregister(
         self,
         entity: Entity,
