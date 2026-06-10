@@ -243,10 +243,7 @@ def test_replace_command_callback(
         "homeassistant",
     )
 
-    mqtt_client_sync.simulate_message(
-        expected_topic,
-        "ON"
-    )
+    mqtt_client_sync.simulate_message(expected_topic, "ON")
 
     assert first_called["value"] is False
     assert second_called["value"] is True
