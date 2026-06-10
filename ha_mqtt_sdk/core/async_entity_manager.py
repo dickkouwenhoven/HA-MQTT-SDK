@@ -182,7 +182,7 @@ class AsyncEntityManager:
         Publish availability (online/offline) to MQTT.
 
         This control wheter the device is shown as available in Home Assistant.
-        
+
         Args:
         entity: Entity instance
         online: True = online, False = offline
