@@ -100,6 +100,7 @@ async def test_async_update_state():
         unique_id="temp_1",
     )
 
+    await manager.register(entity)
     await manager.update_state(
         entity,
         "22.5",
