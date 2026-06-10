@@ -210,7 +210,7 @@ def test_duplicate_unique_id_fails(
 
 
 def test_replace_command_callback(
-    mqtt_client_sync,
+    mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
 
