@@ -37,6 +37,19 @@ def _normalize_prefix(prefix: str | None) -> str:
     return prefix
 
 
+def _get_domain_schema(domain: HADomain) -> dict:
+    if not isinstance(domain, HADomain):
+        raise BuilderError("Invalid domain")
+
+    schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
+
+    if not schema:
+        raise BuilderError(
+            f"No field definition found for domain {domain}."
+
+    return schema
+
+
 # ---------------------------------------------------------------------------
 # Public functions
 # ---------------------------------------------------------------------------
@@ -69,10 +82,7 @@ def build_state_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
     _validate_unique_id(unique_id)
     prefix = _normalize_prefix(prefix)
 
-    schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
-
-    if not schema:
-        raise BuilderError(f"No field definition found for domain {domain}")
+    schema = _get_domain_schema(domain)
 
     required = schema["required"]
     optional = schema["optional"]
@@ -99,10 +109,7 @@ def build_command_topic(
     _validate_unique_id(unique_id)
     prefix = _normalize_prefix(prefix)
 
-    schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
-
-    if not schema:
-        raise BuilderError(f"No field definition found for domain {domain}")
+    schema = _get_domain_schema(domain)
 
     required = schema["required"]
     optional = schema["optional"]
@@ -122,10 +129,7 @@ def build_availability_topic(
     _validate_unique_id(unique_id)
     prefix = _normalize_prefix(prefix)
 
-    schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
-
-    if not schema:
-        raise BuilderError(f"No field definition found for domain {domain}")
+    schema = _get_domain_schema(domain)
 
     required = schema["required"]
     optional = schema["optional"]
