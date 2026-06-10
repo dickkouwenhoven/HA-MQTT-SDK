@@ -67,6 +67,7 @@ def test_update_state(mqtt_client_sync):
         unique_id="temp_1",
     )
 
+    manager.register(entity)
     manager.update_state(entity, 25)
 
     assert mqtt_client_sync.published[-1][1] == 25
@@ -81,6 +82,7 @@ def test_update_availability(mqtt_client_sync):
         unique_id="temp_1",
     )
 
+    manager.register(entity)
     manager.update_availability(entity, True)
 
     topic, payload, retain = mqtt_client_sync.published[-1]
