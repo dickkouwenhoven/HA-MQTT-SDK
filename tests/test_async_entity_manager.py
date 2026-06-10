@@ -237,7 +237,7 @@ def test_replace_command_callback(
     async def callback_1(topic, payload):
         first_called["value"] = True
 
-    asyn def callback_2(topic, payload):
+    async def callback_2(topic, payload):
         second_called["value"] = True
 
     await manager.register(
