@@ -356,3 +356,24 @@ def test_register_same_entity_twice_fails(
 
     with pytest.raises(EntityError):
         manager.register(entity)
+
+
+def test_update_state_unregistered_entity_fails(
+    mqtt_client_sync,
+):
+    manager = EntityManager(
+        mqtt_client_sync,
+        MQTTSettings(),
+    )
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    with pytest.raises(EntityError):
+        manager.update_state(
+            entity,
+            25,
+        )
