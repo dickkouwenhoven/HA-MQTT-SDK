@@ -75,10 +75,7 @@ class HASDK:
         self._logger.info("Shutting down HASDK")
         self._mqtt.disconnect()
 
-    def register(
-        self,
-        entity: Entity,
-        command_callback: Callable[[str, str], None] | None = None
+    def register(self, entity: Entity, command_callback: Callable[[str, str], None] | None = None
     ) -> None:
         """
         Register entity in Home Assistant.
