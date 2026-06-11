@@ -31,30 +31,29 @@ from .entity_manager import EntityManager
 class HASDK:
     def __init__(
         self,
-        mqtt_config: MQTTSettings | None = None,
         mqtt_client: BaseMQTTClient | None = None,
         mqtt_settings: MQTTSettings | None = None,
     ):
         """
         Initialize SDK.
 
-        Either mqtt_config OR mqtt_client must be provided.
+        Either mqtt_settings OR mqtt_client must be provided.
         """
 
         self._logger = get_logger(__name__)
         self._mqtt_settings = mqtt_settings or MQTTSettings()
 
-        if not mqtt_client and not mqtt_config:
-            raise SDKError("Provide either mqtt_config or mqtt_client")
+        if not mqtt_client and not mqtt_settings:
+            raise SDKError("Provide either mqtt_settings or mqtt_client")
 
-        if mqtt_client and mqtt_config:
-            self._logger.warning("Both mqtt_client and mqtt_config provided. Using mqtt_client.")
+        if mqtt_client and mqtt_settings:
+            self._logger.warning("Both mqtt_client and mqtt_settings provided. Using mqtt_client.")
 
         # Dependency injection (preferred)
         if mqtt_client:
             self._mqtt = mqtt_client
         else:
-            self._mqtt = PahoMQTTClient(mqtt_config)
+            self._mqtt = PahoMQTTClient(mqtt_settings)
 
         self._entity_manager = EntityManager(self._mqtt, self._mqtt_settings)
 
@@ -76,7 +75,7 @@ class HASDK:
         self._logger.info("Shutting down HASDK")
         self._mqtt.disconnect()
 
-    def register(self, entity: Entity) -> None:
+    def register(self, entity: Entity, command_callback: Callable[[str, str], None] | None = None ) -> None:
         """
         Register entity in Home Assistant.
 
@@ -86,9 +85,9 @@ class HASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        self._entity_manager.register(entity)
+        self._entity_manager.register(entity, command_callback)
 
-    def update_state(self, entity: Entity, payload: dict) -> None:
+    def update_state(self, entity: Entity, state: object) -> None:
         """
         Update entity state.
 
@@ -98,10 +97,7 @@ class HASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        if not isinstance(payload, dict):
-            raise SDKError("Payload must be dict")
-
-        self._entity_manager.update_state(entity, payload)
+        self._entity_manager.update_state(entity, state)
 
     def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
         """
@@ -117,3 +113,32 @@ class HASDK:
             raise SDKError("Callback must be callable")
 
         self._entity_manager.set_command_callback(entity, callback)
+
+    def create_entity(
+        self,
+        *,
+        domain,
+        name,
+        unique_id,
+        device_info=None,
+        extra=None,
+    ):
+        return self._entity.manager.create_entity(
+            domain=domain,
+            name=name,
+            unique_id=unique_id,
+            device_info=device_info,
+            extra=extra,
+        )
+
+    def unregister(
+        self,
+        entity: Entity,
+    ) -> None:
+        self._entity_manager.unregister(entity)
+
+    def is_registered(
+        self,
+        entity: Entity,
+    ) -> None:
+        EntityManager.is_registered(entity)
