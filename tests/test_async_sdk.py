@@ -122,6 +122,8 @@ async def test_async_update_availability():
         unique_id="relay_1",
     )
 
+    await manager.register(entity)
+
     await manager.update_availability(
         entity,
         True,
