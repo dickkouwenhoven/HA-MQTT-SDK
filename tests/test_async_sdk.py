@@ -273,9 +273,9 @@ async def test_async_set_command_callback():
     async def callback(topic, payload):
         pass
 
-    manager.register(entity, command_callback=callback)
+    await manager.register(entity, command_callback=callback)
 
-    manager.set_command_callback(
+    await manager.set_command_callback(
         entity,
         callback,
     )
