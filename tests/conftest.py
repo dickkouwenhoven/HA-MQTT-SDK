@@ -101,7 +101,7 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
 
     async def simulate_message(self, topic, payload):
         if self.callback:
-            self.callback(topic, payload)
+            await self.callback(topic, payload)
 
 
 @pytest.fixture
