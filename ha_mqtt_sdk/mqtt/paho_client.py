@@ -151,7 +151,7 @@ class PahoMQTTClient(BaseMQTTClient):
                 self._logger.info("Reconnected successfully")
                 return
             except Exception as e:
-                self.logger.warning("Reconnect failed: %s", e)
+                self._logger.warning("Reconnect failed: %s", e)
                 self._reconnect_delay = min(
                     self._reconnect_delay * 2,
                     self._config.reconnect_delay_max,
