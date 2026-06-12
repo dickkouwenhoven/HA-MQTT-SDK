@@ -32,6 +32,7 @@ class AsyncMQTTClient(BaseMQTTClient):
         self._shutdown = False
         self._lwt_topic: str | None = None
         self._lwt_payload: str = "offline"
+        self._reconnect_task: asyncio.Task | None = None
 
     # -------------------------
     # LWT
@@ -88,6 +89,13 @@ class AsyncMQTTClient(BaseMQTTClient):
 
     async def disconnect(self) -> None:
         self._shutdown = True
+
+        if self._reconnect_task:
+            self._reconnect_task.cancel()
+            try:
+                await self.reconnect_task
+            except asyncio.CancelledError:
+                pass
 
         if self._listen_task:
             self._listen_task.cancel()
@@ -146,7 +154,7 @@ class AsyncMQTTClient(BaseMQTTClient):
         except Exception as e:
             self._logger.warning("Listener dropped with error: %s", e)
             if not self._shutdown and self._config.reconnect:
-                asyncio.create_task(self._reconnect_loop())
+                self._reconnect_task = asyncio.create_task(self._reconnect_loop())
 
     async def _reconnect_loop(self) -> None:
         """
@@ -166,6 +174,7 @@ class AsyncMQTTClient(BaseMQTTClient):
                     await self._client.subscribe(topic)
 
                 self._logger.info("Reconnected successfully")
+                self._reconnect_task = None
                 return
             except Exception as e:
                 self._logger.warning("Reconnect attempt failed: %s", e)
