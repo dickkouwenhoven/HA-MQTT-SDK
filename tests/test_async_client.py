@@ -7,7 +7,6 @@ import pytest
 from ha_mqtt_sdk.exceptions import MQTTError
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
-
 # ------------------------------------------------------------------
 # Fixtures
 # ------------------------------------------------------------------
