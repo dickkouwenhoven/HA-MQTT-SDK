@@ -1,9 +1,8 @@
 import pytest
 
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from typing import Any
 
-from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
