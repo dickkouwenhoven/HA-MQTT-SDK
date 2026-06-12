@@ -132,15 +132,19 @@ async def test_start_connection_with_lwt(
 
 @pytest.mark.asyncio
 async def test_disconnect(mqtt_client):
-    task = AsyncMock()
 
+    async def dummy():
+        await asyncio.sleep(3600)
+        
+    task = asyncio.create_task(dummy())
+    
     mqtt_client._listen_task = task
     mqtt_client._client = AsyncMock()
 
     await mqtt_client.disconnect()
 
     assert mqtt_client._shutdown is True
-    task.cancel.assert_called_once()
+    assert task.cancelled()
 
 
 @pytest.mark.asyncio
