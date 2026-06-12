@@ -35,7 +35,7 @@ def mqtt_client(mqtt_settings):
         mock_client = MagicMock()
         mock_client_cls.return_value = mock_client
 
-        client = MockMQTTClient(mqtt_settings)
+        client = PahoMQTTClient(mqtt_settings)
 
         yield client
 
