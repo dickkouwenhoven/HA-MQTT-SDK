@@ -217,5 +217,5 @@ class AsyncMQTTClient(BaseMQTTClient):
             )
 
     def _clear_reconnect_task(self, task: asyncio.Task) -> None:
-        if self._reconnect_task is Task:
+        if self._reconnect_task is task:
             self._reconnect_task = None
