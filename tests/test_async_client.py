@@ -8,6 +8,10 @@ from ha_mqtt_sdk.exceptions import MQTTError
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
 
+# ------------------------------------------------------------------
+# Fixtures
+# ------------------------------------------------------------------
+
 @pytest.fixture
 def mqtt_settings():
     config = MagicMock()
@@ -52,7 +56,6 @@ def mqtt_client(mqtt_settings, mock_aiomqtt_client):
 # Last Will
 # ------------------------------------------------------------------
 
-
 def test_set_last_will(mqtt_client):
     mqtt_client.set_last_will("device/status", "offline")
 
@@ -63,7 +66,6 @@ def test_set_last_will(mqtt_client):
 # ------------------------------------------------------------------
 # Connect
 # ------------------------------------------------------------------
-
 
 @pytest.mark.asyncio
 async def test_connect(mqtt_client):
@@ -79,46 +81,31 @@ async def test_connect(mqtt_client):
 
 
 # ------------------------------------------------------------------
-# Starct connection
+# Start connection
 # ------------------------------------------------------------------
 
-
 @pytest.mark.asyncio
-async def test_start_connection(
-    mqtt_client,
-    mock_aiomqtt_client,
-):
-    with patch(
-        "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-        return_value=safe_create_task,
-    ) as create_task:
-        await mqtt_client._start_connection()
+async def test_start_connection(mqtt_client, mock_aiomqtt_client):
+    await mqtt_client._start_connection()
 
-        mock_aiomqtt_client.__aenter__.assert_awaited_once()
-        create_task.assert_called_once()
+    mock_aiomqtt_client.__aenter__.assert_awaited_once()
+
+    # listener task should be created
+    assert mqtt_client._listen_task is not None
+    assert mqtt_client._shutdown is False
 
 
 @pytest.mark.asyncio
-async def test_start_connection_with_lwt(
-    mqtt_client,
-):
-    mqtt_client.set_last_will(
-        "availability",
-        "offline",
-    )
+async def test_start_connection_with_lwt(mqtt_client):
+    mqtt_client.set_last_will("availability", "offline")
 
     with patch("ha_mqtt_sdk.mqtt.async_client.aiomqtt.Client") as client_cls:
         client_instance = AsyncMock()
-
         client_instance.__aenter__ = AsyncMock(return_value=client_instance)
 
         client_cls.return_value = client_instance
 
-        with patch(
-            "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-            return_value=safe_create_task,
-        ):
-            await mqtt_client._start_connection()
+        await mqtt_client._start_connection()
 
         client_cls.assert_called_once()
 
@@ -127,10 +114,8 @@ async def test_start_connection_with_lwt(
 # Disconnect
 # ----------------------------------------------------
 
-
 @pytest.mark.asyncio
 async def test_disconnect(mqtt_client):
-
     async def dummy():
         await asyncio.sleep(3600)
 
@@ -148,7 +133,6 @@ async def test_disconnect(mqtt_client):
 @pytest.mark.asyncio
 async def test_disconnect_without_client(mqtt_client):
     await mqtt_client.disconnect()
-
     assert mqtt_client._shutdown is True
 
 
@@ -156,18 +140,11 @@ async def test_disconnect_without_client(mqtt_client):
 # Publish
 # --------------------------------------------------
 
-
 @pytest.mark.asyncio
-async def test_publish_string(
-    mqtt_client,
-    mock_aiomqtt_client,
-):
+async def test_publish_string(mqtt_client, mock_aiomqtt_client):
     mqtt_client._client = mock_aiomqtt_client
 
-    await mqtt_client.publish(
-        "test/topic",
-        "ON",
-    )
+    await mqtt_client.publish("test/topic", "ON")
 
     mock_aiomqtt_client.publish.assert_awaited_once_with(
         "test/topic",
@@ -177,18 +154,12 @@ async def test_publish_string(
 
 
 @pytest.mark.asyncio
-async def test_publish_json(
-    mqtt_client,
-    mock_aiomqtt_client,
-):
+async def test_publish_json(mqtt_client, mock_aiomqtt_client):
     mqtt_client._client = mock_aiomqtt_client
 
     payload = {"state": "ON"}
 
-    await mqtt_client.publish(
-        "test/topic",
-        payload,
-    )
+    await mqtt_client.publish("test/topic", payload)
 
     mock_aiomqtt_client.publish.assert_awaited_once_with(
         "test/topic",
@@ -198,26 +169,17 @@ async def test_publish_json(
 
 
 @pytest.mark.asyncio
-async def test_publish_without_connection(
-    mqtt_client,
-):
+async def test_publish_without_connection(mqtt_client):
     with pytest.raises(MQTTError):
-        await mqtt_client.publish(
-            "topic",
-            "payload",
-        )
+        await mqtt_client.publish("topic", "payload")
 
 
 # --------------------------------------------------
 # Subscribe
 # --------------------------------------------------
 
-
 @pytest.mark.asyncio
-async def test_subscribe(
-    mqtt_client,
-    mock_aiomqtt_client,
-):
+async def test_subscribe(mqtt_client, mock_aiomqtt_client):
     mqtt_client._client = mock_aiomqtt_client
 
     await mqtt_client.subscribe("test/topic")
@@ -226,9 +188,7 @@ async def test_subscribe(
 
 
 @pytest.mark.asyncio
-async def test_subscribe_without_connection(
-    mqtt_client,
-):
+async def test_subscribe_without_connection(mqtt_client):
     with pytest.raises(MQTTError):
         await mqtt_client.subscribe("test/topic")
 
@@ -237,10 +197,7 @@ async def test_subscribe_without_connection(
 # Callback
 # --------------------------------------------------
 
-
-def test_set_message_callback(
-    mqtt_client,
-):
+def test_set_message_callback(mqtt_client):
     callback = AsyncMock()
 
     mqtt_client.set_message_callback(callback)
@@ -252,11 +209,8 @@ def test_set_message_callback(
 # Listen
 # --------------------------------------------------
 
-
 @pytest.mark.asyncio
-async def test_listen_cancelled(
-    mqtt_client,
-):
+async def test_listen_cancelled(mqtt_client):
     mqtt_client._client = MagicMock()
 
     class MessageIterator:
@@ -273,9 +227,7 @@ async def test_listen_cancelled(
 
 
 @pytest.mark.asyncio
-async def test_listen_starts_reconnect(
-    mqtt_client,
-):
+async def test_listen_starts_reconnect(mqtt_client):
     mqtt_client._shutdown = False
     mqtt_client._config.reconnect = True
 
@@ -290,29 +242,18 @@ async def test_listen_starts_reconnect(
 
     mqtt_client._client.messages = MessageIterator()
 
-    async def dummy():
-        return None
+    await mqtt_client._listen()
 
-    dummy_task = asyncio.create_task(dummy())
-
-    with patch(
-        "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-        return_value=dummy_task,
-    ):
-        await mqtt_client._listen()
-
-    assert mqtt_client._reconnect_task is dummy_task
+    # reconnect must have been scheduled
+    assert mqtt_client._reconnect_task is not None
 
 
 # --------------------------------------------------
 # Reconnect
 # --------------------------------------------------
 
-
 @pytest.mark.asyncio
-async def test_reconnect_loop_success(
-    mqtt_client,
-):
+async def test_reconnect_loop_success(mqtt_client):
     mqtt_client._callbacks = {
         "topic/1": MagicMock(),
         "topic/2": MagicMock(),
@@ -333,9 +274,7 @@ async def test_reconnect_loop_success(
 
 
 @pytest.mark.asyncio
-async def test_reconnect_loop_backoff(
-    mqtt_client,
-):
+async def test_reconnect_loop_backoff(mqtt_client):
     call_count = 0
 
     async def start_connection():
@@ -360,15 +299,3 @@ async def test_reconnect_loop_backoff(
             await mqtt_client._reconnect_loop()
 
     assert call_count == 2
-
-
-def safe_create_task(coro):
-    try:
-        coro.close()
-    except Exception:
-        pass
-
-    async def dummy():
-        return None
-
-    return asyncio.create_task(dummy())
