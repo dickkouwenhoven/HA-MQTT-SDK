@@ -1,7 +1,5 @@
 from unittest.mock import MagicMock, patch
 
-from ha_mqtt_sdk.config.domains import HADomain
-
 
 # ------------------------------------------------------------------
 # create_entity
