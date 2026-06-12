@@ -55,7 +55,7 @@ class MockMQTTClient(PahoMQTTClient):
 class AsyncMockMQTTClient(AsyncMQTTClient):
     def __init__(self):
         self.published: list[tuple[str, Any, bool]] = []
-        self.subscribed: list[str]  = []
+        self.subscribed: list[str] = []
         self.callback: Callable[[str, str], Awaitable[None]] | None = None
         self.last_will = None
 
@@ -95,6 +95,7 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
 
     async def disconnect(self):
         pass
+
 
 @pytest.fixture
 def mqtt_client_sync():
