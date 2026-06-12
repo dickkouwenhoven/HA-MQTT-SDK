@@ -11,6 +11,7 @@ from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 # Fixtures
 # ------------------------------------------------------------------
 
+
 @pytest.fixture
 def mqtt_settings():
     config = MagicMock()
@@ -55,6 +56,7 @@ def mqtt_client(mqtt_settings, mock_aiomqtt_client):
 # Last Will
 # ------------------------------------------------------------------
 
+
 def test_set_last_will(mqtt_client):
     mqtt_client.set_last_will("device/status", "offline")
 
@@ -65,6 +67,7 @@ def test_set_last_will(mqtt_client):
 # ------------------------------------------------------------------
 # Connect
 # ------------------------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_connect(mqtt_client):
@@ -82,6 +85,7 @@ async def test_connect(mqtt_client):
 # ------------------------------------------------------------------
 # Start connection
 # ------------------------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_start_connection(mqtt_client, mock_aiomqtt_client):
@@ -113,6 +117,7 @@ async def test_start_connection_with_lwt(mqtt_client):
 # Disconnect
 # ----------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_disconnect(mqtt_client):
     async def dummy():
@@ -138,6 +143,7 @@ async def test_disconnect_without_client(mqtt_client):
 # --------------------------------------------------
 # Publish
 # --------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_publish_string(mqtt_client, mock_aiomqtt_client):
@@ -177,6 +183,7 @@ async def test_publish_without_connection(mqtt_client):
 # Subscribe
 # --------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_subscribe(mqtt_client, mock_aiomqtt_client):
     mqtt_client._client = mock_aiomqtt_client
@@ -196,6 +203,7 @@ async def test_subscribe_without_connection(mqtt_client):
 # Callback
 # --------------------------------------------------
 
+
 def test_set_message_callback(mqtt_client):
     callback = AsyncMock()
 
@@ -207,6 +215,7 @@ def test_set_message_callback(mqtt_client):
 # --------------------------------------------------
 # Listen
 # --------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_listen_cancelled(mqtt_client):
@@ -250,6 +259,7 @@ async def test_listen_starts_reconnect(mqtt_client):
 # --------------------------------------------------
 # Reconnect
 # --------------------------------------------------
+
 
 @pytest.mark.asyncio
 async def test_reconnect_loop_success(mqtt_client):
