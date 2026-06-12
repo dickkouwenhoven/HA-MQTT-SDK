@@ -5,6 +5,8 @@
 #    create_entity,
 # )
 
+from ha_mqtt_sdk.config.domains import HADomain
+
 from unittest.mock import MagicMock, patch
 
 # ------------------------------------------------------------------
