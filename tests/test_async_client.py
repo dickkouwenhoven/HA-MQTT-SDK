@@ -90,7 +90,7 @@ async def test_start_connection(
 ):
     with patch(
         "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-        return_value=safe_create_taskdummy_task,
+        return_value=safe_create_task,
     ) as create_task:
         await mqtt_client._start_connection()
 
