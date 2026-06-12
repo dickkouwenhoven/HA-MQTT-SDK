@@ -92,7 +92,7 @@ async def test_start_connection(
         return None
 
     dummy_task = asyncio.create_task(dummy())
-    
+
     with patch(
         "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
         return_value=dummy_task,
