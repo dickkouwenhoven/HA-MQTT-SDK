@@ -96,7 +96,7 @@ async def test_start_connection(
     with patch(
         "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
         return_value=dummy_task,
-    ):
+    ) as create_task:
         await mqtt_client._start_connection()
 
         mock_aiomqtt_client.__aenter__.assert_awaited_once()
