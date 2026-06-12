@@ -128,7 +128,7 @@ async def test_disconnect(mqtt_client):
     async def dummy():
         await asyncio.sleep(3600)
 
-    task = asyncio.create_task(dummy())    
+    task = asyncio.create_task(dummy())
 
     mqtt_client._listen_task = task
     mqtt_client._client = AsyncMock()
@@ -224,9 +224,7 @@ async def test_subscribe_without_connection(
     mqtt_client,
 ):
     with pytest.raises(MQTTError):
-        await mqtt_client.subscribe(
-            "test/topic"
-        )
+        await mqtt_client.subscribe("test/topic")
 
 
 # --------------------------------------------------
