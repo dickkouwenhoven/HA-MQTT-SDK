@@ -208,13 +208,8 @@ class AsyncMQTTClient(BaseMQTTClient):
                 delay = min(delay * 2, self._config.reconnect_delay_max)
 
     def _ensure_reconnect_task(self) -> None:
-        if (
-            self._reconnect_task is None
-            or self._reconnect_task.done()
-        ):
-            self._reconnect_task = asyncio.create_task(
-                self._reconnect_loop()
-            )
+        if self._reconnect_task is None or self._reconnect_task.done():
+            self._reconnect_task = asyncio.create_task(self._reconnect_loop())
 
     def _clear_reconnect_task(self, task: asyncio.Task) -> None:
         if self._reconnect_task is task:
