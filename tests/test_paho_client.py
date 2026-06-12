@@ -6,6 +6,8 @@ import pytest
 from ha_mqtt_sdk.exceptions import MQTTError, ValidationError
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
+from .conftest import MockMQTTClient
+
 
 @pytest.fixture
 def mqtt_config():
@@ -28,12 +30,12 @@ def mqtt_config():
 
 
 @pytest.fixture
-def mqtt_client(mqtt_config):
-    with patch("your_package.mqtt.paho_client.mqtt.Client") as mock_client_cls:
+def mqtt_client(mqtt_settings):
+    with patch("ha_mqtt_sdk.mqtt.paho_client.mqtt.Client") as mock_client_cls:
         mock_client = MagicMock()
         mock_client_cls.return_value = mock_client
 
-        client = PahoMQTTClient(mqtt_config)
+        client = MockMQTTClient(mqtt_settings)
 
         yield client
 
