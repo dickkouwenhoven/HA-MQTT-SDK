@@ -88,9 +88,7 @@ async def test_start_connection(
     mqtt_client,
     mock_aiomqtt_client,
 ):
-    with patch(
-        "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task"
-    ) as create_task:
+    with patch("ha_mqtt_sdk.mqtt.async_client.asyncio.create_task") as create_task:
         await mqtt_client._start_connection()
 
         mock_aiomqtt_client.__aenter__.assert_awaited_once()
@@ -117,9 +115,7 @@ async def test_start_connection_with_lwt(
 
         client_cls.return_value = client_instance
 
-        with patch(
-            "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task"
-        ):
+        with patch("ha_mqtt_sdk.mqtt.async_client.asyncio.create_task"):
             await mqtt_client._start_connection()
 
         client_cls.assert_called_once()
