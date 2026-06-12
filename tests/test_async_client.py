@@ -362,7 +362,7 @@ async def test_reconnect_loop_backoff(
     assert call_count == 2
 
 
-def safe_create_task(core):
+def safe_create_task(coro):
     try:
         coro.close()
     except Exception:
