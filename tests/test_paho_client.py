@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from ..exceptions import MQTTError, ValidationError
+from .exceptions import MQTTError, ValidationError
 from ..mqtt.paho_client import PahoMQTTClient
 
 
