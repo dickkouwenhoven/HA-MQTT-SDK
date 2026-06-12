@@ -44,13 +44,14 @@ class MockMQTTClient(PahoMQTTClient):
 
     def simulate_message(self, topic, payload):
         if self.callback:
-            self.callback(topic, payload)    
+            self.callback(topic, payload)
 
     def connect(self):
         pass
 
     def disconnect(self):
         pass
+
 
 class AsyncMockMQTTClient(AsyncMQTTClient):
     def __init__(self):
