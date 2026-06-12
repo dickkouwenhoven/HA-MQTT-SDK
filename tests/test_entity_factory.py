@@ -78,11 +78,11 @@ def test_build_registration(
 
     mock_discovery_payload.return_value = {"name": "Temperature"}
 
-    mock_state_topic.return_value = ("homeassistant/sensor/test/state")
+    mock_state_topic.return_value = "homeassistant/sensor/test/state"
 
-    mock_command_topic.return_value = ("homeassistant/sensor/test/set")
+    mock_command_topic.return_value = "homeassistant/sensor/test/set"
 
-    mock_availability_topic.return_value = ("homeassistant/sensor/test/availability")
+    mock_availability_topic.return_value = "homeassistant/sensor/test/availability"
 
     registration = build_registration(
         entity,
