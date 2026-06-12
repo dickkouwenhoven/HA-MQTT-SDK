@@ -10,7 +10,7 @@ from .conftest import MockMQTTClient
 
 
 @pytest.fixture
-def mqtt_config():
+def mqtt_settings():
     config = MagicMock()
 
     config.client_id = "test-client"
