@@ -107,9 +107,7 @@ async def test_start_connection_with_lwt(
     with patch("ha_mqtt_sdk.mqtt.async_client.aiomqtt.Client") as client_cls:
         client_instance = AsyncMock()
 
-        client_instance.__aenter__ = AsyncMock(
-            return_value=client_instance
-        )
+        client_instance.__aenter__ = AsyncMock(return_value=client_instance)
 
         client_cls.return_value = client_instance
 
@@ -128,7 +126,7 @@ async def test_start_connection_with_lwt(
 async def test_disconnect(mqtt_client):
 
     async def dummy():
-        await asyncio.sleep(3600)        
+        await asyncio.sleep(3600)
 
     task = asyncio.create_task(dummy())    
 
