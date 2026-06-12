@@ -71,13 +71,13 @@ def test_set_last_will(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_connect(mqtt_client, mqtt_config):
+def test_connect(mqtt_client, mqtt_settings):
     mqtt_client.connect()
 
     mqtt_client._client.connect.assert_called_once_with(
-        mqtt_config.host,
-        mqtt_config.port,
-        mqtt_config.keepalive,
+        mqtt_settings.host,
+        mqtt_settings.port,
+        mqtt_settings.keepalive,
     )
 
     mqtt_client._client.loop_start.assert_called_once()
