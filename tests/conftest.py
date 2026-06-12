@@ -1,7 +1,7 @@
 import pytest
 
 from collections.abc import Callable
-from typin import Any
+from typing import Any
 
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
