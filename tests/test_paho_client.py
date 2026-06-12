@@ -3,8 +3,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from .exceptions import MQTTError, ValidationError
-from ..mqtt.paho_client import PahoMQTTClient
+from ha_mqtt_sdk.exceptions import MQTTError, ValidationError
+from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
 
 @pytest.fixture
