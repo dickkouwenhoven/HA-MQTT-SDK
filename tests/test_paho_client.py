@@ -188,9 +188,7 @@ def test_on_connect_success(mqtt_client):
     mqtt_client._on_connect(None, None, None, 0)
 
     assert mqtt_client._connected is True
-    assert mqtt_client._reconnect_delay == (
-        mqtt_client._config.reconnect_delay_min
-    )
+    assert mqtt_client._reconnect_delay == mqtt_client._config.reconnect_delay_min
 
 
 def test_on_connect_failure(mqtt_client):
