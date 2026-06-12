@@ -57,7 +57,12 @@ class AsyncMQTTClient(BaseMQTTClient):
     # -------------------------
 
     async def connect(self) -> None:
+        if self._listen_task and not self._listen_task.done():
+            self._logger.info("Client already connected with MQTT broker")
+            return
+
         self._logger.info("Connecting (async) to MQTT broker")
+
         self._shutdown = False
         await self._start_connection()
 
@@ -88,24 +93,34 @@ class AsyncMQTTClient(BaseMQTTClient):
         self._logger.info("Connected (async) to MQTT broker")
 
     async def disconnect(self) -> None:
+        if self._shutdown:
+            return
+
         self._shutdown = True
 
         if self._reconnect_task:
             self._reconnect_task.cancel()
+
             try:
                 await self.reconnect_task
             except asyncio.CancelledError:
                 pass
+            finally:
+                self._reconnect_task = None
 
         if self._listen_task:
             self._listen_task.cancel()
+
             try:
                 await self._listen_task
             except asyncio.CancelledError:
                 pass
+            finally:
+                self._listen_task = None
 
         if self._client:
             await self._client.__aexit__(None, None, None)
+            self._client = None
 
     # -------------------------
     # Publish / Subscribe
@@ -153,8 +168,17 @@ class AsyncMQTTClient(BaseMQTTClient):
             raise
         except Exception as e:
             self._logger.warning("Listener dropped with error: %s", e)
-            if not self._shutdown and self._config.reconnect:
-                self._reconnect_task = asyncio.create_task(self._reconnect_loop())
+
+            if self._shutdown:
+                return
+
+            if not self._config.reconnect:
+                return
+
+            if self._reconnect_task is None or self._reconnect_task.done():
+                task = asyncio.create_task(self._reconnect_loop())
+                task.add_done_callback(self._clear_reconnect_task)
+                self._reconnect_task = task
 
     async def _reconnect_loop(self) -> None:
         """
@@ -176,6 +200,22 @@ class AsyncMQTTClient(BaseMQTTClient):
                 self._logger.info("Reconnected successfully")
                 self._reconnect_task = None
                 return
+            except asyncio.CancelledError:
+                self._logger.debug("Reconnect task cancelled")
+                raise
             except Exception as e:
                 self._logger.warning("Reconnect attempt failed: %s", e)
                 delay = min(delay * 2, self._config.reconnect_delay_max)
+
+    def _ensure_reconnect_task(self) -> None
+        if (
+            self._reconnect_task is None
+            or self._reconnect_task.done()
+        ):
+            self._reconnect_task = asyncio.create_task(
+                self._reconnect_loop()
+            )
+
+    def _clear_reconnect_task(self, task: asyncio.Task) -> None:
+        if self._reconnect_task is Task:
+            self._reconnect_task = None
