@@ -40,7 +40,7 @@ def test_create_entity_calls_validate(
 
 def test_create_entity_with_optional_fields():
     device_info = {
-        "identifiers": ["device_1"],
+        "identifiers": [("device_1", "sensor")],
         "manufacturer": "Test",
     }
 
