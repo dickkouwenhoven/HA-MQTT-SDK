@@ -207,7 +207,7 @@ class AsyncMQTTClient(BaseMQTTClient):
                 self._logger.warning("Reconnect attempt failed: %s", e)
                 delay = min(delay * 2, self._config.reconnect_delay_max)
 
-    def _ensure_reconnect_task(self) -> None
+    def _ensure_reconnect_task(self) -> None:
         if (
             self._reconnect_task is None
             or self._reconnect_task.done()
