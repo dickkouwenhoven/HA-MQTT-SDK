@@ -216,7 +216,7 @@ def test_on_disconnect_intentional(mqtt_client):
     assert mqtt_client._connected is False
 
 
-@patch("your_package.mqtt.paho_client.threading.Thread")
+@patch("ha_mqtt_sdk.mqtt.paho_client.threading.Thread")
 def test_on_disconnect_starts_reconnect_thread(
     mock_thread,
     mqtt_client,
@@ -234,7 +234,7 @@ def test_on_disconnect_starts_reconnect_thread(
 # ------------------------------------------------------------------
 
 
-@patch("your_package.mqtt.paho_client.time.sleep")
+@patch("ha_mqtt_sdk.mqtt.paho_client.time.sleep")
 def test_reconnect_loop_success(mock_sleep, mqtt_client):
     mqtt_client._shutdown = False
     mqtt_client._connected = False
@@ -249,7 +249,7 @@ def test_reconnect_loop_success(mock_sleep, mqtt_client):
     mqtt_client._client.reconnect.assert_called_once()
 
 
-@patch("your_package.mqtt.paho_client.time.sleep")
+@patch("ha_mqtt_sdk.mqtt.paho_client.time.sleep")
 def test_reconnect_loop_backoff(mock_sleep, mqtt_client):
     mqtt_client._shutdown = False
     mqtt_client._connected = False
