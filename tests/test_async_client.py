@@ -290,11 +290,18 @@ async def test_listen_starts_reconnect(
 
     mqtt_client._client.messages = MessageIterator()
 
+    async def dummy():
+        return None
+        
+    dummy_task = asyncio.create_task(dummy())
+    
     with patch(
         "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-        return_value=safe_create_task,
+        return_value=dummy_task,
     ):
         await mqtt_client._listen()
+
+    assert mqtt_client._reconnect_task is dummy_task
 
 
 # --------------------------------------------------
