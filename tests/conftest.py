@@ -1,7 +1,7 @@
-import pytest
-
 from collections.abc import Awaitable, Callable
 from typing import Any
+
+import pytest
 
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
