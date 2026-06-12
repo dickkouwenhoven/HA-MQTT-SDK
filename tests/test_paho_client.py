@@ -253,16 +253,19 @@ def test_reconnect_loop_backoff(mock_sleep, mqtt_client):
     mqtt_client._connected = False
     mqtt_client._reconnect_delay = 1
 
-    mqtt_client._client.reconnect.side_effect = Exception("boom")
+    call_count = 0
 
-    with patch.object(
-        mqtt_client,
-        "_connected",
-        new_callable=lambda: False,
-    ):
-        try:
-            mqtt_client._reconnect_loop()
-        except Exception:
-            pass
+    def reconnect_side_effect():
+        nonlocal call_count
+        call_count += 1
+
+        if call_count == 1:
+            raise Exception("boom")
+
+        mqtt_client._connected = True
+
+    mqtt_client._client.reconnect.side_effect = reconnect_side_effect
+
+    mqtt_client._reconnect_loop()
 
     assert mqtt_client._reconnect_delay == 2
