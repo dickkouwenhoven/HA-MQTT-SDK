@@ -1,5 +1,8 @@
 import pytest
 
+from collections.abc import Callable
+from typin import Any
+
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
@@ -8,9 +11,9 @@ from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
 class MockMQTTClient(PahoMQTTClient):
     def __init__(self):
-        self.published: list[tuple] = []
+        self.published: list[tuple[str, Any, bool]] = []
         self.subscribed: list[str] = []
-        self.callback = None
+        self.callback: Callable[[str, str], None] | None = None
         self.last_will = None
 
     def publish(
@@ -42,34 +45,19 @@ class MockMQTTClient(PahoMQTTClient):
 
     def simulate_message(self, topic, payload):
         if self.callback:
-            self.callback(topic, payload)
+            self.callback(topic, payload)    
 
-    def test_sensor_not_subscribed(
-        mqtt_client_sync,
-    ):
-        from ha_mqtt_sdk.core.entity_manager import EntityManager
+    def connect(self):
+        pass
 
-        manager = EntityManager(
-            mqtt_client_sync,
-            MQTTSettings(discovery_prefix="homeassistant"),
-        )
-
-        entity = manager.create_entity(
-            domain=HADomain.SENSOR,
-            name="Temp",
-            unique_id="temp_1",
-        )
-
-        manager.register(entity)
-
-        assert mqtt_client_sync.subscribed == []
-
+    def disconnect(self):
+        pass
 
 class AsyncMockMQTTClient(AsyncMQTTClient):
     def __init__(self):
-        self.published = []
-        self.subscribed = []
-        self.callback = None
+        self.published: list[tuple[str, Any, bool]] = []
+        self.subscribed: list[str]  = []
+        self.callback: Callabe[[str, str], Awaitable[None]] | None = None
         self.last_will = None
 
     async def publish(
@@ -103,6 +91,11 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
         if self.callback:
             await self.callback(topic, payload)
 
+    async def connect(self):
+        pass
+
+    async def disconnect(self):
+        pass
 
 @pytest.fixture
 def mqtt_client_sync():
