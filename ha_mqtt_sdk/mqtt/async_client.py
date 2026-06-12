@@ -134,13 +134,13 @@ class AsyncMQTTClient(BaseMQTTClient):
                 topic = str(msg.topic)
                 payload = msg.payload.decode()
 
-            self._logger.debug("Received message on %s: %s", topic, payload)
+                self._logger.debug("Received message on %s: %s", topic, payload)
 
-            if self._message_callback:
-                try:
-                    await self._message_callback(topic, payload)
-                except Exception as e:
-                    self._logger.error("Error in message callback for %s: %s", topic, e)
+                if self._message_callback:
+                    try:
+                        await self._message_callback(topic, payload)
+                    except Exception as e:
+                        self._logger.error("Error in message callback for %s: %s", topic, e)
         except asyncio.CancelledError:
             raise
         except Exception as e:
