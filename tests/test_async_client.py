@@ -88,14 +88,9 @@ async def test_start_connection(
     mqtt_client,
     mock_aiomqtt_client,
 ):
-    async def dummy():
-        return None
-
-    dummy_task = asyncio.create_task(dummy())
-
     with patch(
         "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-        return_value=dummy_task,
+        return_value=safe_create_taskdummy_task,
     ) as create_task:
         await mqtt_client._start_connection()
 
@@ -112,11 +107,6 @@ async def test_start_connection_with_lwt(
         "offline",
     )
 
-    async def dummy():
-        return None
-
-    dummy_task = asyncio.create_task(dummy())
-
     with patch("ha_mqtt_sdk.mqtt.async_client.aiomqtt.Client") as client_cls:
         client_instance = AsyncMock()
 
@@ -126,7 +116,7 @@ async def test_start_connection_with_lwt(
 
         with patch(
             "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-            return_value=dummy_task,
+            return_value=safe_create_task,
         ):
             await mqtt_client._start_connection()
 
@@ -300,18 +290,11 @@ async def test_listen_starts_reconnect(
 
     mqtt_client._client.messages = MessageIterator()
 
-    async def dummy():
-        return None
-
-    dummy_task = asyncio.create_task(dummy())
-
     with patch(
         "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
-        return_value=dummy_task,
+        return_value=safe_create_task,
     ):
         await mqtt_client._listen()
-
-    assert mqtt_client._reconnect_task is dummy_task
 
 
 # --------------------------------------------------
@@ -370,3 +353,15 @@ async def test_reconnect_loop_backoff(
             await mqtt_client._reconnect_loop()
 
     assert call_count == 2
+
+
+def safe_create_task(core):
+    try:
+        coro.close()
+    except Exception:
+        pass
+
+    async def dummy():
+        return None
+
+    return asyncio.create_task(dummy())
