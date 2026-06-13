@@ -325,7 +325,7 @@ async def test_subscribe_stores_subscriptions(
 
     await mqtt_client.subscribe("test/topic")
 
-    assert "test/topic"in mqtt_client._subscriptions
+    assert "test/topic" in mqtt_client._subscriptions
 
 
 @pytest.mark.asyncio
@@ -333,9 +333,7 @@ async def test_disconnect_cancels_reconnect_task(mqtt_client):
     async def dummy():
         await asyncio.sleep(3600)
 
-    mqtt_client._reconnect_task = asyncio.create_task(
-        dummy()
-    )
+    mqtt_client._reconnect_task = asyncio.create_task(dummy())
 
     await mqtt_client.disconnect()
 
@@ -366,9 +364,7 @@ async def test_publish_wraps_exception(
 ):
     mqtt_client._client = mock_aiomqtt_client
 
-    mock_aiomqtt_client.publish.side_effect = RuntimeError(
-        "boom"
-    )
+    mock_aiomqtt_client.publish.side_effect = RuntimeError("boom")
 
     with pytest.raises(MQTTError):
         await mqtt_client.publish(
