@@ -26,6 +26,7 @@ from ..builders.topic_manager import (
     build_state_topic,
 )
 from ..config.domains import HADomain
+from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..utils.logger import get_logger
 
@@ -52,7 +53,7 @@ def create_entity(
     domain: HADomain,
     name: str,
     unique_id: str,
-    device_info: dict[str, Any] | None = None,
+    device_info: DeviceInfo | None = None,
     extra: dict[str, Any] | None = None,
 ) -> Entity:
     """
