@@ -9,6 +9,7 @@ from ha_mqtt_sdk.plugin_interface import IntegrationPlugin
 # 1. ABC cannot be instantiated
 # -------------------------------------------------
 
+
 def test_integration_plugin_cannot_be_instantiated():
     with pytest.raises(TypeError):
         IntegrationPlugin()
@@ -17,6 +18,7 @@ def test_integration_plugin_cannot_be_instantiated():
 # -------------------------------------------------
 # 2. Fake implementation for testing contract
 # -------------------------------------------------
+
 
 class FakePlugin(IntegrationPlugin):
     def map_device(self, data, entity_manager):
@@ -29,6 +31,7 @@ class FakePlugin(IntegrationPlugin):
 # -------------------------------------------------
 # 3. Contract behavior tests
 # -------------------------------------------------
+
 
 def test_fake_plugin_map_device_returns_entities():
     plugin = FakePlugin()
@@ -53,6 +56,7 @@ def test_fake_plugin_handle_command_returns_expected_string():
 # -------------------------------------------------
 # 4. Ensure abstract methods are enforced
 # -------------------------------------------------
+
 
 def test_missing_method_implementation_raises_error():
     class BrokenPlugin(IntegrationPlugin):
