@@ -76,7 +76,7 @@ class PahoMQTTClient(BaseMQTTClient):
         """
         self._lwt_topic = topic
         self._lwt_payload = payload
-        
+
         self._client.will_set(topic, payload=payload, retain=True)
         self._logger.debug("Last will set on topic: %s", topic)
 
@@ -167,11 +167,7 @@ class PahoMQTTClient(BaseMQTTClient):
 
                     self._logger.debug("Re-subscribed to topic: %s", topic)
                 except Exception as e:
-                    self._logger.warning(
-                        "Failed to re-subscribe %s: %s",
-                        topic,
-                        e
-                    )                        
+                    self._logger.warning("Failed to re-subscribe %s: %s", topic, e)                        
         else:
             self._logger.error("Failed to connect, rc=%s", reason_code)
 
@@ -190,19 +186,16 @@ class PahoMQTTClient(BaseMQTTClient):
     def _ensure_reconnect_thread(self) -> None:
         with self._reconnect_lock:
 
-            if (
-                self._reconnect_thread
-                and self._reconnect_thread.is_alive()
-            ):
+            if self._reconnect_thread and self._reconnect_thread.is_alive():
                 return
 
             self._reconnect_thread = threading.Thread(
-                target =self._reconnect_loop,
+                target=self._reconnect_loop,
                 daemon=True,
             )
 
             self._reconnect_thread.start()
- 
+
     def _reconnect_loop(self) -> None:
         """
         Blocking reconnect loop with exponential backoff.
