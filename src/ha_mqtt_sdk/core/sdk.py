@@ -125,7 +125,7 @@ class HASDK:
         device_info=None,
         extra=None,
     ):
-        return self._entity.manager.create_entity(
+        return self._entity_manager.create_entity(
             domain=domain,
             name=name,
             unique_id=unique_id,
