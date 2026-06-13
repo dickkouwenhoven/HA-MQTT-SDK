@@ -9,6 +9,7 @@ from ha_mqtt_sdk.plugin_manager import PluginManager
 # Helpers
 # -------------------------------------------------
 
+
 @pytest.fixture
 def plugin_manager():
     return PluginManager()
@@ -22,6 +23,7 @@ def mock_plugin():
 # -------------------------------------------------
 # Tests
 # -------------------------------------------------
+
 
 def test_register_plugin_stores_plugin(plugin_manager, mock_plugin):
     plugin_manager.register_plugin("hue", mock_plugin)
