@@ -274,7 +274,7 @@ def test_reconnect_loop_success(mock_sleep, mqtt_client):
 def test_reconnect_loop_retries(mock_sleep, mqtt_client):
     mqtt_client._shutdown = False
     mqtt_client._connected = False
-    
+
     attempts = 0
 
     def reconnect_side_effect():
