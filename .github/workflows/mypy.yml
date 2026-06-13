@@ -29,4 +29,4 @@ jobs:
 
       - name: Run tests
         run: |
-          mypy ha_mqtt_sdk
+          mypy .
