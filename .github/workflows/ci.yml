@@ -12,6 +12,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        python-version: ["3.13", "3.14"]
+
     services:
       mqtt:
         image: eclipse-mosquitto:2.0
@@ -19,13 +23,13 @@ jobs:
           - 1883:1883
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Python
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
@@ -34,4 +38,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --cove=ha_mqtt_sdk --cov-report=term-missing --cov-fail-under=90 
+          pytest --cov=ha_mqtt_sdk --cov-report=term-missing --cov-fail-under=90 
