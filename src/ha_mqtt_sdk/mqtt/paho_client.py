@@ -178,7 +178,13 @@ class PahoMQTTClient(BaseMQTTClient):
         else:
             self._logger.error("Failed to connect, rc=%s", reason_code)
 
-    def _on_disconnect(self, client, userdata, reason_code, properties=None) -> None:
+    def _on_disconnect(
+        self,
+        client: mqtt.Client,
+        userdata: object,
+        reason_code: mqtt.ReasonCode,
+        properties: mqtt.Properties | None = None,
+    ) -> None:
         self._connected = False
 
         if self._shutdown:
