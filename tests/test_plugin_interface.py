@@ -22,7 +22,7 @@ def test_integration_plugin_cannot_be_instantiated():
 
 class FakePlugin(IntegrationPlugin):
     def map_device(self, data, entity_manager):
-        return [Entity(unique_id="test", name="Test")]
+        return [Entity(domain="sensor", unique_id="test", name="Test")]
 
     def handle_command(self, topic, payload):
         return f"{topic}:{payload}"
