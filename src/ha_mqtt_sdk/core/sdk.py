@@ -53,6 +53,7 @@ class HASDK:
         if mqtt_client:
             self._mqtt = mqtt_client
         else:
+            assert mqtt_settings is not None
             self._mqtt = PahoMQTTClient(mqtt_settings)
 
         self._entity_manager = EntityManager(self._mqtt, self._mqtt_settings)
