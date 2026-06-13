@@ -36,8 +36,8 @@ class BaseMQTTClient(ABC):
         """Publish a message to a topic."""
 
     @abstractmethod
-    def subscribe(self, topic: str, callback: MessageCallback) -> None:
-        """Subscribe to a topic and register a message callback."""
+    def subscribe(self, topic: str) -> None:
+        """Subscribe to a topic."""
 
     @abstractmethod
     def set_message_callback(self, callback: MessageCallback) -> None:
