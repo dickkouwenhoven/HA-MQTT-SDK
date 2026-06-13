@@ -2,7 +2,10 @@ name: Ruff
 
 on:
   push:
-    branches: ["main", "master", "develop"]
+    branches: 
+      - main
+      - master
+      - develop      
   pull_request:
 
 jobs:
