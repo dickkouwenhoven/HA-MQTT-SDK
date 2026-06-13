@@ -119,6 +119,7 @@ def test_publish_json_payload(mqtt_client):
 
 
 def test_publish_with_retain(mqtt_client):
+    mqtt_client._connected = True
     mqtt_client.publish("test/topic", "ON", retain=True)
 
     mqtt_client._client.publish.assert_called_once_with(
