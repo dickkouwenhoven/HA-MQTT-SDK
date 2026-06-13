@@ -166,7 +166,10 @@ def test_message_callback_invoked(mqtt_client):
 
     mqtt_client._on_message(None, None, msg)
 
-    callback.assert_called_once_with("sensor/temp", "22.5")
+    callback.assert_called_once_with(
+        "sensor/temp",
+        "22.5",
+    )
 
 
 def test_message_callback_not_set(mqtt_client):
