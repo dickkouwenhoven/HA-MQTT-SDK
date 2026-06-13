@@ -5,7 +5,6 @@ from unittest.mock import MagicMock
 from ha_mqtt_sdk.models.entity import Entity
 from ha_mqtt_sdk.plugin_interface import IntegrationPlugin
 
-
 # -------------------------------------------------
 # 1. ABC cannot be instantiated
 # -------------------------------------------------
