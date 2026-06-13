@@ -239,15 +239,16 @@ def test_on_disconnect_intentional(mqtt_client):
 
 @patch("ha_mqtt_sdk.mqtt.paho_client.threading.Thread")
 def test_on_disconnect_starts_reconnect_thread(
-    mock_thread,
     mqtt_client,
 ):
     mqtt_client._shutdown = False
     mqtt_client._config.reconnect = True
 
+    mqtt_client._ensure_reconnect_thread = MagicMock()
+
     mqtt_client._on_disconnect(None, None, 1)
 
-    mock_thread.assert_called_once()
+    mqtt_client._ensure_reconnect_thread.assert_called_once()
 
 
 # ------------------------------------------------------------------
