@@ -141,3 +141,8 @@ def test_payload_keeps_state_topic_after_build(
     }
 
     assert required_fields.issubset(payload.keys())
+
+
+def test_validate_entity_invalid_type_raises():
+    with pytest.raises(EntityError):
+        _validate_entity("not_an_entity")
