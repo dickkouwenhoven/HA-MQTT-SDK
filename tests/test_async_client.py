@@ -307,7 +307,8 @@ async def test_reconnect_loop_backoff(mqtt_client):
             mqtt_client,
             "_start_connection",
             side_effect=start_connection,
-        ), patch(
+        ),
+        patch(
             "ha_mqtt_sdk.mqtt.async_client.asyncio.sleep",
             AsyncMock(),
         ),
