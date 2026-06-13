@@ -155,7 +155,14 @@ class PahoMQTTClient(BaseMQTTClient):
     # Internal callbacks
     # -----------------------
 
-    def _on_connect(self, client, userdata, flags, reason_code, properties=None) -> None:
+    def _on_connect(
+        self,
+        client: mqtt.Client,
+        userdata: object,
+        flags: mqtt.ConnectFlags,
+        reason_code: mqtt.ReasonCode,
+        properties: mqtt.Properties | None = None,
+    ) -> None:
         if reason_code == 0:
             self._connected = True
             self._logger.info("Connected to MQTT broker")
