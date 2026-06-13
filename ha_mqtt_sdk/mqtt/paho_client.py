@@ -167,7 +167,11 @@ class PahoMQTTClient(BaseMQTTClient):
 
                     self._logger.debug("Re-subscribed to topic: %s", topic)
                 except Exception as e:
-                    self._logger.warning("Failed to re-subscribe %s: %s", topic, e)                        
+                    self._logger.warning(
+                        "Failed to re-subscribe %s: %s",
+                        topic,
+                        e
+                    )                        
         else:
             self._logger.error("Failed to connect, rc=%s", reason_code)
 
