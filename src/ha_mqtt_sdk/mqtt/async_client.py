@@ -9,6 +9,7 @@ Used by:
 """
 
 import asyncio
+import contextlib
 import json
 from collections.abc import Callable
 from typing import Any
@@ -81,10 +82,8 @@ class AsyncMQTTClient(BaseMQTTClient):
             )
 
         if self._client:
-            try:
+            with contextlib.suppress(Exception):
                 await self._client.__aexit__(None, None, None)
-            except Exception:
-                pass
 
         self._client = aiomqtt.Client(
             hostname=self._config.host,
