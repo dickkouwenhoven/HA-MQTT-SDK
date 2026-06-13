@@ -26,8 +26,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
       - name: Run tests
         run: |
-          pytest -v 
+          pytest --cove=ha_mqtt_sdk --cov-report=term-missing --cov-fail-under=90 
