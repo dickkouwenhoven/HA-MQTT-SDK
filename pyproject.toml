@@ -73,7 +73,8 @@ select = [
 	"F",
 	"I",
 	"UP",
-	"B",	
+	"B",
+	"SIM",
 ]
 
 [tool.pytest.ini_options]
