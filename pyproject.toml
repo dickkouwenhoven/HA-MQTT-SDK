@@ -57,7 +57,7 @@ Issues = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/issues"
 # -------------------------
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["ha_mqtt_sdk*"]
 
 [tool.setuptools]
