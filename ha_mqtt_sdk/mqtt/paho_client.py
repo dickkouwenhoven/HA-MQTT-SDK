@@ -163,7 +163,7 @@ class PahoMQTTClient(BaseMQTTClient):
             # Re-subscribe after reconnect
             for topic in self._subscriptions:
                 try:
-                    self._client.suscribe(topic)
+                    self._client.subscribe(topic)
 
                     self._logger.debug("Re-subscribed to topic: %s", topic)
                 except Exception as e:
