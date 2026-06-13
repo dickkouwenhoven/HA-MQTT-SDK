@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 
 from ha_mqtt_sdk.plugin_interface import IntegrationPlugin
 from ha_mqtt_sdk.plugin_manager import PluginManager
