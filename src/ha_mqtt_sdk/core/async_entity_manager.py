@@ -279,7 +279,7 @@ class AsyncEntityManager:
         try:
             await callback(topic, payload)
         except Exception as e:
-            _logger.erro(
+            _logger.error(
                 "Error handling command for %s: %s",
                 topic,
                 str(e),
