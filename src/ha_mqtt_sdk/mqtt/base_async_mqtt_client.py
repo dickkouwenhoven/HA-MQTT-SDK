@@ -28,17 +28,17 @@ class BaseAsyncMQTTClient(ABC):
         """Establish connection to the MQTT broker."""
 
     @abstractmethod
-    def disconnect(self) -> None:
+    async def disconnect(self) -> None:
         """Disconnect from the MQTT broker."""
 
     @abstractmethod
-    def publish(self, topic: str, payload: str, retain: bool = False) -> None:
+    async def publish(self, topic: str, payload: str, retain: bool = False) -> None:
         """Publish a message to a topic."""
 
     @abstractmethod
-    def subscribe(self, topic: str) -> None:
+    async def subscribe(self, topic: str) -> None:
         """Subscribe to a topic."""
 
     @abstractmethod
-    def set_message_callback(self, callback: MessageCallback) -> None:
+    async def set_message_callback(self, callback: MessageCallback) -> None:
         """Register a global message handler."""
