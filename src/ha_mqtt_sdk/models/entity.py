@@ -138,15 +138,18 @@ class Entity:
             if not any(key in self.device_info for key in ("identifiers", "connections")):
                 raise EntityError("At least one of 'identifiers' or 'connections' must be provided")
 
-            identifiers = self.device_info.get("identifiers")
+            if "identifiers" in self.device_info:
+                identifiers = self.device_info["identifiers"]
+                assert identifiers is not None
 
-            if identifiers is not None:
                 self._validate_tuple_collection(
                     self.device_info["identifiers"],
                     "identifiers",
                 )
 
             if "connections" in self.device_info:
+                connections = self.device_info["connections"]
+                assert connections is not None
                 self._validate_tuple_collection(
                     self.device_info["connections"],
                     "connections",
