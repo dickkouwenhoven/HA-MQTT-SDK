@@ -10,8 +10,8 @@ from ..models.device_info import DeviceInfo
 
 def create_device_info(
     *,
-    identifiers: set[tuple[str, str]] | None = None,
-    connections: set[tuple[str, str]] | None = None,
+    identifiers: list[tuple[str, str]] | None = None,
+    connections: list[tuple[str, str]] | None = None,
     manufacturer: str | None = None,
     model: str | None = None,
     name: str | None = None,
