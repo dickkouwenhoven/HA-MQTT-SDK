@@ -25,7 +25,7 @@ class AsyncMQTTClient(BaseMQTTClient):
     def __init__(self, config: MQTTSettings):
         self._config = config
         self._logger = get_logger(__name__)
-        self._callbacks: dict[str, Callable] = {}
+        self._subscriptions: set[str] = set()
         self._message_callback: Callable | None = None
         self._client: aiomqtt.Client | None = None
         self._listen_task: asyncio.Task | None = None
@@ -33,6 +33,7 @@ class AsyncMQTTClient(BaseMQTTClient):
         self._lwt_topic: str | None = None
         self._lwt_payload: str = "offline"
         self._reconnect_task: asyncio.Task | None = None
+        self._reconnect_lock = asyncio.Lock()
 
     # -------------------------
     # LWT
@@ -79,6 +80,12 @@ class AsyncMQTTClient(BaseMQTTClient):
                 retain=True,
             )
 
+        if self._client:
+            try:
+                await self._client.__aexit__(None, None, None)
+            except Exception:
+                pass
+
         self._client = aiomqtt.Client(
             hostname=self._config.host,
             port=self._config.port,
@@ -102,7 +109,7 @@ class AsyncMQTTClient(BaseMQTTClient):
             self._reconnect_task.cancel()
 
             try:
-                await self.reconnect_task
+                await self._reconnect_task
             except asyncio.CancelledError:
                 pass
             finally:
@@ -131,13 +138,19 @@ class AsyncMQTTClient(BaseMQTTClient):
             raise MQTTError("Client is not connected")
 
         message = payload if isinstance(payload, str) else json.dumps(payload)
-        await self._client.publish(topic, message, retain=retain)
+        try:
+            await self._client.publish(topic, message, retain=retain)
+        except Exception as e:
+            raise MQTTError(str(e)) from e
 
     async def subscribe(self, topic: str) -> None:
         if not self._client:
             raise MQTTError("Client is not connected")
 
+        self._subscriptions.add(topic)
+
         self._logger.debug("Subscribing to topic: %s", topic)
+
         await self._client.subscribe(topic)
 
     def set_message_callback(self, callback: Callable[[str, Any], None]) -> None:
@@ -184,28 +197,33 @@ class AsyncMQTTClient(BaseMQTTClient):
         """
         Async reconnect with exponential backoff.
         """
-        delay = self._config.reconnect_delay_min
+        async with self._reconnect_lock:
+            
+            delay = self._config.reconnect_delay_min
 
-        while not self._shutdown:
-            self._logger.info("Reconnecting in %.1fs...", delay)
-            await asyncio.sleep(delay)
+            while not self._shutdown:
+                self._logger.info("Reconnecting in %.1fs...", delay)
 
-            try:
-                await self._start_connection()
+                await asyncio.sleep(delay)
 
-                # Re-subscribe to all known topics
-                for topic in self._callbacks:
-                    await self._client.subscribe(topic)
+                try:
+                    await self._start_connection()
 
-                self._logger.info("Reconnected successfully")
-                self._reconnect_task = None
-                return
-            except asyncio.CancelledError:
-                self._logger.debug("Reconnect task cancelled")
-                raise
-            except Exception as e:
-                self._logger.warning("Reconnect attempt failed: %s", e)
-                delay = min(delay * 2, self._config.reconnect_delay_max)
+                    # Re-subscribe to all known topics
+                    for topic in self._subscriptions:
+                        await self._client.subscribe(topic)
+
+                        self._logger.debug("Re-subscribed to topic: %s", topic)
+
+                    self._logger.info("Reconnected successfully")
+                    self._reconnect_task = None
+                    return
+                except asyncio.CancelledError:
+                    self._logger.debug("Reconnect task cancelled")
+                    raise
+                except Exception as e:
+                    self._logger.warning("Reconnect attempt failed: %s", e)
+                    delay = min(delay * 2, self._config.reconnect_delay_max)
 
     def _ensure_reconnect_task(self) -> None:
         if self._reconnect_task is None or self._reconnect_task.done():
