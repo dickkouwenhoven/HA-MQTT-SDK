@@ -198,7 +198,7 @@ class AsyncMQTTClient(BaseMQTTClient):
         Async reconnect with exponential backoff.
         """
         async with self._reconnect_lock:
-            
+
             delay = self._config.reconnect_delay_min
 
             while not self._shutdown:
