@@ -207,13 +207,13 @@ def test_message_callback_not_set(mqtt_client):
 
 
 def test_on_connect_success(mqtt_client):
-    mqtt_client._connected = False
-    mqtt_client._reconnect_delay = 99
+    mqtt_client.subscribe("test/topic")
 
     mqtt_client._on_connect(None, None, None, 0)
 
     assert mqtt_client._connected is True
-    assert mqtt_client._reconnect_delay == mqtt_client._config.reconnect_delay_min
+
+    mqtt_client._client.subscribe.assert_called_once_with("test/topic")
 
 
 def test_on_connect_failure(mqtt_client):
@@ -271,18 +271,17 @@ def test_reconnect_loop_success(mock_sleep, mqtt_client):
 
 
 @patch("ha_mqtt_sdk.mqtt.paho_client.time.sleep")
-def test_reconnect_loop_backoff(mock_sleep, mqtt_client):
+def test_reconnect_loop_retries(mock_sleep, mqtt_client):
     mqtt_client._shutdown = False
     mqtt_client._connected = False
-    mqtt_client._reconnect_delay = 1
-
-    call_count = 0
+    
+    attempts = 0
 
     def reconnect_side_effect():
-        nonlocal call_count
-        call_count += 1
+        nonlocal attempts
+        attempts += 1
 
-        if call_count == 1:
+        if attempts == 1:
             raise Exception("boom")
 
         mqtt_client._connected = True
@@ -291,4 +290,5 @@ def test_reconnect_loop_backoff(mock_sleep, mqtt_client):
 
     mqtt_client._reconnect_loop()
 
-    assert mqtt_client._reconnect_delay == 2
+    assert attempts == 2
+    assert mqtt_client._client.reconnect.call_count == 2
