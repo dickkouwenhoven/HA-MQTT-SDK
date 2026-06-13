@@ -20,9 +20,10 @@ from ..config.mqtt import MQTTSettings
 from ..exceptions import MQTTError
 from ..utils.logger import get_logger
 from .base import BaseMQTTClient
+from .base_async_mqtt_client import BaseAsyncMQTTClient
 
 
-class AsyncMQTTClient(BaseMQTTClient):
+class AsyncMQTTClient(BaseAsyncMQTTClient):
     def __init__(self, config: MQTTSettings):
         self._config = config
         self._logger = get_logger(__name__)
