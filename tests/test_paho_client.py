@@ -152,6 +152,7 @@ def test_subscribe_when_connected(mqtt_client):
 
     mqtt_client._client.subscribe.assert_called_once_with("test/topic")
 
+
 def test_resubscribe_after_connect(mqtt_client):
     mqtt_client.subscribe("test/topic")
 
