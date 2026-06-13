@@ -185,7 +185,6 @@ class PahoMQTTClient(BaseMQTTClient):
 
     def _ensure_reconnect_thread(self) -> None:
         with self._reconnect_lock:
-
             if self._reconnect_thread and self._reconnect_thread.is_alive():
                 return
 
