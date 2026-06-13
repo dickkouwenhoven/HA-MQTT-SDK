@@ -237,7 +237,6 @@ def test_on_disconnect_intentional(mqtt_client):
     assert mqtt_client._connected is False
 
 
-@patch("ha_mqtt_sdk.mqtt.paho_client.threading.Thread")
 def test_on_disconnect_starts_reconnect_thread(
     mqtt_client,
 ):
