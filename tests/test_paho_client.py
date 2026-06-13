@@ -158,7 +158,7 @@ def test_resubscribe_after_connect(mqtt_client):
 
     mqtt_client._on_connect(
         None,
-        None
+        None,
         None,
         0,
     )
