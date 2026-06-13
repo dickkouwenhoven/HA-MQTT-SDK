@@ -173,6 +173,7 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
 
                 if self._message_callback:
                     try:
+                        assert self._client is not None
                         await self._message_callback(topic, payload)
                     except Exception as e:
                         self._logger.error("Error in message callback for %s: %s", topic, e)
@@ -209,6 +210,7 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
 
                     # Re-subscribe to all known topics
                     for topic in self._subscriptions:
+                        assert self._client is not None
                         await self._client.subscribe(topic)
 
                         self._logger.debug("Re-subscribed to topic: %s", topic)
