@@ -95,6 +95,7 @@ def test_disconnect(mqtt_client):
 
 
 def test_publish_string(mqtt_client):
+    mqtt_client._connected = True
     mqtt_client.publish("test/topic", "ON")
 
     mqtt_client._client.publish.assert_called_once_with(
@@ -105,6 +106,7 @@ def test_publish_string(mqtt_client):
 
 
 def test_publish_json_payload(mqtt_client):
+    mqtt_client._connected = True
     payload = {"state": "ON"}
 
     mqtt_client.publish("test/topic", payload)
