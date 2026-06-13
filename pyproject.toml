@@ -58,10 +58,9 @@ Issues = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["ha_mqtt_sdk*"]
 
 [tool.setuptools]
-include-package-data = true
+package-dir = {"" = "src"}
 
 # -------------------------
 # Optional dev tools
@@ -93,7 +92,6 @@ select = [
 ignore = []
 
 [tool.pytest.ini_options]
-pythonpath=["."]
 testpaths = ["tests"]
 
 [tool.coverage.run]
