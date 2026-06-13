@@ -139,11 +139,29 @@ def test_publish_empty_topic_raises(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_subscribe(mqtt_client):
+def test_subscribe_stores_topic(mqtt_client):
     mqtt_client.subscribe("test/topic")
 
-    mqtt_client._client.subscribe.assert_called_once_with("test/topic")
+    assert "test/topic" in mqtt_client._subscriptions
 
+def test_subscribe_when_connected(mqtt_client):
+    mqtt_client._connected = True
+
+    mqtt_client.subscribe("test/topic")
+
+    mqtt_client._client.subscribe.assert_called_once_with(
+        "test/topic"
+    )
+
+def test_resubscribe_after_connect(mqtt_client):
+    mqtt_client.subscribe("test/topic")
+
+    mqtt_client._on_connect(
+        None,
+        None
+        None,
+        0,
+    )
 
 def test_subscribe_empty_topic_raises(mqtt_client):
     with pytest.raises(MQTTError):
