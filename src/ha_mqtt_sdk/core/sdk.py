@@ -16,6 +16,7 @@ Used by:
 """
 
 from collections.abc import Callable
+from typing import Any
 
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
@@ -25,8 +26,8 @@ from ..mqtt import (
     BaseMQTTClient,
     PahoMQTTClient,
 )
-from .device_info import DeviceInfo
 from ..utils.logger import get_logger
+from .device_info import DeviceInfo
 from .entity_manager import EntityManager
 
 
