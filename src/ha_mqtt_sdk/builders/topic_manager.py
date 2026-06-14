@@ -37,7 +37,7 @@ def _normalize_prefix(prefix: str | None) -> str:
     return prefix
 
 
-def _get_domain_schema(domain: HADomain) -> dict[str, set[str]] | None:
+def _get_domain_schema(domain: HADomain) -> dict:
     if not isinstance(domain, HADomain):
         raise BuilderError("Invalid domain")
 
