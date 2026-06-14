@@ -54,7 +54,7 @@ class Entity:
         self._validate_schema()
 
     def to_dict(self) -> dict[str, Any]:
-        payload = {
+        payload: dict[str, str] = {
             "name": self.name,
             "unique_id": self.unique_id,
         }
