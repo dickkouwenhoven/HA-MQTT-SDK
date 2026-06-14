@@ -41,9 +41,7 @@ def _get_domain_schema(domain: HADomain) -> dict:
     if not isinstance(domain, HADomain):
         raise BuilderError("Invalid domain")
 
-    schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
-
-    return schema
+    return ALLOWED_FIELDS_PER_DOMAIN.get(domain)
 
 
 # ---------------------------------------------------------------------------
