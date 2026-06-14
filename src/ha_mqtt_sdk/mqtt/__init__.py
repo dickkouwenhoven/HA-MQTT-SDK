@@ -9,15 +9,13 @@ Provides:
 
 from .async_client import AsyncMQTTClient
 from .base import BaseMQTTClient
+from .base_async_mqtt_client import BaseAsyncMQTTClient
+from .paho_client import PahoMQTTClient
 
-# Optional Paho import
-try:
-    from .paho_client import PahoMQTTClient
-except ModuleNotFoundError:  # pragma: no cover
-    PahoMQTTClient = None
 
 __all__ = [
     "BaseMQTTClient",
+    "BaseAsyncMQTTClient",
     "PahoMQTTClient",
     "AsyncMQTTClient",
 ]
