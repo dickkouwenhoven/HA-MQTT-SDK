@@ -143,5 +143,5 @@ class HASDK:
     def is_registered(
         self,
         entity: Entity,
-    ) -> None:
-        EntityManager.is_registered(entity)
+    ) -> bool:
+        return self._entityManager.is_registered(entity)
