@@ -8,8 +8,8 @@ Provides:
 """
 
 from .async_client import AsyncMQTTClient
-from .base import BaseMQTTClient
 from .base_async_mqtt_client import BaseAsyncMQTTClient
+from .base import BaseMQTTClient
 from .paho_client import PahoMQTTClient
 
 
