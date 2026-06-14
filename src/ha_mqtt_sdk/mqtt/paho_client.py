@@ -233,7 +233,7 @@ class PahoMQTTClient(BaseMQTTClient):
                     self._config.reconnect_delay_max,
                 )
 
-    def _on_message(self, client, userdata, msg) -> None:
+    def _on_message(self, client: mqtt.Client, userdata: Any, msg: Any) -> None:
         topic = msg.topic
         payload = msg.payload.decode()
 
