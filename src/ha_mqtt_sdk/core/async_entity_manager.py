@@ -252,7 +252,7 @@ class AsyncEntityManager:
     # Internal
     # ----------------------------
 
-    async def _handle_command(self, topic: str, payload: Any) -> None:
+    async def _handle_command(self, topic: str, payload: str) -> None:
         """
         Internal MQTT message handler.
 
