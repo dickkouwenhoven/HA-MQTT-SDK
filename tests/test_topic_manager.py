@@ -82,6 +82,15 @@ def test_empty_prefix_uses_default():
     assert topic == "homeassistant/sensor/id1/state"
 
 
+def test_normalize_prefix_with_wrong_prefix_type:
+    with pytest.raises(BuilderError):
+        build_state_topic(
+            HADomain.SENSOR,
+            "id1",
+            1,
+        )
+
+
 def test_none_prefix_uses_default():
     topic = build_state_topic(
         HADomain.SENSOR,
