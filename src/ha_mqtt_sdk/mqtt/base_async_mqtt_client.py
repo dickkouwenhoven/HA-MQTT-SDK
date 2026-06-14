@@ -40,5 +40,5 @@ class BaseAsyncMQTTClient(ABC):
         """Subscribe to a topic."""
 
     @abstractmethod
-    def set_message_callback(self, callback: MessageCallback) -> None:
+    async def set_message_callback(self, callback: MessageCallback) -> None:
         """Register a global message handler."""
