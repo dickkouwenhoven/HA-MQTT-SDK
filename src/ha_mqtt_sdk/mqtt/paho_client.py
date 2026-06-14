@@ -181,8 +181,8 @@ class PahoMQTTClient(BaseMQTTClient):
     def _on_disconnect(
         self,
         client: mqtt.Client,
-        userdata: object,
-        reason_code: mqtt.ReasonCode,
+        userdata: Any,
+        reason_code: mqtt.ReasonCode | int | None = None,
         properties: mqtt.Properties | None = None,
     ) -> None:
         self._connected = False
