@@ -154,7 +154,7 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
 
         await self._client.subscribe(topic)
 
-    async def set_message_callback(self, callback: MessageCallback) -> None:
+    def set_message_callback(self, callback: MessageCallback) -> None:
         self._message_callback = callback
 
     # -------------------------
