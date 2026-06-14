@@ -160,9 +160,9 @@ class EntityManager:
                 registration.command_topic,
             )
 
-        # Register callback if provided
-        if command_callback:
-            self._command_callbacks[registration.command_topic] = command_callback
+            # Register callback if provided
+            if command_callback:
+                self._command_callbacks[registration.command_topic] = command_callback
 
     def update_state(self, entity: Entity, state: Any) -> None:
         """
