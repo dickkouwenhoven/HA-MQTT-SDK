@@ -9,6 +9,8 @@ Used by:
 - sdk/core/entity_manager.py
 """
 
+from typing import Optional
+
 from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from ..config.domains import HADomain
 from ..exceptions import BuilderError
@@ -37,7 +39,7 @@ def _normalize_prefix(prefix: str | None) -> str:
     return prefix
 
 
-def _get_domain_schema(domain: HADomain) -> dict[str, set[str]] | None:
+def _get_domain_schema(domain: HADomain) -> Optional[dict[str, set[str]]]:
     if not isinstance(domain, HADomain):
         raise BuilderError("Invalid domain")
 
