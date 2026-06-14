@@ -21,13 +21,13 @@ from typing import Any
 from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
 from ..exceptions import SDKError
+from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt import (
     BaseMQTTClient,
     PahoMQTTClient,
 )
 from ..utils.logger import get_logger
-from .device_info import DeviceInfo
 from .entity_manager import EntityManager
 
 
