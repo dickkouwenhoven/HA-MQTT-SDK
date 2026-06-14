@@ -11,9 +11,9 @@ Used by:
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 
-MessageCallback = Callable[[str, str], None]
+MessageCallback = Callable[[str, str], Awaitable[None]]
 
 
 class BaseAsyncMQTTClient(ABC):
