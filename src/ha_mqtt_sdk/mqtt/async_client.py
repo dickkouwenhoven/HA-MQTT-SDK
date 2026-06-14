@@ -164,6 +164,8 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
         Single long-running task that routes all incoming messages.
         Triggers reconnect loop on unexpected disconnect.
         """
+        assert self._client is not None
+
         try:
             async for msg in self._client.messages:
                 topic = str(msg.topic)
