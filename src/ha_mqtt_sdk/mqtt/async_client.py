@@ -21,7 +21,6 @@ from ..exceptions import MQTTError
 from ..utils.logger import get_logger
 from .base_async_mqtt_client import BaseAsyncMQTTClient
 
-
 MessageCallback = Callable[[str, str], Awaitable[None]]
 
 
