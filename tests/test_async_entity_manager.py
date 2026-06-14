@@ -188,11 +188,12 @@ def test_set_callback_on_sensor_fails(
         unique_id="temp_1",
     )
 
-    with pytest.raises(EntityError):
-        manager.set_command_callback(
-            entity,
-            lambda t, p: None,
-        )
+    result = manager.set_command_callback(
+        entity,
+        lambda t, p: None,
+    )
+
+    assert result is False
 
 
 @pytest.mark.asyncio
