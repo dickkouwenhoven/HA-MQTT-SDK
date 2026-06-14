@@ -144,4 +144,4 @@ class HASDK:
         self,
         entity: Entity,
     ) -> bool:
-        return self._entityManager.is_registered(entity)
+        return self._entity_manager.is_registered(entity)
