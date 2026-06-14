@@ -17,6 +17,7 @@ Used by:
 
 from collections.abc import Callable
 
+from ..config.domains import HADomain
 from ..config.mqtt import MQTTSettings
 from ..exceptions import SDKError
 from ..models.entity import Entity
@@ -24,6 +25,7 @@ from ..mqtt import (
     BaseMQTTClient,
     PahoMQTTClient,
 )
+from .device_info import DeviceInfo
 from ..utils.logger import get_logger
 from .entity_manager import EntityManager
 
@@ -120,12 +122,12 @@ class HASDK:
     def create_entity(
         self,
         *,
-        domain,
-        name,
-        unique_id,
-        device_info=None,
-        extra=None,
-    ):
+        domain: HADomain,
+        name: str,
+        unique_id: str,
+        device_info: DeviceInfo | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> Entity:
         return self._entity_manager.create_entity(
             domain=domain,
             name=name,
