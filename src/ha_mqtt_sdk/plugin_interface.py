@@ -17,6 +17,6 @@ class IntegrationPlugin(ABC):
         pass
 
     @abstractmethod
-    def handle_command(self, topic: str, payload: Any):
+    def handle_command(self, topic: str, payload: Any) -> None:
         """Handle incoming command"""
         pass
