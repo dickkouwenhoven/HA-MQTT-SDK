@@ -47,7 +47,7 @@ class EntityRegistration:
     discovery_payload: dict[str, Any]
 
     state_topic: str
-    command_topic: str
+    command_topic: str | None
     availability_topic: str
 
 
