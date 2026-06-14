@@ -211,7 +211,7 @@ class AsyncEntityManager:
             payload,
         )
 
-    def set_command_callback(
+    async def set_command_callback(
         self,
         entity: Entity,
         callback: Callable[[str, str], Awaitable[None]],
