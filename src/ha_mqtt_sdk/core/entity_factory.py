@@ -25,7 +25,9 @@ from ..builders.topic_manager import (
     build_discovery_topic,
     build_state_topic,
 )
+from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 from ..config.domains import HADomain
+from ..exceptions import SchemaError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..utils.logger import get_logger
@@ -117,11 +119,22 @@ def build_registration(
         discovery_prefix,
     )
 
-    command_topic = build_command_topic(
-        entity.domain,
-        entity.unique_id,
-        discovery_prefix,
+    schema = ALLOWED_FIELDS_PER_DOMAIN.get(entity.domain)
+
+    if not schema:
+        raise SchemaError(f"No field definition found for domain {domain}.")
+
+    supports_command = (
+        "command_topic"in schema["requited"] or "command_topic"in schema["optional"]
     )
+
+    command_topic = None
+    if supports_command:
+        command_topic = build_command_topic(
+            entity.domain,
+            entity.unique_id,
+            discovery_prefix,
+        )
 
     availability_topic = build_availability_topic(
         entity.domain,
