@@ -125,7 +125,7 @@ def build_registration(
         raise SchemaError(f"No field definition found for domain {entity.domain}.")
 
     supports_command = (
-        "command_topic" in schema["requited"] or "command_topic" in schema["optional"]
+        "command_topic" in schema["required"] or "command_topic" in schema["optional"]
     )
 
     command_topic = None
