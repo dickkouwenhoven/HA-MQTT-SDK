@@ -11,7 +11,7 @@ Used by:
 import asyncio
 import contextlib
 import json
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 import aiomqtt
@@ -20,6 +20,9 @@ from ..config.mqtt import MQTTSettings
 from ..exceptions import MQTTError
 from ..utils.logger import get_logger
 from .base_async_mqtt_client import BaseAsyncMQTTClient
+
+
+MessageCallback = Callable[[str, str], Awaitable[None]]
 
 
 class AsyncMQTTClient(BaseAsyncMQTTClient):
@@ -152,7 +155,7 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
 
         await self._client.subscribe(topic)
 
-    def set_message_callback(self, callback: Callable[[str, Any], None]) -> None:
+    async def set_message_callback(self, callback: MessageCallback) -> None:
         self._message_callback = callback
 
     # -------------------------
