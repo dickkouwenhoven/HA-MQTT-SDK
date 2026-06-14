@@ -143,7 +143,7 @@ class Entity:
                 assert identifiers is not None
 
                 self._validate_tuple_collection(
-                    self.device_info["identifiers"],
+                    identifiers,
                     "identifiers",
                 )
 
