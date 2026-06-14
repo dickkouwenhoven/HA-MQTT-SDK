@@ -151,13 +151,15 @@ class Entity:
                 connections = self.device_info["connections"]
                 assert connections is not None
                 self._validate_tuple_collection(
-                    self.device_info["connections"],
+                    connections,
                     "connections",
                 )
 
             if "via_device" in self.device_info:
+                via_device = self.device_info["via_device"]
+                assert via_device is not None
                 self._validate_tuple_pair(
-                    self.device_info["via_device"],
+                    via_device,
                     "via_device",
                 )
 
