@@ -12,7 +12,7 @@ from .models.entity import Entity
 
 class IntegrationPlugin(ABC):
     @abstractmethod
-    def map_device(self, data: Any, entity_manager) -> list[Entity]:
+    def map_device(self, data: Any, entity_manager: Any) -> list[Entity]:
         """Map device data to entities"""
         pass
 
