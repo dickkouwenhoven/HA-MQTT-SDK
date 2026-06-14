@@ -1,6 +1,7 @@
 import pytest
 
 from ha_mqtt_sdk.builders.topic_manager import (
+    _get_domain_schema,
     build_availability_topic,
     build_command_topic,
     build_discovery_topic,
@@ -62,6 +63,16 @@ def test_invalid_domain():
             "id1",
             "homeassistant",
         )
+
+
+def test_get_domain_schema_invalid_domain():
+    with pytest.raises(BuilderError):
+        _get_domain_schema("invalid")
+
+
+def test_get_domain_schema_invalid_schema():
+    with pytest.raises(BuilderError):
+        _get_domain_schema("sensor")
 
 
 def test_empty_unique_id():
