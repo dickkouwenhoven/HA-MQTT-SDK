@@ -43,9 +43,6 @@ def _get_domain_schema(domain: HADomain) -> dict:
 
     schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
 
-    if not schema:
-        raise BuilderError(f"No field definition found for domain {domain}.")
-
     return schema
 
 
