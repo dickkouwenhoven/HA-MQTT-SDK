@@ -23,10 +23,7 @@ from ..config.mqtt import MQTTSettings
 from ..exceptions import SDKError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
-from ..mqtt import (
-    BaseMQTTClient,
-    PahoMQTTClient,
-)
+from ..mqtt import PahoMQTTClient
 from ..utils.logger import get_logger
 from .entity_manager import EntityManager
 
@@ -34,7 +31,7 @@ from .entity_manager import EntityManager
 class HASDK:
     def __init__(
         self,
-        mqtt_client: BaseMQTTClient | None = None,
+        mqtt_client: PahoMQTTClient | None = None,
         mqtt_settings: MQTTSettings | None = None,
     ):
         """
