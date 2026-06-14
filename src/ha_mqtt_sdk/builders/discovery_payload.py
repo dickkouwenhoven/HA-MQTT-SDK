@@ -13,6 +13,7 @@ Used by:
 from typing import Any
 
 from ..exceptions import EntityError
+from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..utils.logger import get_logger
 from ..validators.payload_validator import validate_discovery_payload
@@ -34,7 +35,7 @@ def _validate_entity(entity: Entity) -> None:
         raise EntityError("Invalid entity")
 
 
-def _build_device_block(entity: Entity) -> dict[str, Any]:
+def _build_device_block(entity: Entity) -> DeviceInfo:
     """
     Build device block for HA.
     """
