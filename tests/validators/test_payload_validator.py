@@ -3,8 +3,8 @@ import pytest
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.exceptions import ValidationError
 from ha_mqtt_sdk.validators.payload_validator import (
-    validate_json_serializable,
     validate_discovery_payload,
+    validate_json_serializable,
 )
 
 
