@@ -102,6 +102,24 @@ def test_normalize_prefix_with_wrong_prefix_type():
         )
 
 
+def test build_state_topic_with_a_domain_without_state_topic():
+    topic = build_state_topic(
+        HADomain.BUTTON,
+        "id1",
+        "homeassistant",
+    )
+    assert topic == ""
+
+
+def test build_availability_topic_with_a_domain_without_availability_topic():
+    topic = build_availability_topic(
+        HADomain.BUTTON,
+        "id1",
+        "homeassistant",
+    )
+    assert topic == ""
+
+
 def test_none_prefix_uses_default():
     topic = build_state_topic(
         HADomain.SENSOR,
@@ -124,6 +142,8 @@ def test_none_prefix_uses_default():
         ),
     ],
 )
+
+
 def test_topic_are_built_correctly(
     builder,
     expected,
