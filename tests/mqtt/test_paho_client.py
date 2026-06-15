@@ -1,5 +1,4 @@
 import pytest
-
 from unittest.mock import MagicMock, patch
 
 from ha_mqtt_sdk.mqtt.config.mqtt import MQTTSettings
