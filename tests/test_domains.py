@@ -5,7 +5,7 @@ from ha_mqtt_sdk.config.domains import HADomain
 
 @pytest.mark.parametrize(
     "value",
-    (member.value for member in HADomain],
+    [member.value for member in HADomain],
 )
 def test_has_value_return_true_for_enum_values(value):
     assert HADomain.has_value(value) is True
