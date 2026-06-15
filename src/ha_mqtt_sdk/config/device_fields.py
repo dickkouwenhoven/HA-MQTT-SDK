@@ -7,6 +7,18 @@ Imports HADomain from domains.py for single source of truth.
 
 from .domains import HADomain
 
+
+def _optional(*parts: set[str], required: set[str] | None = None) -> set[str]:
+    result: set[str] = set()
+    for part in parts:
+        result |= part
+
+    if required:
+        result -= required
+
+    return result
+
+
 # ---------------------------------------------------------------------------
 # Generic fields applied to most devices
 # ---------------------------------------------------------------------------
@@ -140,9 +152,12 @@ ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
     },
     HADomain.SENSOR: {
         "required": {"name", "state_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | STATE_FIELDS
-        | {"device_class", "unit_of_measurement", "state_class", "last_reset_value_template"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            STATE_FIELDS,
+            {"device_class", "unit_of_measurement", "state_class", "last_reset_value_template"},
+            required={"name", "state_topic", "unique_id"},
+        ),
     },
     HADomain.BINARY_SENSOR: {
         "required": {"name", "state_topic", "unique_id"},
