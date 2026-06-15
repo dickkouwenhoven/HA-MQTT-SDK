@@ -29,7 +29,7 @@ def config():
 
 @pytest.fixture
 def mqtt_client(config):
-    with patch("your_module.paho_mqtt_client.mqtt.Client") as mock_client:
+    with patch("ha_mqtt_sdk.mqtt.paho_client.mqtt.Client") as mock_client:
         instance = MagicMock()
         mock_client.return_value = instance
 
