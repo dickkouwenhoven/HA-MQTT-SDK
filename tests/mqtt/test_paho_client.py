@@ -205,3 +205,103 @@ def test_on_disconnect_sets_state(mqtt_client):
     client._on_disconnect(None, None, 0)
 
     assert client._connected is False
+
+
+def test_reconnect_thread_starts(mqtt_client):
+    client, instance = mqtt_client
+
+    client._connected = False
+    client._config.reconnect = True
+
+    client._on_disconnect(None, None, 1)
+
+    # thread moet bestaan
+    assert client._reconnect_thread is not None
+    assert client._reconnect_thread.is_alive()
+
+
+def test_reconnect_thread_not_started_twice(mqtt_client):
+    client, _ = mqtt_client
+
+    client._connected = False
+    client._config.reconnect = True
+
+    client._ensure_reconnect_thread()
+    first = client._reconnect_thread
+
+    client._ensure_reconnect_thread()
+
+    assert client._reconnect_thread is first
+
+
+def test_message_callback_exception_handled(mqtt_client):
+    client, _ = mqtt_client
+
+    def bad_callback(topic, payload):
+        raise ValueError("boom")
+
+    client.set_message_callback(bad_callback)
+
+    msg = MagicMock()
+    msg.topic = "t"
+    msg.payload = b"data"
+
+    # mag niet crashen
+    client._on_message(None, None, msg)
+
+
+def test_publish_mqtt_exception(mqtt_client):
+    client, instance = mqtt_client
+    client._connected = True
+
+    instance.publish.side_effect = Exception("fail")
+
+    with pytest.raises(MQTTError):
+        client.publish("t", "data")
+
+
+def test_connect_failure_raises_error():
+    config = MQTTSettings(
+        host="bad",
+        port=1883,
+        keepalive=60,
+        client_id="x",
+        reconnect=True,
+        reconnect_delay_min=0.1,
+        reconnect_delay_max=1,
+        username=None,
+        password=None,
+        tls=False,
+    )
+
+    with patch("ha_mqtt_sdk.mqtt.paho_client.mqtt.Client") as mock:
+        instance = MagicMock()
+        instance.connect.side_effect = Exception("fail")
+        mock.return_value = instance
+
+        client = PahoMQTTClient(config)
+
+        with pytest.raises(MQTTError):
+            client.connect()
+
+
+def test_disconnect_when_already_shutdown(mqtt_client):
+    client, instance = mqtt_client
+
+    client._shutdown = True
+
+    client.disconnect()
+
+    instance.disconnect.assert_not_called()
+
+
+@patch("time.sleep", return_value=None)
+def test_reconnect_loop_exits_when_shutdown(mock_sleep, mqtt_client):
+    client, instance = mqtt_client
+
+    client._shutdown = True
+
+    client._reconnect_loop()
+
+    # mag gewoon stoppen zonder crash
+    assert True
