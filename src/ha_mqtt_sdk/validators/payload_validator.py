@@ -71,7 +71,6 @@ def _validate_json_value(
                 item,
                 f"{path}.{key}",
             )
-        return
 
     try:
         json.dumps(value)
