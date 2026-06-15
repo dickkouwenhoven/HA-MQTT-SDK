@@ -60,7 +60,6 @@ def _validate_json_value(
                 item,
                 f"{path}[{index}]",
             )
-            return
 
     if isinstance(value, Mapping):
         for key, item in value.items():
@@ -71,6 +70,7 @@ def _validate_json_value(
                 item,
                 f"{path}.{key}",
             )
+        return
 
     try:
         json.dumps(value)
