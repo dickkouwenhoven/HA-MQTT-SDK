@@ -540,7 +540,7 @@ async def test_unregister_twice_fails(
 def test_init_requires_mqtt_settings(mqtt_client_async):
     with pytest.raises(EntityError, match="mqtt_settings must be MQTTSettings"):
         AsyncEntityManager(
-            mqtt_client=mock_async_mqtt_client,
+            mqtt_client=mqtt_client_async,
             mqtt_settings="invalid",
         )
 
@@ -550,11 +550,11 @@ def test_init_registers_message_callback(
     mqtt_settings,
 ):
     AsyncEntityManager(
-        mqtt_client=mock_async_mqtt_client,
+        mqtt_client=mqtt_client_async,
         mqtt_settings=mqtt_settings,
     )
 
-    mock_async_mqtt_client.set_message_callback.assert_called_once()
+    mqtt_client_async.set_message_callback.assert_called_once()
 
 
 @pytest.mark.asyncio
