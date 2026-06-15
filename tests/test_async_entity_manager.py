@@ -190,6 +190,8 @@ async def test_set_callback_on_sensor_fails(
         unique_id="temp_1",
     )
 
+    await manager.register(entity)
+
     result = await manager.set_command_callback(
         entity,
         lambda t, p: None,
