@@ -192,12 +192,11 @@ async def test_set_callback_on_sensor_fails(
 
     await manager.register(entity)
 
-    result = await manager.set_command_callback(
-        entity,
-        lambda t, p: None,
-    )
-
-    assert result is False
+    with pytest.raises(EntityError, match="does not support commands"):
+        await manager.set_command_callback(
+            entity,
+            lambda t, p: None,
+        )
 
 
 @pytest.mark.asyncio
