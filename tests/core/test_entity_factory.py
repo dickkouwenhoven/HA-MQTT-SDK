@@ -72,7 +72,12 @@ def test_build_registration(
     mock_command_topic,
     mock_availability_topic,
 ):
-    entity = MagicMock()
+
+    entity = create_entity(
+        domain=HADomain.SENSOR,
+        name="Temperature",
+        unique_id="temp_1",
+    )
 
     mock_discovery_topic.return_value = "homeassistant/sensor/test/config"
 
