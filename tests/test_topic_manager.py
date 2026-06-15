@@ -113,7 +113,7 @@ def test_build_state_topic_with_a_domain_without_state_topic():
 
 def test_build_availability_topic_with_a_domain_without_availability_topic():
     topic = build_availability_topic(
-        HADomain.BUTTON,
+        HADomain.TRIGGER,
         "id1",
         "homeassistant",
     )
@@ -142,8 +142,6 @@ def test_none_prefix_uses_default():
         ),
     ],
 )
-
-
 def test_topic_are_built_correctly(
     builder,
     expected,
