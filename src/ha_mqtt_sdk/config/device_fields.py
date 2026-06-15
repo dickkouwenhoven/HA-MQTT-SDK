@@ -161,7 +161,12 @@ ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
     },
     HADomain.BINARY_SENSOR: {
         "required": {"name", "state_topic", "unique_id"},
-        "optional": COMMON_FIELDS | STATE_FIELDS | {"device_class", "payload_on", "payload_off"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            STATE_FIELDS,
+            {"device_class", "payload_on", "payload_off"},
+            required={"name", "state_topic", "unique_id"},
+        ),
     },
     HADomain.SWITCH: {
         "required": {"name", "command_topic", "unique_id"},
