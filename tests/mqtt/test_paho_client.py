@@ -77,7 +77,7 @@ def test_publish_success(mqtt_client):
     args = instance.publish.call_args[0]
 
     assert args[0] == "topic/test"
-    assert "\"a\": 1" in args[1]
+    assert '"a": 1' in args[1]
 
 
 def test_publish_not_connected():
