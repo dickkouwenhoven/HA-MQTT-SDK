@@ -1,9 +1,11 @@
 import pytest
+
 from unittest.mock import MagicMock, patch
 
 from ha_mqtt_sdk.mqtt.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.mqtt.exceptions import MQTTError, ValidationError
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
+
 
 # -----------------------------
 # Helpers
