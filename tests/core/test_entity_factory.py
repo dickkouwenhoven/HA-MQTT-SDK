@@ -74,7 +74,7 @@ def test_build_registration(
 ):
 
     entity = create_entity(
-        domain=HADomain.SENSOR,
+        domain=HADomain.SWITCH,
         name="Temperature",
         unique_id="temp_1",
     )
