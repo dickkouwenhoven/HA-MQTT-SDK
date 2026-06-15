@@ -84,5 +84,3 @@ def test_create_device_info_single_field(kwargs, expected_key, expected_value):
     assert device_info == {
         expected_key: expected_value,
     }
-
-
