@@ -67,3 +67,80 @@ def test_missing_method_implementation_raises_error():
 
     with pytest.raises(TypeError):
         BrokenPlugin()
+
+
+# -----------------------------
+# 1. ABC mag niet geïnstantieerd worden
+# -----------------------------
+
+
+def test_cannot_instantiate_abstract_class():
+    with pytest.raises(TypeError):
+        IntegrationPlugin()
+
+
+# -----------------------------
+# 2. Subclass zonder implementatie faalt
+# -----------------------------
+
+
+def test_missing_implementation_raises_typeerror():
+    class BadPlugin(IntegrationPlugin):
+        pass
+
+    with pytest.raises(TypeError):
+        BadPlugin()
+
+
+# -----------------------------
+# 3. Partial implementation faalt ook
+# -----------------------------
+
+
+def test_partial_implementation_raises_typeerror():
+    class BadPlugin(IntegrationPlugin):
+        def map_device(self, data, entity_manager):
+            return []
+
+    with pytest.raises(TypeError):
+        BadPlugin()
+
+
+# -----------------------------
+# 4. Volledige implementatie werkt
+# -----------------------------
+
+
+def test_valid_plugin_can_be_instantiated():
+    class GoodPlugin(IntegrationPlugin):
+        def map_device(self, data, entity_manager):
+            return []
+
+        def handle_command(self, topic, payload):
+            return None
+
+    plugin = GoodPlugin()
+
+    assert isinstance(plugin, IntegrationPlugin)
+
+
+# -----------------------------
+# 5. Methoden zijn callable
+# -----------------------------
+
+
+def test_plugin_methods_work():
+    class GoodPlugin(IntegrationPlugin):
+        def map_device(self, data, entity_manager):
+            return ["entity"]
+
+        def handle_command(self, topic, payload):
+            return None
+
+    plugin = GoodPlugin()
+
+    result = plugin.map_device({}, object())
+    assert result == ["entity"]
+
+    # mag gewoon None returnen
+    assert plugin.handle_command("topic", {"a": 1}) is None
