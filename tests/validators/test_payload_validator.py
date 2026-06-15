@@ -11,20 +11,25 @@ from ha_mqtt_sdk.validators.payload_validator import (
 # validate_json_serializable
 # -------------------------
 
+
 def test_validate_json_serializable_valid_simple():
-    validate_json_serializable({
-        "a": 1,
-        "b": "text",
-        "c": True,
-        "d": None,
-    })
+    validate_json_serializable(
+        {
+            "a": 1,
+            "b": "text",
+            "c": True,
+            "d": None,
+        }
+    )
 
 
 def test_validate_json_serializable_nested_valid():
-    validate_json_serializable({
-        "a": [1, 2, {"b": "c"}],
-        "d": (1, 2, 3),
-    })
+    validate_json_serializable(
+        {
+            "a": [1, 2, {"b": "c"}],
+            "d": (1, 2, 3),
+        }
+    )
 
 
 def test_validate_json_serializable_invalid_type():
@@ -47,6 +52,7 @@ def test_validate_json_serializable_invalid_key_type():
 # -------------------------
 # validate_discovery_payload
 # -------------------------
+
 
 def test_validate_discovery_payload_valid():
     payload = {
