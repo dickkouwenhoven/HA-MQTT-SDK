@@ -1,6 +1,6 @@
-import pytest
-
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.exceptions import MQTTError, ValidationError
