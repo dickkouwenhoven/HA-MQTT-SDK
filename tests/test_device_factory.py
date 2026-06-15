@@ -61,9 +61,6 @@ def test_create_device_info_omits_none_values():
     assert "model" not in device_info
 
 
-import pytest
-
-
 @pytest.mark.parametrize(
     ("kwargs", "expected_key", "expected_value"),
     [
