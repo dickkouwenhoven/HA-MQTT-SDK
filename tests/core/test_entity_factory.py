@@ -151,11 +151,7 @@ def test_build_registration_calls_dependencies(
         "homeassistant",
     )
 
-    mock_command_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
+    mock_command_topic.assert_not_called()
 
     mock_availability_topic.assert_called_once_with(
         entity.domain,
