@@ -249,7 +249,7 @@ async def test_replace_command_callback(
         command_callback=callback_1,
     )
 
-    manager.set_command_callback(
+    await manager.set_command_callback(
         entity,
         callback_2,
     )
