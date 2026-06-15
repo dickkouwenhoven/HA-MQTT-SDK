@@ -305,7 +305,12 @@ ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
         "required": {"name", "command_topic", "unique_id"},
         "optional": _optional(
             COMMON_FIELDS,
-            {"state_topic", "fan_speed_command_topic", "fan_speed_state_topic", "send_command_topic"},
+            {
+                "state_topic",
+                "fan_speed_command_topic",
+                "fan_speed_state_topic",
+                "send_command_topic",
+            },
             required={"name", "command_topic", "unique_id"},
         ),
     },
