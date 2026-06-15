@@ -61,17 +61,17 @@ def test_validate_discovery_payload_valid():
         "state_topic": "home/test",
     }
 
-    validate_discovery_payload(payload, HADomain())
+    validate_discovery_payload(payload, HADomain.SENSOR)
 
 
 def test_validate_discovery_payload_not_mapping():
     with pytest.raises(ValidationError):
-        validate_discovery_payload(["not", "a", "dict"], HADomain())
+        validate_discovery_payload(["not", "a", "dict"], HADomain.SENSOR)
 
 
 def test_validate_discovery_payload_empty():
     with pytest.raises(ValidationError):
-        validate_discovery_payload({}, HADomain())
+        validate_discovery_payload({}, HADomain.SENSOR)
 
 
 @pytest.mark.parametrize(
@@ -87,7 +87,7 @@ def test_validate_discovery_payload_missing_required_fields(missing_field):
     payload.pop(missing_field)
 
     with pytest.raises(ValidationError) as exc:
-        validate_discovery_payload(payload, HADomain())
+        validate_discovery_payload(payload, HADomain.SENSOR)
 
     assert f"{missing_field}" in str(exc.value)
 
@@ -100,6 +100,6 @@ def test_validate_discovery_payload_state_topic_wrong_type():
     }
 
     with pytest.raises(ValidationError) as exc:
-        validate_discovery_payload(payload, HADomain())
+        validate_discovery_payload(payload, HADomain.SENSOR)
 
     assert "state_topic must be a string" in str(exc.value)
