@@ -7,7 +7,6 @@ from ha_mqtt_sdk.validators.payload_validator import (
     validate_json_serializable,
 )
 
-
 # -------------------------
 # validate_json_serializable
 # -------------------------
