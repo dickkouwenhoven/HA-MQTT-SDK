@@ -64,91 +64,128 @@ COMMAND_FIELDS: set[str] = {
 ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
     HADomain.ALARM_CONTROL_PANEL: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-            "code",
-            "code_arm_required",
-            "payload_arm_home",
-            "payload_arm_away",
-            "payload_arm_night",
-            "payload_arm_vacation",
-            "payload_disarm",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "state_topic",
+                "code",
+                "code_arm_required",
+                "payload_arm_home",
+                "payload_arm_away",
+                "payload_arm_night",
+                "payload_arm_vacation",
+                "payload_disarm",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.BUTTON: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS | {"payload_press"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"payload_press"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.DEVICE_TRACKER: {
         "required": {"name", "state_topic", "unique_id"},
-        "optional": COMMON_FIELDS | {"payload_home", "payload_not_home", "source_type"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"payload_home", "payload_not_home", "source_type"},
+            required={"name", "state_topic", "unique_id"},
+        ),
     },
     HADomain.DEVICE_TRIGGER: {
         "required": {"automation_type", "topic", "type", "subtype", "device"},
-        "optional": {"payload", "value_template", "qos"},
+        "optional": _optional(
+            {"payload", "value_template", "qos"},
+            required={"automation_type", "topic", "type", "subtype", "device"},
+        ),
     },
     HADomain.EVENT: {
         "required": {"name", "state_topic", "unique_id"},
-        "optional": COMMON_FIELDS | {"event_types", "value_template"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"event_types", "value_template"},
+            required={"name", "state_topic", "unique_id"},
+        ),
     },
     HADomain.HUMIDIFIER: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-            "target_humidity_command_topic",
-            "target_humidity_state_topic",
-            "min_humidity",
-            "max_humidity",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "state_topic",
+                "target_humidity_command_topic",
+                "target_humidity_state_topic",
+                "min_humidity",
+                "max_humidity",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.LAWN_MOWER: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-            "payload_start",
-            "payload_pause",
-            "payload_stop",
-            "payload_return_to_base",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "state_topic",
+                "payload_start",
+                "payload_pause",
+                "payload_stop",
+                "payload_return_to_base",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.SCENE: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS | {"payload_on"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"payload_on"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.SIREN: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-            "available_tones",
-            "tone_command_topic",
-            "tone_state_topic",
-            "duration_command_topic",
-            "duration_state_topic",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "state_topic",
+                "available_tones",
+                "tone_command_topic",
+                "tone_state_topic",
+                "duration_command_topic",
+                "duration_state_topic",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.UPDATE: {
         "required": {"name", "state_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "command_topic",
-            "payload_install",
-            "latest_version_template",
-            "installed_version_template",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "command_topic",
+                "payload_install",
+                "latest_version_template",
+                "installed_version_template",
+            },
+            required={"name", "state_topic", "unique_id"},
+        ),
     },
     HADomain.VALVE: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-            "position_command_topic",
-            "position_state_topic",
-            "set_position_template",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "state_topic",
+                "position_command_topic",
+                "position_state_topic",
+                "set_position_template",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.SENSOR: {
         "required": {"name", "state_topic", "unique_id"},
@@ -170,150 +207,193 @@ ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
     },
     HADomain.SWITCH: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS | COMMAND_FIELDS | {"state_topic"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            COMMAND_FIELDS,
+            {"state_topic"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.LIGHT: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | COMMAND_FIELDS
-        | {
-            "state_topic",
-            "brightness_command_topic",
-            "brightness_state_topic",
-            "brightness_scale",
-            "color_temp_command_topic",
-            "color_temp_state_topic",
-            "effect_command_topic",
-            "effect_state_topic",
-            "hs_command_topic",
-            "hs_state_topic",
-            "rgb_command_topic",
-            "rgb_state_topic",
-            "xy_command_topic",
-            "xy_state_topic",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            COMMAND_FIELDS,
+            {
+                "state_topic",
+                "brightness_command_topic",
+                "brightness_state_topic",
+                "brightness_scale",
+                "color_temp_command_topic",
+                "color_temp_state_topic",
+                "effect_command_topic",
+                "effect_state_topic",
+                "hs_command_topic",
+                "hs_state_topic",
+                "rgb_command_topic",
+                "rgb_state_topic",
+                "xy_command_topic",
+                "xy_state_topic",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.COVER: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-            "position_command_topic",
-            "tilt_command_topic",
-            "tilt_state_topic",
-            "set_position_template",
-            "set_tilt_template",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "state_topic",
+                "position_command_topic",
+                "tilt_command_topic",
+                "tilt_state_topic",
+                "set_position_template",
+                "set_tilt_template",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.FAN: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-            "percentage_command_topic",
-            "percentage_state_topic",
-            "preset_mode_command_topic",
-            "preset_mode_state_topic",
-            "oscillation_command_topic",
-            "oscillation_state_topic",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "state_topic",
+                "percentage_command_topic",
+                "percentage_state_topic",
+                "preset_mode_command_topic",
+                "preset_mode_state_topic",
+                "oscillation_command_topic",
+                "oscillation_state_topic",
+            },
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.LOCK: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS | {"state_topic", "payload_lock", "payload_unlock"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic", "payload_lock", "payload_unlock"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.NUMBER: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS | {"state_topic", "min", "max", "step", "mode"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic", "min", "max", "step", "mode"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.SELECT: {
         "required": {"name", "command_topic", "options", "unique_id"},
-        "optional": COMMON_FIELDS | {"state_topic"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic"},
+            required={"name", "command_topic", "options", "unique_id"},
+        ),
     },
     HADomain.TEXT: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS | {"state_topic", "min", "max", "pattern"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic", "min", "max", "pattern"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.VACUUM: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {"state_topic", "fan_speed_command_topic", "fan_speed_state_topic", "send_command_topic"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic", "fan_speed_command_topic", "fan_speed_state_topic", "send_command_topic"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.WATER_HEATER: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {"state_topic", "temperature_command_topic", "temperature_state_topic", "modes"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic", "temperature_command_topic", "temperature_state_topic", "modes"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.CLIMATE: {
         "required": {"name", "mode_command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "mode_state_topic",
-            "temperature_command_topic",
-            "temperature_state_topic",
-            "current_temperature_topic",
-            "temperature_unit",
-            "modes",
-            "fan_mode_command_topic",
-            "fan_mode_state_topic",
-            "swing_mode_command_topic",
-            "swing_mode_state_topic",
-            "preset_mode_command_topic",
-            "preset_mode_state_topic",
-            "action_topic",
-            "power_command_topic",
-            "power_state_topic",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {
+                "mode_state_topic",
+                "temperature_command_topic",
+                "temperature_state_topic",
+                "current_temperature_topic",
+                "temperature_unit",
+                "modes",
+                "fan_mode_command_topic",
+                "fan_mode_state_topic",
+                "swing_mode_command_topic",
+                "swing_mode_state_topic",
+                "preset_mode_command_topic",
+                "preset_mode_state_topic",
+                "action_topic",
+                "power_command_topic",
+                "power_state_topic",
+            },
+            required={"name", "mode_command_topic", "unique_id"},
+        ),
     },
     HADomain.CAMERA: {
         "required": {"name", "topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "image_encoding",
-            "content_type",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"image_encoding", "content_type"},
+            required={"name", "topic", "unique_id"},
+        ),
     },
     HADomain.DATE: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.DATETIME: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.TIME: {
         "required": {"name", "command_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "state_topic",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"state_topic"},
+            required={"name", "command_topic", "unique_id"},
+        ),
     },
     HADomain.IMAGE: {
         "required": {"name", "image_topic", "unique_id"},
-        "optional": COMMON_FIELDS
-        | {
-            "content_type",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"content_type"},
+            required={"name", "image_topic", "unique_id"},
+        ),
     },
     HADomain.NOTIFY: {
         "required": {"name", "command_topic"},
-        "optional": COMMON_FIELDS
-        | {
-            "title",
-            "icon",
-        },
+        "optional": _optional(
+            COMMON_FIELDS,
+            {"title", "icon"},
+            required={"name", "command_topic"},
+        ),
     },
     HADomain.TAG: {
         "required": {"topic"},
-        "optional": {
-            "value_template",
-            "qos",
-        },
+        "optional": _optional(
+            {"value_template", "qos"},
+            required={"topic"},
+        ),
     },
 }
