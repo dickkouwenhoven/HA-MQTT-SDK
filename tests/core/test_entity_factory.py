@@ -115,7 +115,7 @@ def test_build_registration(
 @patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
 @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
 @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
-def test_build_registration_calls_dependencies(
+def test_build_registration_calls_dependencies_no_command_topic(
     mock_discovery_topic,
     mock_discovery_payload,
     mock_state_topic,
@@ -152,6 +152,60 @@ def test_build_registration_calls_dependencies(
     )
 
     mock_command_topic.assert_not_called()
+
+    mock_availability_topic.assert_called_once_with(
+        entity.domain,
+        entity.unique_id,
+        "homeassistant",
+    )
+
+
+@patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
+@patch("ha_mqtt_sdk.core.entity_factory.build_command_topic")
+@patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
+@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
+@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
+def test_build_registration_calls_dependencies_with_command_topic(
+    mock_discovery_topic,
+    mock_discovery_payload,
+    mock_state_topic,
+    mock_command_topic,
+    mock_availability_topic,
+):
+    entity = MagicMock()
+
+    entity.domain = HADomain.SWITCH
+    entity.unique_id = "temp_1"
+
+    build_registration(
+        entity,
+        "homeassistant",
+    )
+
+    entity.validate.assert_called_once()
+
+    mock_discovery_topic.assert_called_once_with(
+        entity.domain,
+        entity.unique_id,
+        "homeassistant",
+    )
+
+    mock_discovery_payload.assert_called_once_with(
+        entity,
+        "homeassistant",
+    )
+
+    mock_state_topic.assert_called_once_with(
+        entity.domain,
+        entity.unique_id,
+        "homeassistant",
+    )
+
+    mock_command_topic.assert_called_once_with(
+        entity.domain,
+        entity.unique_id,
+        "homeassistant",
+    )
 
     mock_availability_topic.assert_called_once_with(
         entity.domain,
