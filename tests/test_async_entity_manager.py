@@ -8,6 +8,7 @@ from ha_mqtt_sdk.builders.topic_manager import (
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.core.async_entity_manager import AsyncEntityManager
+from ha_mqtt_sdk.core.entity_factory import build_registration
 from ha_mqtt_sdk.exceptions import EntityError
 
 
