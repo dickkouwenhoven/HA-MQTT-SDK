@@ -178,7 +178,8 @@ async def test_update_availability_invalid_entity(
         )
 
 
-def test_set_callback_on_sensor_fails(
+@pytest.mark.asyncio
+async def test_set_callback_on_sensor_fails(
     mqtt_client_async,
 ):
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings())
@@ -189,7 +190,7 @@ def test_set_callback_on_sensor_fails(
         unique_id="temp_1",
     )
 
-    result = manager.set_command_callback(
+    result = await manager.set_command_callback(
         entity,
         lambda t, p: None,
     )
