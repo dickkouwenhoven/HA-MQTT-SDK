@@ -58,6 +58,7 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
         self.published: list[tuple[str, Any, bool]] = []
         self.subscribed: list[str] = []
         self.callback: Callable[[str, str], Awaitable[None]] | None = None
+        self.set_message_callback = MagicMock()
         self.last_will = None
 
     async def publish(
