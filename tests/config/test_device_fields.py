@@ -24,9 +24,7 @@ def test_required_and_optional_do_not_overlap():
     for domain, config in ALLOWED_FIELDS_PER_DOMAIN.items():
         overlap = config["required"] & config["optional"]
 
-        assert overlap == set(), (
-            f"{domain}: required and optional overlap: {overlap}"
-        )
+        assert overlap == set(), f"{domain}: required and optional overlap: {overlap}"
 
 def test_sensor_required_fields():
     config = ALLOWED_FIELDS_PER_DOMAIN[HADomain.SENSOR]
