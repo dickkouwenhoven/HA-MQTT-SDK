@@ -94,7 +94,7 @@ def test_publish_not_connected():
         tls=False,
     )
 
-    with patch("your_module.paho_mqtt_client.mqtt.Client"):
+    with patch("ha_mqtt_sdk.mqtt.paho_client.mqtt.Client"):
         client = PahoMQTTClient(config)
 
         with pytest.raises(MQTTError):
