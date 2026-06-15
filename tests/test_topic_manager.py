@@ -113,7 +113,7 @@ def test_build_state_topic_with_a_domain_without_state_topic():
 
 def test_build_availability_topic_with_a_domain_without_availability_topic():
     topic = build_availability_topic(
-        HADomain.TRIGGER,
+        HADomain.DEVICE_TRIGGER,
         "id1",
         "homeassistant",
     )
