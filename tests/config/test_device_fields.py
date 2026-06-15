@@ -1,8 +1,8 @@
 from ha_mqtt_sdk.config.device_fields import (
     ALLOWED_FIELDS_PER_DOMAIN,
+    COMMAND_FIELDS,
     COMMON_FIELDS,
     STATE_FIELDS,
-    COMMAND_FIELDS,
 )
 from ha_mqtt_sdk.config.domains import HADomain
 
