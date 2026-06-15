@@ -102,7 +102,7 @@ def test_normalize_prefix_with_wrong_prefix_type():
         )
 
 
-def test build_state_topic_with_a_domain_without_state_topic():
+def test_build_state_topic_with_a_domain_without_state_topic():
     topic = build_state_topic(
         HADomain.BUTTON,
         "id1",
@@ -111,7 +111,7 @@ def test build_state_topic_with_a_domain_without_state_topic():
     assert topic == ""
 
 
-def test build_availability_topic_with_a_domain_without_availability_topic():
+def test_build_availability_topic_with_a_domain_without_availability_topic():
     topic = build_availability_topic(
         HADomain.BUTTON,
         "id1",
