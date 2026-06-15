@@ -678,7 +678,7 @@ async def test_get_entity_returns_registered_entity(
 
     await manager.register(entity)
 
-    assert manager.get_entity(entity.unique_id) is command_entity
+    assert manager.get_entity(entity.unique_id) is entity
 
 
 @pytest.mark.asyncio
