@@ -575,10 +575,7 @@ async def test_register_stores_command_callback(
         manager._settings.discovery_prefix,
     )
 
-    assert (
-        manager._command_callbacks[registration.command_topic]
-        is callback
-    )
+    assert manager._command_callbacks[registration.command_topic] is callback
 
 
 @pytest.mark.asyncio
@@ -653,10 +650,7 @@ async def test_get_entity_returns_registered_entity(
 ):
     await manager.register(command_entity)
 
-    assert (
-        manager.get_entity(command_entity.unique_id)
-        is command_entity
-    )
+    assert manager.get_entity(command_entity.unique_id) is command_entity
 
 
 @pytest.mark.asyncio
