@@ -559,19 +559,26 @@ def test_init_registers_message_callback(
 
 @pytest.mark.asyncio
 async def test_register_stores_command_callback(
-    manager,
-    command_entity,
+    mqtt_client_async,
 ):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
     async def callback(topic, payload):
         pass
 
     await manager.register(
-        command_entity,
+        entity,
         command_callback=callback,
     )
 
     registration = build_registration(
-        command_entity,
+        entity,
         manager._settings.discovery_prefix,
     )
 
@@ -580,22 +587,31 @@ async def test_register_stores_command_callback(
 
 @pytest.mark.asyncio
 async def test_set_command_callback_requires_callable(
-    manager,
-    command_entity,
+    mqtt_client_async,
 ):
-    await manager.register(command_entity)
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    await manager.register(entity)
 
     with pytest.raises(EntityError, match="callback must be callable"):
         await manager.set_command_callback(
-            command_entity,
+            entity,
             "not_a_function",
         )
 
 
 @pytest.mark.asyncio
 async def test_handle_command_without_registered_callback(
-    manager,
+    mqtt_client_async,
 ):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
+
     await manager._handle_command(
         "test/topic",
         "payload",
@@ -604,8 +620,10 @@ async def test_handle_command_without_registered_callback(
 
 @pytest.mark.asyncio
 async def test_handle_command_callback_exception(
-    manager,
+    mqtt_client_async,
 ):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
+
     async def failing_callback(topic, payload):
         raise RuntimeError("boom")
 
@@ -627,9 +645,10 @@ async def test_handle_command_callback_exception(
     ],
 )
 def test_get_entity_requires_non_empty_string(
-    manager,
+    mqtt_client_async,
     unique_id,
 ):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
     with pytest.raises(
         EntityError,
         match="unique_id must be a non-empty string",
@@ -638,62 +657,87 @@ def test_get_entity_requires_non_empty_string(
 
 
 def test_get_entity_returns_none_when_not_found(
-    manager,
+    mqtt_client_async,
 ):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
+
     assert manager.get_entity("missing") is None
 
 
 @pytest.mark.asyncio
 async def test_get_entity_returns_registered_entity(
-    manager,
-    command_entity,
+    mqtt_client_async,
 ):
-    await manager.register(command_entity)
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
-    assert manager.get_entity(command_entity.unique_id) is command_entity
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    await manager.register(entity)
+
+    assert manager.get_entity(entity.unique_id) is command_entity
 
 
 @pytest.mark.asyncio
 async def test_unregister_requires_entity_instance(
-    manager,
+    mqtt_client_async,
 ):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
+
     with pytest.raises(EntityError, match="Invalid entity"):
         await manager.unregister("not_entity")
 
 
 @pytest.mark.asyncio
 async def test_unregister_removes_command_callback(
-    manager,
-    command_entity,
+    mqtt_client_async,
 ):
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
+
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
     async def callback(topic, payload):
         pass
 
     await manager.register(
-        command_entity,
+        entity,
         command_callback=callback,
     )
 
     registration = build_registration(
-        command_entity,
+        entity,
         manager._settings.discovery_prefix,
     )
 
     assert registration.command_topic in manager._command_callbacks
 
-    await manager.unregister(command_entity)
+    await manager.unregister(entity)
 
     assert registration.command_topic not in manager._command_callbacks
 
 
 @pytest.mark.asyncio
 async def test_unregister_logs_success(
-    manager,
-    command_entity,
+    mqtt_client_async,
     caplog,
 ):
-    await manager.register(command_entity)
+    manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
-    await manager.unregister(command_entity)
+    entity = manager.create_entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    await manager.register(entity)
+
+    await manager.unregister(entity)
 
     assert "Entity unregistered" in caplog.text
