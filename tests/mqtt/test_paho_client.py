@@ -361,3 +361,60 @@ def test_reconnect_success_exits_loop(mqtt_client):
     client._reconnect_loop()
 
     instance.reconnect.assert_called_once()
+
+
+def test_reconnect_thread_already_running_branch(mqtt_client):
+    client, _ = mqtt_client
+
+    thread = MagicMock()
+    thread.is_alive.return_value = True
+
+    client._reconnect_thread = thread
+
+    # eerste call zet thread misschien niet goed
+    client._ensure_reconnect_thread()
+
+    # tweede call moet return branch triggeren
+    client._ensure_reconnect_thread()
+
+
+def test_message_callback_exception_branch(mqtt_client):
+    client, _ = mqtt_client
+
+    def bad(topic, payload):
+        raise ValueError("boom")
+
+    client.set_message_callback(bad)
+
+    msg = MagicMock()
+    msg.topic = "t"
+    msg.payload = b"123"
+
+    client._on_message(None, None, msg)
+
+
+def test_reconnect_loop_condition_branch(mqtt_client):
+    client, instance = mqtt_client
+
+    client._shutdown = False
+    client._connected = False
+
+    instance.reconnect.return_value = None
+
+    with patch("time.sleep", return_value=None):
+        client._reconnect_loop()
+
+
+def test_reconnect_success_exit_path(mqtt_client):
+    client, instance = mqtt_client
+
+    instance.reconnect.return_value = True
+
+    client._shutdown = False
+    client._connected = False
+
+    client._reconnect_loop()
+
+    instance.reconnect.assert_called_once()
+
+
