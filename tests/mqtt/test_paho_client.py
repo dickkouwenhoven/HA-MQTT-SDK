@@ -10,6 +10,7 @@ from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 # Helpers
 # -----------------------------
 
+
 @pytest.fixture
 def config():
     return MQTTSettings(
@@ -40,6 +41,7 @@ def mqtt_client(config):
 # connect / disconnect
 # -----------------------------
 
+
 def test_connect_sets_connection(mqtt_client):
     client, instance = mqtt_client
 
@@ -62,6 +64,7 @@ def test_disconnect_graceful(mqtt_client):
 # -----------------------------
 # publish
 # -----------------------------
+
 
 def test_publish_success(mqtt_client):
     client, instance = mqtt_client
@@ -110,6 +113,7 @@ def test_publish_empty_topic(mqtt_client):
 # subscribe
 # -----------------------------
 
+
 def test_subscribe_stores_topic(mqtt_client):
     client, instance = mqtt_client
 
@@ -131,6 +135,7 @@ def test_subscribe_calls_mqtt_when_connected(mqtt_client):
 # LWT
 # -----------------------------
 
+
 def test_set_last_will(mqtt_client):
     client, instance = mqtt_client
 
@@ -146,6 +151,7 @@ def test_set_last_will(mqtt_client):
 # -----------------------------
 # on_message callback
 # -----------------------------
+
 
 def test_on_message_calls_callback(mqtt_client):
     client, _ = mqtt_client
@@ -165,6 +171,7 @@ def test_on_message_calls_callback(mqtt_client):
 # -----------------------------
 # on_connect
 # -----------------------------
+
 
 def test_on_connect_success(mqtt_client):
     client, instance = mqtt_client
@@ -190,6 +197,7 @@ def test_on_connect_failure_logs(mqtt_client):
 # -----------------------------
 # on_disconnect
 # -----------------------------
+
 
 def test_on_disconnect_sets_state(mqtt_client):
     client, _ = mqtt_client
