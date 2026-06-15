@@ -103,3 +103,11 @@ def test_validate_discovery_payload_state_topic_wrong_type():
         validate_discovery_payload(payload, HADomain.SENSOR)
 
     assert "state_topic must be a string" in str(exc.value)
+
+
+def test_tuple_all_items_are_checked():
+    class Bad:
+        pass
+
+    with pytest.raises(ValidationError):
+        validate_json_serializable((1, 2, Bad()))
