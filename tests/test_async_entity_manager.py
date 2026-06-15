@@ -534,3 +534,171 @@ async def test_unregister_twice_fails(
 
     with pytest.raises(EntityError):
         await manager.unregister(entity)
+
+
+def test_init_requires_mqtt_settings(mock_async_mqtt_client):
+    with pytest.raises(EntityError, match="mqtt_settings must be MQTTSettings"):
+        AsyncEntityManager(
+            mqtt_client=mock_async_mqtt_client,
+            mqtt_settings="invalid",
+        )
+
+
+def test_init_registers_message_callback(
+    mock_async_mqtt_client,
+    mqtt_settings,
+):
+    AsyncEntityManager(
+        mqtt_client=mock_async_mqtt_client,
+        mqtt_settings=mqtt_settings,
+    )
+
+    mock_async_mqtt_client.set_message_callback.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_register_stores_command_callback(
+    manager,
+    command_entity,
+):
+    async def callback(topic, payload):
+        pass
+
+    await manager.register(
+        command_entity,
+        command_callback=callback,
+    )
+
+    registration = build_registration(
+        command_entity,
+        manager._settings.discovery_prefix,
+    )
+
+    assert (
+        manager._command_callbacks[registration.command_topic]
+        is callback
+    )
+
+
+@pytest.mark.asyncio
+async def test_set_command_callback_requires_callable(
+    manager,
+    command_entity,
+):
+    await manager.register(command_entity)
+
+    with pytest.raises(EntityError, match="callback must be callable"):
+        await manager.set_command_callback(
+            command_entity,
+            "not_a_function",
+        )
+
+
+@pytest.mark.asyncio
+async def test_handle_command_without_registered_callback(
+    manager,
+):
+    await manager._handle_command(
+        "test/topic",
+        "payload",
+    )
+
+
+@pytest.mark.asyncio
+async def test_handle_command_callback_exception(
+    manager,
+):
+    async def failing_callback(topic, payload):
+        raise RuntimeError("boom")
+
+    manager._command_callbacks["test/topic"] = failing_callback
+
+    await manager._handle_command(
+        "test/topic",
+        "payload",
+    )
+
+
+@pytest.mark.parametrize(
+    "unique_id",
+    [
+        "",
+        "   ",
+        None,
+        123,
+    ],
+)
+def test_get_entity_requires_non_empty_string(
+    manager,
+    unique_id,
+):
+    with pytest.raises(
+        EntityError,
+        match="unique_id must be a non-empty string",
+    ):
+        manager.get_entity(unique_id)
+
+
+def test_get_entity_returns_none_when_not_found(
+    manager,
+):
+    assert manager.get_entity("missing") is None
+
+
+@pytest.mark.asyncio
+async def test_get_entity_returns_registered_entity(
+    manager,
+    command_entity,
+):
+    await manager.register(command_entity)
+
+    assert (
+        manager.get_entity(command_entity.unique_id)
+        is command_entity
+    )
+
+
+@pytest.mark.asyncio
+async def test_unregister_requires_entity_instance(
+    manager,
+):
+    with pytest.raises(EntityError, match="Invalid entity"):
+        await manager.unregister("not_entity")
+
+
+@pytest.mark.asyncio
+async def test_unregister_removes_command_callback(
+    manager,
+    command_entity,
+):
+    async def callback(topic, payload):
+        pass
+
+    await manager.register(
+        command_entity,
+        command_callback=callback,
+    )
+
+    registration = build_registration(
+        command_entity,
+        manager._settings.discovery_prefix,
+    )
+
+    assert registration.command_topic in manager._command_callbacks
+
+    await manager.unregister(command_entity)
+
+    assert registration.command_topic not in manager._command_callbacks
+
+
+@pytest.mark.asyncio
+async def test_unregister_logs_success(
+    manager,
+    command_entity,
+    caplog,
+):
+    await manager.register(command_entity)
+
+    await manager.unregister(command_entity)
+
+    assert "Entity unregistered" in caplog.text
