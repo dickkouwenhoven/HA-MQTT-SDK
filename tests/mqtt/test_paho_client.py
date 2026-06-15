@@ -416,5 +416,3 @@ def test_reconnect_success_exit_path(mqtt_client):
     client._reconnect_loop()
 
     instance.reconnect.assert_called_once()
-
-
