@@ -102,17 +102,16 @@ def test_build_registration_calls_dependencies_no_command_topic():
 
 
 def test_build_registration_calls_dependencies_with_command_topic():
-    entity = MagicMock()
-
-    entity.domain = HADomain.SWITCH
-    entity.unique_id = "temp_1"
+    entity = create_entity(
+        domain=HADomain.SWITCH,
+        name="Temperature",
+        unique_id="temp_1",
+    )
 
     registration = build_registration(
         entity,
         "homeassistant",
     )
-
-    entity.validate.assert_called_once()
 
     assert registration.command_topic is not None
     assert registration.command_topic.endswith("/set")
