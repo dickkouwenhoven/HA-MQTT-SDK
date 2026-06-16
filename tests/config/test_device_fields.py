@@ -1,10 +1,31 @@
 from ha_mqtt_sdk.config.device_fields import (
+    _optional,
     ALLOWED_FIELDS_PER_DOMAIN,
     COMMAND_FIELDS,
     COMMON_FIELDS,
     STATE_FIELDS,
 )
 from ha_mqtt_sdk.config.domains import HADomain
+
+
+def test_optional_without_required():
+    base = {"a", "b", "c"}
+    extra = {"c", "d"}
+
+    result = _optional(base, extra)
+
+    assert result == {"a", "b", "c", "d"}
+
+
+def test_optional_with_required():
+    base = {"a", "b", "c"}
+    extra = {"c", "d"}
+    required = {"c"}
+
+    result = _optional(base, extra, required=required)
+
+    # 'c' must be removed due to required
+    assert result == {"a", "b", "d"}
 
 
 def test_all_domains_have_configuration():
