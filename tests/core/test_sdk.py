@@ -5,7 +5,6 @@ import pytest
 from ha_mqtt_sdk.core.sdk import HASDK
 from ha_mqtt_sdk.exceptions import SDKError
 
-
 # -------------------------
 # Helpers (fake objects)
 # -------------------------
