@@ -144,6 +144,7 @@ def build_registration(
             entity.unique_id,
             discovery_prefix,
         )
+        print("COMMAND TOPIC RAW RESULT:", command_topic)
 
     availability_topic = build_availability_topic(
         entity.domain,
