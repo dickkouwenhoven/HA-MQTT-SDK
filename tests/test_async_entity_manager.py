@@ -8,7 +8,7 @@ from ha_mqtt_sdk.builders.topic_manager import (
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.core.async_entity_manager import AsyncEntityManager
-from ha_mqtt_sdk.core.entity_factory import build_registration
+from ha_mqtt_sdk.core.entity_factory import build_rteseegistration
 from ha_mqtt_sdk.exceptions import EntityError
 
 
@@ -556,7 +556,7 @@ def test_init_registers_message_callback(
         mqtt_settings=mqtt_settings,
     )
 
-    assert mqtt_client_async.message_callback is not None
+    assert mqtt_client_async.set_message_callback.assert_called_once()
 
 
 @pytest.mark.asyncio
