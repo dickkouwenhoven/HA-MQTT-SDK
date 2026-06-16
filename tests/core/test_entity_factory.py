@@ -78,15 +78,15 @@ def test_build_registration():
         EntityRegistration,
     )
 
-    assert registration.discovery_topic == "homeassistant/sensor/test/config"
+    assert registration.discovery_topic == "homeassistant/switch/temp_1/config"
 
     assert registration.discovery_payload == {"name": "Temperature"}
 
-    assert registration.state_topic == "homeassistant/sensor/test/state"
+    assert registration.state_topic == "homeassistant/switch/temp_1/state"
 
-    assert registration.command_topic == "homeassistant/sensor/test/set"
+    assert registration.command_topic == "homeassistant/switch/temp_1/set"
 
-    assert registration.availability_topic == "homeassistant/sensor/test/availability"
+    assert registration.availability_topic == "homeassistant/switch/temp_1/availability"
 
 
 def test_build_registration_calls_dependencies_no_command_topic():
