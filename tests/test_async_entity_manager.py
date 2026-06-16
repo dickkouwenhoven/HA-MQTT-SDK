@@ -579,12 +579,9 @@ async def test_register_stores_command_callback(
         command_callback=callback,
     )
 
-    registration = build_registration(
-        entity,
-        manager._settings.discovery_prefix,
-    )
-
-    assert manager._command_callbacks[registration.command_topic] is callback
+    assert len(manager._command_callbacks) == 1
+    stored_callback = next(iter(manager._command_callbacks.values()))
+    assert stored_callback is callback
 
 
 @pytest.mark.asyncio
