@@ -503,7 +503,7 @@ async def test_unregister_removes_entity(
     )
 
     entity = manager.create_entity(
-        domain=HADomain.SENSOR,
+        domain=HADomain.SWITCH,
         name="Temp",
         unique_id="temp_1",
     )
