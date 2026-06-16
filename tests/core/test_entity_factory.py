@@ -59,6 +59,7 @@ def test_create_entity_with_optional_fields():
 # build_registration
 # ------------------------------------------------------------------
 
+
 def test_build_registration():
 
     entity = create_entity(
