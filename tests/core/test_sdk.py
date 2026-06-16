@@ -2,8 +2,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.ha_mqtt_sdk.core.sdk import HASDK
-from src.ha_mqtt_sdk.exceptions import SDKError
+from ha_mqtt_sdk.core.sdk import HASDK
+from ha_mqtt_sdk.exceptions import SDKError
 
 
 # -------------------------
