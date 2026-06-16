@@ -128,6 +128,15 @@ def build_registration(
         "command_topic" in schema["required"] or "command_topic" in schema["optional"]
     )
 
+    print("DOMAIN:", entity.domain, type(entity.domain))
+    print("SCHEMA KEYS:", ALLOWED_FIELDS_PER_DOMAIN.keys())
+
+    if supports_command:
+        print("Supports_command: TRUE")
+
+    if not supports_command:
+        print("Supports_command: FALSE")
+
     command_topic = None
     if supports_command:
         command_topic = build_command_topic(
