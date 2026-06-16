@@ -556,7 +556,7 @@ def test_init_registers_message_callback(
         mqtt_settings=mqtt_settings,
     )
 
-    assert mqtt_client_async.set_message_callback.assert_called_once()
+    mqtt_client_async.set_message_callback.assert_called_once()
 
 
 @pytest.mark.asyncio
