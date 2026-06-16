@@ -12,11 +12,13 @@ from ha_mqtt_sdk.exceptions import SDKError
 
 class FakeEntity:
     """Minimal stand-in for Entity."""
+
     pass
 
 
 class FakeSettings:
     """Minimal stand-in for MQTTSettings."""
+
     pass
 
 
