@@ -93,7 +93,7 @@ def test_build_registration_calls_dependencies_no_command_topic():
         unique_id="temp_1",
     )
 
-    registration =build_registration(
+    registration = build_registration(
         entity,
         "homeassistant",
     )
