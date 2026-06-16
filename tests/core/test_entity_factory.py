@@ -58,13 +58,13 @@ def test_create_entity_with_optional_fields():
 # ------------------------------------------------------------------
 # build_registration
 # ------------------------------------------------------------------
+# @patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
+# @patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
 
 
-@patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
-@patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
-@patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
-@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
-@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
 def test_build_registration(
     mock_discovery_topic,
     mock_discovery_payload,
@@ -110,11 +110,13 @@ def test_build_registration(
     assert registration.availability_topic == "homeassistant/sensor/test/availability"
 
 
-@patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
-@patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
-@patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
-@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
-@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
+# @patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
+
+
 def test_build_registration_calls_dependencies_no_command_topic(
     mock_discovery_topic,
     mock_discovery_payload,
@@ -160,11 +162,13 @@ def test_build_registration_calls_dependencies_no_command_topic(
     )
 
 
-@patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
-@patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
-@patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
-@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
-@patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
+# @patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
+# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
+
+
 def test_build_registration_calls_dependencies_with_command_topic(
     mock_discovery_topic,
     mock_discovery_payload,
