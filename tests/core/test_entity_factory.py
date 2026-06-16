@@ -87,10 +87,11 @@ def test_build_registration():
 
 
 def test_build_registration_calls_dependencies_no_command_topic():
-    entity = MagicMock()
-
-    entity.domain = HADomain.SENSOR
-    entity.unique_id = "temp_1"
+    entity = create_entity(
+        domain=HADomain.SENSOR,
+        name="Temperature",
+        unique_id="temp_1",
+    )
 
     registration = build_registration(
         entity,
