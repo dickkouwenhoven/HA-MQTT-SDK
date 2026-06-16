@@ -566,7 +566,7 @@ async def test_register_stores_command_callback(
     manager = AsyncEntityManager(mqtt_client_async, MQTTSettings(discovery_prefix="homeassistant"))
 
     entity = manager.create_entity(
-        domain=HADomain.SENSOR,
+        domain=HADomain.SWITCH,
         name="Temp",
         unique_id="temp_1",
     )
