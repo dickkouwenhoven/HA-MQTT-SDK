@@ -39,4 +39,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --cov=ha_mqtt_sdk --cov-report=term-missing --cov-fail-under=90 
+          pytest --cov=ha_mqtt_sdk --cov-report=term-missing --cov-fail-under=90 -s
