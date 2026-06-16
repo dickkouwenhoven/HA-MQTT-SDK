@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.core.entity_factory import EntityRegistration, build_registration, create_entity
