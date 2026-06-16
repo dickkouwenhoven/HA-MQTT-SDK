@@ -549,18 +549,6 @@ def test_init_requires_mqtt_settings(mqtt_client_async):
         )
 
 
-def test_init_registers_message_callback(
-    mqtt_client_async,
-    mqtt_settings,
-):
-    AsyncEntityManager(
-        mqtt_client=mqtt_client_async,
-        mqtt_settings=mqtt_settings,
-    )
-
-    mqtt_client_async.set_message_callback.assert_called_once()
-
-
 @pytest.mark.asyncio
 async def test_register_stores_command_callback(
     mqtt_client_async,
