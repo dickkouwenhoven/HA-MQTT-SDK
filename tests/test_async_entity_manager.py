@@ -262,6 +262,8 @@ async def test_replace_command_callback(
 
     await mqtt_client_async.simulate_message(expected_topic, "ON")
 
+    print(manager._command_callbacks.keys())
+
     assert first_called["value"] is False
     assert second_called["value"] is True
 
