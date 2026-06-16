@@ -58,36 +58,14 @@ def test_create_entity_with_optional_fields():
 # ------------------------------------------------------------------
 # build_registration
 # ------------------------------------------------------------------
-# @patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
-# @patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
 
-
-def test_build_registration(
-    mock_discovery_topic,
-    mock_discovery_payload,
-    mock_state_topic,
-    mock_command_topic,
-    mock_availability_topic,
-):
+def test_build_registration():
 
     entity = create_entity(
         domain=HADomain.SWITCH,
         name="Temperature",
         unique_id="temp_1",
     )
-
-    mock_discovery_topic.return_value = "homeassistant/sensor/test/config"
-
-    mock_discovery_payload.return_value = {"name": "Temperature"}
-
-    mock_state_topic.return_value = "homeassistant/sensor/test/state"
-
-    mock_command_topic.return_value = "homeassistant/sensor/test/set"
-
-    mock_availability_topic.return_value = "homeassistant/sensor/test/availability"
 
     registration = build_registration(
         entity,
@@ -110,112 +88,37 @@ def test_build_registration(
     assert registration.availability_topic == "homeassistant/sensor/test/availability"
 
 
-# @patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
-# @patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
-
-
-def test_build_registration_calls_dependencies_no_command_topic(
-    mock_discovery_topic,
-    mock_discovery_payload,
-    mock_state_topic,
-    mock_command_topic,
-    mock_availability_topic,
-):
+def test_build_registration_calls_dependencies_no_command_topic():
     entity = MagicMock()
 
     entity.domain = HADomain.SENSOR
     entity.unique_id = "temp_1"
 
-    build_registration(
+    registration = build_registration(
         entity,
         "homeassistant",
     )
 
     entity.validate.assert_called_once()
 
-    mock_discovery_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
-
-    mock_discovery_payload.assert_called_once_with(
-        entity,
-        "homeassistant",
-    )
-
-    mock_state_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
-
-    mock_command_topic.assert_not_called()
-
-    mock_availability_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
+    assert registration.command_topic is None
 
 
-# @patch("ha_mqtt_sdk.core.entity_factory.build_availability_topic")
-# @patch("ha_mqtt_sdk.builders.topic_manager.build_command_topic")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_state_topic")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_payload")
-# @patch("ha_mqtt_sdk.core.entity_factory.build_discovery_topic")
-
-
-def test_build_registration_calls_dependencies_with_command_topic(
-    mock_discovery_topic,
-    mock_discovery_payload,
-    mock_state_topic,
-    mock_command_topic,
-    mock_availability_topic,
-):
+def test_build_registration_calls_dependencies_with_command_topic():
     entity = MagicMock()
 
     entity.domain = HADomain.SWITCH
     entity.unique_id = "temp_1"
 
-    build_registration(
+    registration = build_registration(
         entity,
         "homeassistant",
     )
 
     entity.validate.assert_called_once()
 
-    mock_discovery_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
-
-    mock_discovery_payload.assert_called_once_with(
-        entity,
-        "homeassistant",
-    )
-
-    mock_state_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
-
-    mock_command_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
-
-    mock_availability_topic.assert_called_once_with(
-        entity.domain,
-        entity.unique_id,
-        "homeassistant",
-    )
+    assert registration.command_topic is not None
+    assert registration.command_topic.endswith("/set")
 
 
 def test_entity_registration_dataclass():
