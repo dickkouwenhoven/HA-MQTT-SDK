@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -36,7 +36,7 @@ def test_init_requires_either_settings_or_client():
 def test_init_with_mqtt_settings_only(mock_entity_manager, mock_mqtt_client):
     settings = FakeSettings()
 
-    sdk = HASDK(mqtt_client=None, mqtt_settings=settings)
+    HASDK(mqtt_client=None, mqtt_settings=settings)
 
     mock_mqtt_client.assert_called_once_with(settings)
     mock_entity_manager.assert_called_once()
