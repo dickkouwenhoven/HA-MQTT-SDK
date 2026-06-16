@@ -1,6 +1,6 @@
 from collections.abc import Awaitable, Callable
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -60,6 +60,7 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
         self.subscribed: list[str] = []
         self.callback: Callable[[str, str], Awaitable[None]] | None = None
         self.last_will = None
+        self.set_message_callback = MagicMock()
 
     async def publish(
         self,
