@@ -261,6 +261,9 @@ class AsyncEntityManager:
         Routes incoming commands to registered callbacks.
         """
 
+        print("Dick INCOMMING:", topic)
+        print("KNOWN KEYS:", self._command_callbacks.keys())
+
         _logger.debug(
             "Command received:%s -> %s",
             topic,
