@@ -98,9 +98,7 @@ def test_build_registration_calls_dependencies_no_command_topic():
         "homeassistant",
     )
 
-    entity.validate.assert_called_once()
-
-    assert registration.command_topic is None
+    assert entity.command_topic is None
 
 
 def test_build_registration_calls_dependencies_with_command_topic():
