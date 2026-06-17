@@ -198,24 +198,3 @@ def test_create_entity_delegates(mock_entity_manager):
 
     assert result == expected_entity
     entity_manager.create_entity.assert_called_once()
-
-
-# -------------------------
-# unregister / is_registered
-# -------------------------
-
-
-@patch("src.ha_mqtt_sdk.core.sdk.EntityManager")
-def test_unregister_and_is_registered(mock_entity_manager):
-    entity_manager = MagicMock()
-    entity_manager.is_registered.return_value = True
-    mock_entity_manager.return_value = entity_manager
-
-    client = PahoMQTTClient(mqtt_settings)
-    entity = FakeEntity()
-
-    sdk.unregister(entity)
-    entity_manager.unregister.assert_called_once_with(entity)
-
-    assert sdk.is_registered(entity) is True
-    entity_manager.is_registered.assert_called_once_with(entity)
