@@ -210,7 +210,7 @@ def test_unregister_and_is_registered(mock_entity_manager):
     entity_manager.is_registered.return_value = True
     mock_entity_manager.return_value = entity_manager
 
-    sdk = HASDK(mqtt_client=MagicMock(), mqtt_settings=FakeSettings())
+    sdk = HASDK(mqtt_client=MagicMock())
     entity = FakeEntity()
 
     sdk.unregister(entity)
