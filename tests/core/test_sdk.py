@@ -4,6 +4,7 @@ import pytest
 
 from ha_mqtt_sdk.core.sdk import HASDK
 from ha_mqtt_sdk.exceptions import SDKError
+from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
 # -------------------------
 # Helpers (fake objects)
@@ -210,7 +211,7 @@ def test_unregister_and_is_registered(mock_entity_manager):
     entity_manager.is_registered.return_value = True
     mock_entity_manager.return_value = entity_manager
 
-    sdk = HASDK(mqtt_client=MagicMock())
+    sdk = HASDK(mqtt_client=PahoMQTTClient())
     entity = FakeEntity()
 
     sdk.unregister(entity)
