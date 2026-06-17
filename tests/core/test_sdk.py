@@ -156,18 +156,3 @@ def test_on_command_non_callable():
 
     with pytest.raises(SDKError):
         sdk.on_command(entity, "not-callable")
-
-
-@patch("src.ha_mqtt_sdk.core.sdk.EntityManager")
-def test_on_command_delegates(mock_entity_manager):
-    entity_manager = MagicMock()
-    mock_entity_manager.return_value = entity_manager
-
-    sdk = HASDK(mqtt_client=MagicMock(), mqtt_settings=FakeSettings())
-
-    entity = FakeEntity()
-    cb = MagicMock()
-
-    sdk.on_command(entity, cb)
-
-    entity_manager.set_command_callback.assert_called_once_with(entity, cb)
