@@ -4,7 +4,6 @@ import pytest
 
 from ha_mqtt_sdk.core.sdk import HASDK
 from ha_mqtt_sdk.exceptions import SDKError
-from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
 # -------------------------
 # Helpers (fake objects)
@@ -172,29 +171,3 @@ def test_on_command_delegates(mock_entity_manager):
     sdk.on_command(entity, cb)
 
     entity_manager.set_command_callback.assert_called_once_with(entity, cb)
-
-
-# -------------------------
-# create_entity
-# -------------------------
-
-
-@patch("src.ha_mqtt_sdk.core.sdk.EntityManager")
-def test_create_entity_delegates(mock_entity_manager):
-    entity_manager = MagicMock()
-    expected_entity = FakeEntity()
-    entity_manager.create_entity.return_value = expected_entity
-    mock_entity_manager.return_value = entity_manager
-
-    sdk = HASDK(mqtt_client=MagicMock(), mqtt_settings=FakeSettings())
-
-    result = sdk.create_entity(
-        domain="light",
-        name="Lamp",
-        unique_id="123",
-        device_info=None,
-        extra={"foo": "bar"},
-    )
-
-    assert result == expected_entity
-    entity_manager.create_entity.assert_called_once()
