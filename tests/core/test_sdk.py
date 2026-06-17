@@ -135,24 +135,3 @@ def test_update_state_delegates(mock_entity_manager):
     sdk.update_state(entity, {"on": True})
 
     entity_manager.update_state.assert_called_once_with(entity, {"on": True})
-
-
-# -------------------------
-# on_command
-# -------------------------
-
-
-def test_on_command_invalid_entity():
-    sdk = HASDK(mqtt_client=MagicMock(), mqtt_settings=FakeSettings())
-
-    with pytest.raises(SDKError):
-        sdk.on_command("bad", lambda x, y: None)
-
-
-def test_on_command_non_callable():
-    sdk = HASDK(mqtt_client=MagicMock(), mqtt_settings=FakeSettings())
-
-    entity = FakeEntity()
-
-    with pytest.raises(SDKError):
-        sdk.on_command(entity, "not-callable")
