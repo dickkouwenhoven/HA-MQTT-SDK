@@ -696,7 +696,7 @@ def test_reconnect_loop_retries(mock_sleep, mqtt_client_2):
         if attempts == 1:
             raise Exception("boom")
 
-        mqtt_client._connected = True
+        mqtt_client_2._connected = True
 
     mqtt_client_2._client.reconnect.side_effect = reconnect_side_effect
 
