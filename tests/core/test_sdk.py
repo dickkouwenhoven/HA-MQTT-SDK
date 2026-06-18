@@ -1,5 +1,6 @@
 import pytest
 
+from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.core.entity_factory import create_entity
 from ha_mqtt_sdk.core.sdk import HASDK
 from ha_mqtt_sdk.exceptions import SDKError
@@ -27,12 +28,13 @@ def test_update_state_with_invalid_entity():
 
 def test_on_command_with_invalid_entity():
     entity: Entity = create_entity(
-        domain="switch",
+        domain=HADomain.SWITCH,
         name="Relay",
         unique_id="relay_1",
     )
 
     callback = "command_callback"
 
+    entity.domain = "Invalid Domain"
     with pytest.raises(SDKError):
         HASDK.on_command(entity, callback)
