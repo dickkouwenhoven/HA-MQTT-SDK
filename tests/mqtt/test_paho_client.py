@@ -703,4 +703,4 @@ def test_reconnect_loop_retries(mock_sleep, mqtt_client_2):
     mqtt_client_2._reconnect_loop()
 
     assert attempts == 2
-    assert mqtt_client._client.reconnect.call_count == 2
+    assert mqtt_client_2._client.reconnect.call_count == 2
