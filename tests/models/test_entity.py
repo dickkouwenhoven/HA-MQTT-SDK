@@ -5,7 +5,7 @@ from ha_mqtt_sdk.exceptions import EntityError, SchemaError
 from ha_mqtt_sdk.models.entity import Entity
 
 
-def test_to_dict_with_device_info()
+def test_to_dict_with_device_info():
     device_info: DeviceInfo = {}
 
     device_info["manufacturer"] = "Ikea"
