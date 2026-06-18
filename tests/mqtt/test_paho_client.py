@@ -440,7 +440,7 @@ def mqtt_settings():
 
 
 @pytest.fixture
-def mqtt_client(mqtt_settings):
+def mqtt_client_2(mqtt_settings):
     with patch("ha_mqtt_sdk.mqtt.paho_client.mqtt.Client") as mock_client_cls:
         mock_client = MagicMock()
         mock_client_cls.return_value = mock_client
@@ -466,7 +466,7 @@ def test_init_sets_callbacks(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_set_last_will(mqtt_client):
+def test_set_last_will_2(mqtt_client):
     mqtt_client.set_last_will("device/status")
 
     mqtt_client._client.will_set.assert_called_once_with(
@@ -551,7 +551,7 @@ def test_publish_empty_topic_raises(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_subscribe_stores_topic(mqtt_client):
+def test_subscribe_stores_topic_2(mqtt_client):
     mqtt_client.subscribe("test/topic")
 
     assert "test/topic" in mqtt_client._subscriptions
@@ -618,7 +618,7 @@ def test_message_callback_not_set(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_on_connect_success(mqtt_client):
+def test_on_connect_success_2(mqtt_client):
     mqtt_client.subscribe("test/topic")
 
     mqtt_client._on_connect(None, None, None, 0)
