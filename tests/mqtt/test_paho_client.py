@@ -455,10 +455,10 @@ def mqtt_client_2(mqtt_settings):
 # ------------------------------------------------------------------
 
 
-def test_init_sets_callbacks(mqtt_client):
-    assert mqtt_client._client.on_connect == mqtt_client._on_connect
-    assert mqtt_client._client.on_disconnect == mqtt_client._on_disconnect
-    assert mqtt_client._client.on_message == mqtt_client._on_message
+def test_init_sets_callbacks(mqtt_client_2):
+    assert mqtt_client_2._client.on_connect == mqtt_client_2._on_connect
+    assert mqtt_client_2._client.on_disconnect == mqtt_client_2._on_disconnect
+    assert mqtt_client_2._client.on_message == mqtt_client_2._on_message
 
 
 # ------------------------------------------------------------------
@@ -466,10 +466,10 @@ def test_init_sets_callbacks(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_set_last_will_2(mqtt_client):
-    mqtt_client.set_last_will("device/status")
+def test_set_last_will_2(mqtt_client_2):
+    mqtt_client_2.set_last_will("device/status")
 
-    mqtt_client._client.will_set.assert_called_once_with(
+    mqtt_client_2._client.will_set.assert_called_once_with(
         "device/status",
         payload="offline",
         retain=True,
@@ -481,24 +481,24 @@ def test_set_last_will_2(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_connect(mqtt_client, mqtt_settings):
-    mqtt_client.connect()
+def test_connect(mqtt_client_2, mqtt_settings):
+    mqtt_client_2.connect()
 
-    mqtt_client._client.connect.assert_called_once_with(
+    mqtt_client_2._client.connect.assert_called_once_with(
         mqtt_settings.host,
         mqtt_settings.port,
         mqtt_settings.keepalive,
     )
 
-    mqtt_client._client.loop_start.assert_called_once()
+    mqtt_client_2._client.loop_start.assert_called_once()
 
 
-def test_disconnect(mqtt_client):
-    mqtt_client.disconnect()
+def test_disconnect(mqtt_client_2):
+    mqtt_client_2.disconnect()
 
-    assert mqtt_client._shutdown is True
-    mqtt_client._client.loop_stop.assert_called_once()
-    mqtt_client._client.disconnect.assert_called_once()
+    assert mqtt_client_2._shutdown is True
+    mqtt_client_2._client.loop_stop.assert_called_once()
+    mqtt_client_2._client.disconnect.assert_called_once()
 
 
 # ------------------------------------------------------------------
@@ -506,44 +506,44 @@ def test_disconnect(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_publish_string(mqtt_client):
-    mqtt_client._connected = True
-    mqtt_client.publish("test/topic", "ON")
+def test_publish_string(mqtt_client_2):
+    mqtt_client_2._connected = True
+    mqtt_client_2.publish("test/topic", "ON")
 
-    mqtt_client._client.publish.assert_called_once_with(
+    mqtt_client_2._client.publish.assert_called_once_with(
         "test/topic",
         "ON",
         retain=False,
     )
 
 
-def test_publish_json_payload(mqtt_client):
-    mqtt_client._connected = True
+def test_publish_json_payload(mqtt_client_2):
+    mqtt_client_2._connected = True
     payload = {"state": "ON"}
 
-    mqtt_client.publish("test/topic", payload)
+    mqtt_client_2.publish("test/topic", payload)
 
-    mqtt_client._client.publish.assert_called_once_with(
+    mqtt_client_2._client.publish.assert_called_once_with(
         "test/topic",
         json.dumps(payload),
         retain=False,
     )
 
 
-def test_publish_with_retain(mqtt_client):
-    mqtt_client._connected = True
-    mqtt_client.publish("test/topic", "ON", retain=True)
+def test_publish_with_retain(mqtt_client_2):
+    mqtt_client_2._connected = True
+    mqtt_client_2.publish("test/topic", "ON", retain=True)
 
-    mqtt_client._client.publish.assert_called_once_with(
+    mqtt_client_2._client.publish.assert_called_once_with(
         "test/topic",
         "ON",
         retain=True,
     )
 
 
-def test_publish_empty_topic_raises(mqtt_client):
+def test_publish_empty_topic_raises(mqtt_client_2):
     with pytest.raises(ValidationError):
-        mqtt_client.publish("", "payload")
+        mqtt_client_2.publish("", "payload")
 
 
 # ------------------------------------------------------------------
@@ -551,24 +551,24 @@ def test_publish_empty_topic_raises(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_subscribe_stores_topic_2(mqtt_client):
-    mqtt_client.subscribe("test/topic")
+def test_subscribe_stores_topic_2(mqtt_client_2):
+    mqtt_client_2.subscribe("test/topic")
 
-    assert "test/topic" in mqtt_client._subscriptions
-
-
-def test_subscribe_when_connected(mqtt_client):
-    mqtt_client._connected = True
-
-    mqtt_client.subscribe("test/topic")
-
-    mqtt_client._client.subscribe.assert_called_once_with("test/topic")
+    assert "test/topic" in mqtt_client_2._subscriptions
 
 
-def test_resubscribe_after_connect(mqtt_client):
-    mqtt_client.subscribe("test/topic")
+def test_subscribe_when_connected(mqtt_client_2):
+    mqtt_client_2._connected = True
 
-    mqtt_client._on_connect(
+    mqtt_client_2.subscribe("test/topic")
+
+    mqtt_client_2._client.subscribe.assert_called_once_with("test/topic")
+
+
+def test_resubscribe_after_connect(mqtt_client_2):
+    mqtt_client_2.subscribe("test/topic")
+
+    mqtt_client_2._on_connect(
         None,
         None,
         None,
@@ -576,9 +576,9 @@ def test_resubscribe_after_connect(mqtt_client):
     )
 
 
-def test_subscribe_empty_topic_raises(mqtt_client):
+def test_subscribe_empty_topic_raises(mqtt_client_2):
     with pytest.raises(MQTTError):
-        mqtt_client.subscribe("")
+        mqtt_client_2.subscribe("")
 
 
 # ------------------------------------------------------------------
@@ -586,16 +586,16 @@ def test_subscribe_empty_topic_raises(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_message_callback_invoked(mqtt_client):
+def test_message_callback_invoked(mqtt_client_2):
     callback = MagicMock()
 
-    mqtt_client.set_message_callback(callback)
+    mqtt_client_2.set_message_callback(callback)
 
     msg = MagicMock()
     msg.topic = "sensor/temp"
     msg.payload.decode.return_value = "22.5"
 
-    mqtt_client._on_message(None, None, msg)
+    mqtt_client_2._on_message(None, None, msg)
 
     callback.assert_called_once_with(
         "sensor/temp",
@@ -603,12 +603,12 @@ def test_message_callback_invoked(mqtt_client):
     )
 
 
-def test_message_callback_not_set(mqtt_client):
+def test_message_callback_not_set(mqtt_client_2):
     msg = MagicMock()
     msg.topic = "sensor/temp"
     msg.payload.decode.return_value = "22.5"
 
-    mqtt_client._on_message(None, None, msg)
+    mqtt_client_2._on_message(None, None, msg)
 
     # Geen exception betekent succes
 
@@ -618,22 +618,22 @@ def test_message_callback_not_set(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_on_connect_success_2(mqtt_client):
-    mqtt_client.subscribe("test/topic")
+def test_on_connect_success_2(mqtt_client_2):
+    mqtt_client_2.subscribe("test/topic")
 
-    mqtt_client._on_connect(None, None, None, 0)
+    mqtt_client_2._on_connect(None, None, None, 0)
 
-    assert mqtt_client._connected is True
+    assert mqtt_client_2._connected is True
 
-    mqtt_client._client.subscribe.assert_called_once_with("test/topic")
+    mqtt_client_2._client.subscribe.assert_called_once_with("test/topic")
 
 
-def test_on_connect_failure(mqtt_client):
-    mqtt_client._connected = False
+def test_on_connect_failure(mqtt_client_2):
+    mqtt_client_2._connected = False
 
-    mqtt_client._on_connect(None, None, None, 1)
+    mqtt_client_2._on_connect(None, None, None, 1)
 
-    assert mqtt_client._connected is False
+    assert mqtt_client_2._connected is False
 
 
 # ------------------------------------------------------------------
@@ -641,25 +641,25 @@ def test_on_connect_failure(mqtt_client):
 # ------------------------------------------------------------------
 
 
-def test_on_disconnect_intentional(mqtt_client):
-    mqtt_client._shutdown = True
+def test_on_disconnect_intentional(mqtt_client_2):
+    mqtt_client_2._shutdown = True
 
-    mqtt_client._on_disconnect(None, None, 0)
+    mqtt_client_2._on_disconnect(None, None, 0)
 
-    assert mqtt_client._connected is False
+    assert mqtt_client_2._connected is False
 
 
 def test_on_disconnect_starts_reconnect_thread(
-    mqtt_client,
+    mqtt_client_2,
 ):
-    mqtt_client._shutdown = False
-    mqtt_client._config.reconnect = True
+    mqtt_client_2._shutdown = False
+    mqtt_client_2._config.reconnect = True
 
-    mqtt_client._ensure_reconnect_thread = MagicMock()
+    mqtt_client_2._ensure_reconnect_thread = MagicMock()
 
-    mqtt_client._on_disconnect(None, None, 1)
+    mqtt_client_2._on_disconnect(None, None, 1)
 
-    mqtt_client._ensure_reconnect_thread.assert_called_once()
+    mqtt_client_2._ensure_reconnect_thread.assert_called_once()
 
 
 # ------------------------------------------------------------------
@@ -668,24 +668,24 @@ def test_on_disconnect_starts_reconnect_thread(
 
 
 @patch("ha_mqtt_sdk.mqtt.paho_client.time.sleep")
-def test_reconnect_loop_success(mock_sleep, mqtt_client):
-    mqtt_client._shutdown = False
-    mqtt_client._connected = False
+def test_reconnect_loop_success(mock_sleep, mqtt_client_2):
+    mqtt_client_2._shutdown = False
+    mqtt_client_2._connected = False
 
     def reconnect():
-        mqtt_client._connected = True
+        mqtt_client_2._connected = True
 
-    mqtt_client._client.reconnect.side_effect = reconnect
+    mqtt_client_2._client.reconnect.side_effect = reconnect
 
-    mqtt_client._reconnect_loop()
+    mqtt_client_2._reconnect_loop()
 
-    mqtt_client._client.reconnect.assert_called_once()
+    mqtt_client_2._client.reconnect.assert_called_once()
 
 
 @patch("ha_mqtt_sdk.mqtt.paho_client.time.sleep")
-def test_reconnect_loop_retries(mock_sleep, mqtt_client):
-    mqtt_client._shutdown = False
-    mqtt_client._connected = False
+def test_reconnect_loop_retries(mock_sleep, mqtt_client_2):
+    mqtt_client_2._shutdown = False
+    mqtt_client_2._connected = False
 
     attempts = 0
 
@@ -698,9 +698,9 @@ def test_reconnect_loop_retries(mock_sleep, mqtt_client):
 
         mqtt_client._connected = True
 
-    mqtt_client._client.reconnect.side_effect = reconnect_side_effect
+    mqtt_client_2._client.reconnect.side_effect = reconnect_side_effect
 
-    mqtt_client._reconnect_loop()
+    mqtt_client_2._reconnect_loop()
 
     assert attempts == 2
     assert mqtt_client._client.reconnect.call_count == 2
