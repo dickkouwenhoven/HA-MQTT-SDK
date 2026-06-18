@@ -7,10 +7,7 @@ from ha_mqtt_sdk.models.entity import Entity
 def test_to_dict_with_device_info():
     device_info: DeviceInfo = {}
 
-    device_info = {
-        "manufacturer": "Ikea",
-        "identifiers": [("relay_1", "ABC123")]
-    }
+    device_info = {"manufacturer": "Ikea", "identifiers": [("relay_1", "ABC123")]}
 
     entity: Entity = create_entity(
         domain=HADomain.SWITCH,
