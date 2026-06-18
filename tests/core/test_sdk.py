@@ -1,7 +1,9 @@
 import pytest
 
+from ha_mqtt_sdk.core.entity_factory import create_entity
 from ha_mqtt_sdk.core.sdk import HASDK
 from ha_mqtt_sdk.exceptions import SDKError
+from ha_mqtt_sdk.models.entity import Entity
 
 # -------------------------
 # Init tests
@@ -24,7 +26,7 @@ def test_update_state_with_invalid_entity():
 
 
 def test_on_command_with_invalid_entity():
-    entity = Entity(
+    entity: Entity = create_entity(
         domain="switch",
         name="Relay",
         unique_id="relay_1",
