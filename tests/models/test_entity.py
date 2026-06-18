@@ -9,7 +9,7 @@ def test_to_dict_with_device_info():
 
     device_info = {
         "manufacturer": "Ikea",
-        "identifiers": ["relay_1"],
+        "identifiers": "relay_1",
     }
 
     entity: Entity = create_entity(
