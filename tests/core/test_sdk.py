@@ -16,3 +16,8 @@ def test_init_requires_either_settings_or_client():
 def test_register_with_invalid_entity():
     with pytest.raises(SDKError):
         HASDK.register("Invalid Entity", "command_callback")
+
+
+def test_update_state_with_invalid_entity():
+    with pytest.raises(SDKError):
+        HASK.update_state("Invalid Entity", "state")
