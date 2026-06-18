@@ -11,3 +11,8 @@ from ha_mqtt_sdk.exceptions import SDKError
 def test_init_requires_either_settings_or_client():
     with pytest.raises(SDKError):
         HASDK(mqtt_client=None, mqtt_settings=None)
+
+
+def test_register_with_invalid_entity():
+    with pytest.raises(SDKError):
+        HASDK.register("Invalid Entity", "command_callback")
