@@ -21,3 +21,16 @@ def test_register_with_invalid_entity():
 def test_update_state_with_invalid_entity():
     with pytest.raises(SDKError):
         HASDK.update_state("Invalid Entity", "ON")
+
+
+def test_on_command_with_invalid_entity():
+    entity = Entity(
+        domain="switch",
+        name="Relay",
+        unique_id="relay_1",
+    )
+
+    callback = "command_callback"
+
+    with pytest.raises(SDKError):
+        HASDK.on_command(entity, callback)
