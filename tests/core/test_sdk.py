@@ -19,6 +19,5 @@ def test_register_with_invalid_entity():
 
 
 def test_update_state_with_invalid_entity():
-    state = object()
     with pytest.raises(SDKError):
-        HASDK.update_state("Invalid Entity", {1: "ON"})
+        HASDK.update_state("Invalid Entity", "ON")
