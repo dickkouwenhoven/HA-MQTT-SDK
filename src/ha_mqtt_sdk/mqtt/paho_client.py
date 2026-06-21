@@ -22,10 +22,9 @@ import paho.mqtt.client as mqtt
 
 from ..config.mqtt import MQTTSettings
 from ..exceptions import MQTTError, ValidationError
+from ..types import PublishPayload
 from ..utils.logger import get_logger
 from .base import BaseMQTTClient
-
-type PublishPayload = str | dict[str, Any] | int | float
 
 
 class PahoMQTTClient(BaseMQTTClient):
