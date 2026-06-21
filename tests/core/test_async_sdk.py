@@ -69,6 +69,7 @@ async def test_on_command_with_invalid_entity():
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
+
 def make_sdk(mock_manager: MagicMock) -> AsyncHASDK:
     """Build an AsyncHASDK with a mocked AsyncEntityManager."""
     mqtt_config = MQTTSettings(host="localhost", port=1883)
@@ -83,6 +84,7 @@ def make_entity() -> Entity:
 
 # ── line 50: init from mqtt_settings only (no injected client) ───────────────
 
+
 def test_init_from_mqtt_settings_only():
     """Covers the else-branch that constructs AsyncMQTTClient internally (line 50)."""
     mqtt_config = MQTTSettings(host="localhost", port=1883)
@@ -91,6 +93,7 @@ def test_init_from_mqtt_settings_only():
 
 
 # ── lines 58-59: start() ─────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_start_calls_mqtt_connect():
@@ -105,6 +108,7 @@ async def test_start_calls_mqtt_connect():
 
 # ── lines 71-72: shutdown() ───────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_shutdown_calls_mqtt_disconnect():
     manager = MagicMock()
@@ -117,6 +121,7 @@ async def test_shutdown_calls_mqtt_disconnect():
 
 
 # ── lines 78-79: register() happy path ───────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_register_valid_entity():
@@ -147,6 +152,7 @@ async def test_register_with_callback():
 
 # ── line 93: update_state() happy path ───────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_update_state_valid_entity():
     manager = MagicMock()
@@ -160,6 +166,7 @@ async def test_update_state_valid_entity():
 
 
 # ── lines 105 + 119-122: on_command() ────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_on_command_valid():
@@ -188,6 +195,7 @@ async def test_on_command_non_callable_raises():
 
 # ── line 133: create_entity() ─────────────────────────────────────────────────
 
+
 def test_create_entity_delegates_to_manager():
     manager = MagicMock()
     expected = make_entity()
@@ -212,6 +220,7 @@ def test_create_entity_delegates_to_manager():
 
 # ── line 145: unregister() ────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_unregister_delegates_to_manager():
     manager = MagicMock()
@@ -225,6 +234,7 @@ async def test_unregister_delegates_to_manager():
 
 
 # ── line 151: is_registered() ─────────────────────────────────────────────────
+
 
 def test_is_registered_true():
     manager = MagicMock()
