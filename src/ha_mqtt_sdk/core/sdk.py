@@ -24,6 +24,7 @@ from ..exceptions import SDKError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt import PahoMQTTClient
+from ..types import StateValue 
 from ..utils.logger import get_logger
 from .entity_factory import create_entity as _create_entity
 from .entity_manager import EntityManager
@@ -91,7 +92,7 @@ class HASDK:
 
         self._entity_manager.register(entity, command_callback)
 
-    def update_state(self, entity: Entity, state: object) -> None:
+    def update_state(self, entity: Entity, state: StateValue) -> None:
         """
         Update entity state.
 
