@@ -23,6 +23,8 @@ from .base_async_mqtt_client import BaseAsyncMQTTClient
 
 MessageCallback = Callable[[str, str], Awaitable[None]]
 
+type PublishPayload = str | dict[str, Any] | int | float
+
 
 class AsyncMQTTClient(BaseAsyncMQTTClient):
     def __init__(self, config: MQTTSettings):
@@ -134,7 +136,7 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
     # Publish / Subscribe
     # -------------------------
 
-    async def publish(self, topic: str, payload: Any, retain: bool = False) -> None:
+    async def publish(self, topic: str, payload: PublishPayload, retain: bool = False) -> None:
         if not self._client:
             raise MQTTError("Client is not connected")
 
