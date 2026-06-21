@@ -24,6 +24,7 @@ from ..exceptions import SDKError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt import AsyncMQTTClient
+from ..types import StateValue
 from ..utils.logger import get_logger
 from .async_entity_manager import AsyncEntityManager
 
@@ -92,7 +93,7 @@ class AsyncHASDK:
 
         await self._async_entity_manager.register(entity, command_callback)
 
-    async def update_state(self, entity: Entity, state: object) -> None:
+    async def update_state(self, entity: Entity, state: StateValue) -> None:
         """
         Update entity state.
 
