@@ -12,7 +12,6 @@ import asyncio
 import contextlib
 import json
 from collections.abc import Awaitable, Callable
-from typing import Any
 
 import aiomqtt
 
