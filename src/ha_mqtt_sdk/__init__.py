@@ -18,6 +18,7 @@ Exports:
 
 Usage:
     from ha_mqtt_sdk import HASDK
+    from ha_mqtt_sdk import AsyncHASDK
 
     from ha_mqtt_sdk import Entity
 
@@ -33,6 +34,7 @@ Usage:
 """
 
 from .config.domains import HADomain
+from .core.async_sdk import AsyncHASDK
 from .core.device_factory import create_device_info
 from .core.sdk import HASDK
 from .models.device_info import DeviceInfo
@@ -48,7 +50,7 @@ __all__ = [
     # Primary entry point
     "HASDK",
     # Async entry point
-    # "AsyncHASDK",
+    "AsyncHASDK",
     # Domain types users must construct
     "Entity",
     "HADomain",
