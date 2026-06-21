@@ -51,8 +51,6 @@ from .utils.logger import get_logger
 # Central SDK logger
 LOGGER = get_logger(__name__)
 
-__version__ = "1.0.0"
-
 __all__ = [
     "HASDK",
     "EntityManager",
