@@ -25,6 +25,8 @@ from ..exceptions import MQTTError, ValidationError
 from ..utils.logger import get_logger
 from .base import BaseMQTTClient
 
+type PublishPayload = str | dict[str, Any] | int | float
+
 
 class PahoMQTTClient(BaseMQTTClient):
     def __init__(self, config: MQTTSettings):
@@ -120,7 +122,7 @@ class PahoMQTTClient(BaseMQTTClient):
     # -----------------------
     # Publish / Subscribe
     # -----------------------
-    def publish(self, topic: str, payload: Any, retain: bool = False) -> None:
+    def publish(self, topic: str, payload: PublishPayload, retain: bool = False) -> None:
         if not topic:
             raise ValidationError("Topic must not be empty")
 
