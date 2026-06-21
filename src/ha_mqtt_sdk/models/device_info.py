@@ -2,19 +2,19 @@ from typing import TypedDict
 
 
 class DeviceInfo(TypedDict, total=False):
-    identifiers: list[tuple[str, str]] | None
+    identifiers: list[tuple[str, str]]
 
-    manufacturer: str | None
-    model: str | None
-    name: str | None
+    manufacturer: str
+    model: str
+    name: str
 
-    sw_version: str | None
-    hw_version: str | None
+    sw_version: str
+    hw_version: str
 
-    suggested_area: str | None
+    suggested_area: str
 
-    connections: list[tuple[str, str]] | None
-    via_device: tuple[str, str] | None
-    configuration_url: str | None
-    serial_number: str | None
-    model_id: str | None
+    connections: list[tuple[str, str]]
+    via_device: tuple[str, str]
+    configuration_url: str
+    serial_number: str
+    model_id: str
