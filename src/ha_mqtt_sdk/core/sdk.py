@@ -24,7 +24,7 @@ from ..exceptions import SDKError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt import PahoMQTTClient
-from ..types import StateValue 
+from ..types import StateValue
 from ..utils.logger import get_logger
 from .entity_factory import create_entity as _create_entity
 from .entity_manager import EntityManager
