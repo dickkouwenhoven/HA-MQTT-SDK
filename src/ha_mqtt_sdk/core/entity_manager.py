@@ -51,7 +51,7 @@ class EntityManager:
             mqtt_client,
             BaseMQTTClient,
         ):
-            raise EntityError("mqtt_client must inherit from PahoMQTTClient")
+            raise EntityError("mqtt_client must inherit from BaseMQTTClient")
 
         if not isinstance(mqtt_settings, MQTTSettings):
             raise EntityError("mqtt_settings must be MQTTSettings")
