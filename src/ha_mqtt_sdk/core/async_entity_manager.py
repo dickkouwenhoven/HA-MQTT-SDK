@@ -15,7 +15,7 @@ from ..exceptions import EntityError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt.base_async_mqtt_client import BaseAsyncMQTTClient
-from ..types import PublishPayload, StateValue
+from ..types import StateValue
 from ..utils.logger import get_logger
 from .entity_factory import build_registration
 from .entity_factory import create_entity as _create_entity
