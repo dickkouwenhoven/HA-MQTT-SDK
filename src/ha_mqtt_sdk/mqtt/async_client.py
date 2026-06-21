@@ -17,7 +17,7 @@ import aiomqtt
 
 from ..config.mqtt import MQTTSettings
 from ..exceptions import MQTTError
-from ..typs import PublishPayload
+from ..types import PublishPayload
 from ..utils.logger import get_logger
 from .base_async_mqtt_client import BaseAsyncMQTTClient
 
