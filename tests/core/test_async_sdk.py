@@ -15,7 +15,7 @@ from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
 def test_init_requires_either_settings_or_client():
     with pytest.raises(SDKError):
-        HASDK(mqtt_client=None, mqtt_settings=None)
+        AsyncHASDK(mqtt_client=None, mqtt_settings=None)
 
 
 def test_register_with_invalid_entity():
