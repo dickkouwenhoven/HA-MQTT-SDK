@@ -1,4 +1,5 @@
 import pytest
+import pytest_asyncio
 
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
@@ -18,12 +19,18 @@ def test_init_requires_either_settings_or_client():
         AsyncHASDK(async_mqtt_client=None, mqtt_settings=None)
 
 
-def test_register_with_invalid_entity():
+@pytest.mark.asyncio
+async def test_register_with_invalid_entity():
+    mqtt_config = MQTTSettings(host="localhost", port=1883)
+    client = AsyncMQTTClient(config=mqtt_config)
+    sdk = AsyncHASDK(async_mqtt_client=client)
+
     with pytest.raises(SDKError):
-        AsyncHASDK.register("Invalid Entity", "command_callback")
+        await sdk.register("Invalid Entity", None)
 
 
-def test_update_state_with_invalid_entity():
+@pytest.mark.asyncio
+async def test_update_state_with_invalid_entity():
     mqtt_config = MQTTSettings(
         host="localhost",
         port=1883,
@@ -36,10 +43,11 @@ def test_update_state_with_invalid_entity():
     )
 
     with pytest.raises(SDKError):
-        sdk.update_state("Invalid Entity", "ON")
+        await sdk.update_state("Invalid Entity", "ON")
 
 
-def test_on_command_with_invalid_entity():
+@pytest.mark.asyncio
+async def test_on_command_with_invalid_entity():
     mqtt_config = MQTTSettings(
         host="localhost",
         port=1883,
