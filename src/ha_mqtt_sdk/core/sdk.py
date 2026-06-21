@@ -25,6 +25,7 @@ from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt import PahoMQTTClient
 from ..utils.logger import get_logger
+from .entity_factory import create_entity as _create_entity
 from .entity_manager import EntityManager
 
 
@@ -126,7 +127,7 @@ class HASDK:
         device_info: DeviceInfo | None = None,
         extra: dict[str, Any] | None = None,
     ) -> Entity:
-        return self._entity_manager.create_entity(
+        return _create_entity(
             domain=domain,
             name=name,
             unique_id=unique_id,
