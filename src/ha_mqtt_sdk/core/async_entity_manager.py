@@ -15,6 +15,7 @@ from ..exceptions import EntityError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt.async_client import AsyncMQTTClient
+from ..mqtt.base_async_mqtt_client import BaseAsyncMQTTClient
 from ..utils.logger import get_logger
 from .entity_factory import build_registration
 from .entity_factory import create_entity as _create_entity
@@ -23,7 +24,7 @@ _logger = get_logger(__name__)
 
 
 class AsyncEntityManager:
-    def __init__(self, mqtt_client: AsyncMQTTClient, mqtt_settings: MQTTSettings):
+    def __init__(self, mqtt_client: BaseAsyncMQTTClient, mqtt_settings: MQTTSettings):
         """
         Initialize AsyncEntityManager.
 
