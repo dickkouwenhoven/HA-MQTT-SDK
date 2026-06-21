@@ -3,9 +3,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from ha_mqtt_sdk.config.domains import HADomain
+from ha_mqtt_sdk.config.mqtt import MQTTSettings
+from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 
-# from ha_mqtt_sdk.config.mqtt import MQTTSettings
-# from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 # from ha_mqtt_sdk.entity_factory import create_entity
 # from ha_mqtt_sdk.exceptions import SDKError
 # from ha_mqtt_sdk.models.entity import Entity
