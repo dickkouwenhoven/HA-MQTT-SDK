@@ -69,14 +69,14 @@ class AsyncHASDK:
         Start MQTT connection.
         """
         self._logger.info("Starting AsyncHASDK")
-        self._mqtt.connect()
+        await self._mqtt.connect()
 
     def shutdown(self) -> None:
         """
         Gracefully shutdown SDK.
         """
         self._logger.info("Shutting down AsyncHASDK")
-        self._mqtt.disconnect()
+        await self._mqtt.disconnect()
 
     def register(
         self, entity: Entity, command_callback: Callable[[str, str], None] | None = None
@@ -90,7 +90,7 @@ class AsyncHASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        self._async_entity_manager.register(entity, command_callback)
+        await self._async_entity_manager.register(entity, command_callback)
 
     def update_state(self, entity: Entity, state: object) -> None:
         """
@@ -102,7 +102,7 @@ class AsyncHASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        self._async_entity_manager.update_state(entity, state)
+        await self._async_entity_manager.update_state(entity, state)
 
     def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
         """
@@ -117,7 +117,7 @@ class AsyncHASDK:
         if not callable(callback):
             raise SDKError("Callback must be callable")
 
-        self._async_entity_manager.set_command_callback(entity, callback)
+        await self._async_entity_manager.set_command_callback(entity, callback)
 
     def create_entity(
         self,
@@ -140,7 +140,7 @@ class AsyncHASDK:
         self,
         entity: Entity,
     ) -> None:
-        self._async_entity_manager.unregister(entity)
+        await self._async_entity_manager.unregister(entity)
 
     def is_registered(
         self,
