@@ -1,11 +1,12 @@
 """
-Base MQTT client interface.
+Async MQTT client interface.
 
-This defines the contract for all MQTT client implementations.
-Both sync and async clients must adhere to this interface.
+This defines the contract for all async MQTT client implementations.
+Async clients must inherit from this class and implement all abstract methods.
 
 Used by:
-- ha_mqtt_sdk/core/sdk.py (HASDK)
+- ha_mqtt_sdk/core/async_sdk.py (AsyncHASDK)
+- ha_mqtt_sdk/core/async_entity_manager.py (AsyncEntityManager)
 """
 
 from __future__ import annotations
