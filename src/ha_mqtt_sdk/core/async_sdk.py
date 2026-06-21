@@ -105,9 +105,7 @@ class AsyncHASDK:
         await self._async_entity_manager.update_state(entity, state)
 
     async def on_command(
-        self,
-        entity: Entity,
-        callback: Callable[[str, str], Awaitable[None]]
+        self, entity: Entity, callback: Callable[[str, str], Awaitable[None]]
     ) -> None:
         """
         Register global command handler.
