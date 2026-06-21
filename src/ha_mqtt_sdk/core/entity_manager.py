@@ -26,7 +26,6 @@ from ..exceptions import EntityError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt.base import BaseMQTTClient
-from ..mqtt.paho_client import PahoMQTTClient
 from ..utils.logger import get_logger
 from .entity_factory import build_registration
 from .entity_factory import create_entity as _create_entity
@@ -50,7 +49,7 @@ class EntityManager:
 
         if not isinstance(
             mqtt_client,
-            PahoMQTTClient,
+            BaseMQTTClient,
         ):
             raise EntityError("mqtt_client must inherit from PahoMQTTClient")
 
