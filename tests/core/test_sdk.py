@@ -24,7 +24,7 @@ def make_sdk(mock_manager: MagicMock) -> HASDK:
 
 
 def make_entity() -> Entity:
-    return create_entity(domain=HADomain.SWITCH, name="Relay", unique_id="relay_1")    
+    return create_entity(domain=HADomain.SWITCH, name="Relay", unique_id="relay_1")
 
 
 # ---------------------------
@@ -59,6 +59,7 @@ def test_init_both_provided_uses_client(caplog: pytest.LogCaptureFixture):
 # ---------------------------
 # start / shutdown
 # ---------------------------
+
 
 def test_start_calls_mqtt_connect():
     """Covers lines 58-59."""
@@ -181,6 +182,7 @@ def test_on_command_non_callable_raises():
 # ---------------------------
 # Create_entity
 # ---------------------------
+
 
 def test_create_entity_returns_entity():
     """Covers line 120."""
