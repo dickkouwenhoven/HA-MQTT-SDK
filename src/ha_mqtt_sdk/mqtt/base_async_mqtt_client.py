@@ -15,9 +15,9 @@ from abc import ABC, abstractmethod
 from collections.abc import Awaitable, Callable
 from typing import Any
 
-MessageCallback = Callable[[str, str], Awaitable[None]]
+from ..types import PublishPayload
 
-type PublishPayload = str | dict[str, Any] | int | float
+MessageCallback = Callable[[str, str], Awaitable[None]]
 
 
 class BaseAsyncMQTTClient(ABC):
