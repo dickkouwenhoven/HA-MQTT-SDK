@@ -15,12 +15,14 @@ Exports:
 - HADomain
 - DeviceInfo
 - create_device_info
+- create_entity
 
 Usage:
     from ha_mqtt_sdk import HASDK
     from ha_mqtt_sdk import AsyncHASDK
 
     from ha_mqtt_sdk import Entity
+    from ha_mqtt_sdk import create_entity
 
     from ha_mqtt_sdk import HADomain
 
@@ -36,6 +38,7 @@ Usage:
 from .config.domains import HADomain
 from .core.async_sdk import AsyncHASDK
 from .core.device_factory import create_device_info
+from .core.entity_factory import create_entity
 from .core.sdk import HASDK
 from .models.device_info import DeviceInfo
 from .models.entity import Entity
@@ -53,6 +56,7 @@ __all__ = [
     "AsyncHASDK",
     # Domain types users must construct
     "Entity",
+    "create_entity",
     "HADomain",
     "DeviceInfo",
     "create_device_info",
