@@ -25,6 +25,7 @@ from ..config.mqtt import MQTTSettings
 from ..exceptions import EntityError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
+from ..mqtt.base import BaseMQTTClient
 from ..mqtt.paho_client import PahoMQTTClient
 from ..utils.logger import get_logger
 from .entity_factory import build_registration
@@ -36,7 +37,7 @@ _logger = get_logger(__name__)
 class EntityManager:
     def __init__(
         self,
-        mqtt_client: PahoMQTTClient,
+        mqtt_client: BaseMQTTClient,
         mqtt_settings: MQTTSettings,
     ):
         """
