@@ -15,7 +15,7 @@ from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
 def test_init_requires_either_settings_or_client():
     with pytest.raises(SDKError):
-        AsyncHASDK(mqtt_client=None, mqtt_settings=None)
+        AsyncHASDK(async_mqtt_client=None, mqtt_settings=None)
 
 
 def test_register_with_invalid_entity():
@@ -32,7 +32,7 @@ def test_update_state_with_invalid_entity():
     client = AsyncMQTTClient(config=mqtt_config)
 
     sdk = AsyncHASDK(
-        mqtt_client=client,
+        async_mqtt_client=client,
     )
 
     with pytest.raises(SDKError):
@@ -48,7 +48,7 @@ def test_on_command_with_invalid_entity():
     client = AsyncMQTTClient(config=mqtt_config)
 
     sdk = AsyncHASDK(
-        mqtt_client=client,
+        async_mqtt_client=client,
     )
 
     entity: Entity = create_entity(
