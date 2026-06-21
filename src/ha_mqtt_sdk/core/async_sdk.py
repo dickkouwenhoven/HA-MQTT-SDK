@@ -15,7 +15,7 @@ Used by:
 - End users of the Async version of the SDK
 """
 
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 from ..config.domains import HADomain
@@ -79,7 +79,7 @@ class AsyncHASDK:
         await self._mqtt.disconnect()
 
     async def register(
-        self, entity: Entity, command_callback: Callable[[str, str], None] | None = None
+        self, entity: Entity, command_callback: Callable[[str, str], Awaitable[None]] | None = None
     ) -> None:
         """
         Register entity in Home Assistant.
@@ -104,7 +104,7 @@ class AsyncHASDK:
 
         await self._async_entity_manager.update_state(entity, state)
 
-    async def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
+    async def on_command(self, entity: Entity, callback: Callable[[str, str], Awaitable[None]]) -> None:
         """
         Register global command handler.
 
