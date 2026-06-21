@@ -15,11 +15,10 @@ from ..exceptions import EntityError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
 from ..mqtt.base_async_mqtt_client import BaseAsyncMQTTClient
+from ..types import PublishPayload, StateValue
 from ..utils.logger import get_logger
 from .entity_factory import build_registration
 from .entity_factory import create_entity as _create_entity
-
-StateValue = str | int | float | bool
 
 _logger = get_logger(__name__)
 
@@ -169,7 +168,7 @@ class AsyncEntityManager:
 
         await self._mqtt.publish(
             topic=registration.state_topic,
-            payload=state,
+            payload: PublishPayload = state,
             retain=False,
         )
 
