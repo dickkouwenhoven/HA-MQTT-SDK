@@ -32,7 +32,7 @@ class MQTTSettings:
 
         self.port = port if port is not None else int(os.getenv("MQTT_PORT", 1883))
 
-        self.username = username if username is not None else os.getenv("MQTT_USER", "hauser")
+        self.username = username if username is not None else os.getenv("MQTT_USER", None)
 
         self.password = password if password is not None else os.getenv("MQTT_PASSWORD", "")
 
