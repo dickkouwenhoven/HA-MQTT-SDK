@@ -19,6 +19,8 @@ from ..utils.logger import get_logger
 from .entity_factory import build_registration
 from .entity_factory import create_entity as _create_entity
 
+StateValue = str | int | float | bool
+
 _logger = get_logger(__name__)
 
 
@@ -145,7 +147,7 @@ class AsyncEntityManager:
             if command_callback:
                 self._command_callbacks[registration.command_topic] = command_callback
 
-    async def update_state(self, entity: Entity, state: Any) -> None:
+    async def update_state(self, entity: Entity, state: StateValue) -> None:
         """
         Publish state update to MQTT
 
