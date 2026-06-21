@@ -12,8 +12,11 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+from typing import Any
 
 MessageCallback = Callable[[str, str], None]
+
+type PublishPayload = str | dict[str, Any] | int | float
 
 
 class BaseMQTTClient(ABC):
@@ -32,7 +35,7 @@ class BaseMQTTClient(ABC):
         """Disconnect from the MQTT broker."""
 
     @abstractmethod
-    def publish(self, topic: str, payload: str, retain: bool = False) -> None:
+    def publish(self, topic: str, payload: PublishPayload, retain: bool = False) -> None:
         """Publish a message to a topic."""
 
     @abstractmethod
