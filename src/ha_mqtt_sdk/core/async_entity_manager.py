@@ -168,7 +168,7 @@ class AsyncEntityManager:
 
         await self._mqtt.publish(
             topic=registration.state_topic,
-            payload: PublishPayload = state,
+            payload=state,
             retain=False,
         )
 
