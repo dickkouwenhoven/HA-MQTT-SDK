@@ -4,4 +4,4 @@ from typing import Any
 PublishPayload = str | dict[str, Any] | int | float
 
 # Valid state values for Home Assistant entities
-StateValue = str | int | float | bool
+StateValue = str | int | float
