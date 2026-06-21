@@ -47,7 +47,9 @@ class AsyncHASDK:
             raise SDKError("Provide either mqtt_settings or async_mqtt_client")
 
         if async_mqtt_client and mqtt_settings:
-            self._logger.warning("Both async_mqtt_client and mqtt_settings provided. Using async_mqtt_client.")
+            self._logger.warning(
+                "Both async_mqtt_client and mqtt_settings provided. Using async_mqtt_client."
+            )
 
         # Dependency injection (preferred)
         if async_mqtt_client:
