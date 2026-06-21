@@ -14,7 +14,6 @@ from ..config.mqtt import MQTTSettings
 from ..exceptions import EntityError
 from ..models.device_info import DeviceInfo
 from ..models.entity import Entity
-from ..mqtt.async_client import AsyncMQTTClient
 from ..mqtt.base_async_mqtt_client import BaseAsyncMQTTClient
 from ..utils.logger import get_logger
 from .entity_factory import build_registration
@@ -35,9 +34,9 @@ class AsyncEntityManager:
 
         if not isinstance(
             mqtt_client,
-            AsyncMQTTClient,
+            BaseAsyncMQTTClient,
         ):
-            raise EntityError("mqtt_client must inherit from AsyncMQTTClient")
+            raise EntityError("mqtt_client must inherit from BaseAsyncMQTTClient")
 
         if not isinstance(mqtt_settings, MQTTSettings):
             raise EntityError("mqtt_settings must be MQTTSettings")
