@@ -12,11 +12,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable
-from typing import Any
+
+from ..types import PublishPayload
 
 MessageCallback = Callable[[str, str], None]
-
-type PublishPayload = str | dict[str, Any] | int | float
 
 
 class BaseMQTTClient(ABC):
