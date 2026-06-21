@@ -64,21 +64,21 @@ class AsyncHASDK:
     # Public API
     # -------------------------
 
-    def start(self) -> None:
+    async def start(self) -> None:
         """
         Start MQTT connection.
         """
         self._logger.info("Starting AsyncHASDK")
         await self._mqtt.connect()
 
-    def shutdown(self) -> None:
+    async def shutdown(self) -> None:
         """
         Gracefully shutdown SDK.
         """
         self._logger.info("Shutting down AsyncHASDK")
         await self._mqtt.disconnect()
 
-    def register(
+    async def register(
         self, entity: Entity, command_callback: Callable[[str, str], None] | None = None
     ) -> None:
         """
@@ -92,7 +92,7 @@ class AsyncHASDK:
 
         await self._async_entity_manager.register(entity, command_callback)
 
-    def update_state(self, entity: Entity, state: object) -> None:
+    async def update_state(self, entity: Entity, state: object) -> None:
         """
         Update entity state.
 
@@ -104,7 +104,7 @@ class AsyncHASDK:
 
         await self._async_entity_manager.update_state(entity, state)
 
-    def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
+    async def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
         """
         Register global command handler.
 
@@ -136,7 +136,7 @@ class AsyncHASDK:
             extra=extra,
         )
 
-    def unregister(
+    async def unregister(
         self,
         entity: Entity,
     ) -> None:
