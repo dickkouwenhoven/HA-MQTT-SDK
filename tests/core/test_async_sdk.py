@@ -58,13 +58,8 @@ async def test_on_command_with_invalid_entity():
         async_mqtt_client=client,
     )
 
-    entity: Entity = create_entity(
-        domain=HADomain.SWITCH,
-        name="Relay",
-        unique_id="relay_1",
-    )
-
-    entity.domain = "Invalid Domain"
+    async def dummy_callback(topic: str, payload: str) -> None:
+        pass
 
     with pytest.raises(SDKError):
-        sdk.on_command(entity, "command_callback")
+        await sdk.on_command("Invalid Entity", dummy_callback)
