@@ -242,4 +242,4 @@ def test_is_registered_false():
     sdk = make_sdk(manager)
     entity = make_entity()
 
-    assert sdk.is_registered(entity) is False               
+    assert sdk.is_registered(entity) is False
