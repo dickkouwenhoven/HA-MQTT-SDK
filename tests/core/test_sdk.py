@@ -147,14 +147,11 @@ def test_update_state_valid_entity():
 
 
 def test_on_command_with_invalid_entity():
-    mqtt_config = MQTTSettings(host="localhost", port=1883)
-    client = PahoMQTTClient(config=mqtt_config)
-    sdk = HASDK(mqtt_client=client)
-    entity = make_entity()
-    entity.domain = "Invalid Domain"  # type: ignore[assignment]
+    manager = MagicMock()
+    sdk = make_sdk(manager)
 
     with pytest.raises(SDKError):
-        sdk.on_command(entity, lambda t, p: None)
+        sdk.on_command("not_an_entity", lambda t, p: None)  # type: ignore[arg-type]
 
 
 def test_on_command_valid():
