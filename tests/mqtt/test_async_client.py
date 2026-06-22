@@ -565,11 +565,11 @@ def test_ensure_reconnect_task_skips_if_task_running(mqtt_client):
     existing_task.done.return_value = False
     mqtt_client._reconnect_task = existing_task
 
-    with patch.object(mqtt_client, "_reconnect_loop", AsyncMock()):
-        with patch(
-            "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task", return_value=MagicMock()
-        ) as mock_create:
-            mqtt_client._ensure_reconnect_task()
+    with (
+        patch.object(mqtt_client, "_reconnect_loop", AsyncMock()),
+        patch("ha_mqtt_sdk.mqtt.async_client.asyncio.create_task", return_value=MagicMock(),
+    ) as mock_create:
+        mqtt_client._ensure_reconnect_task()
 
     mock_create.assert_not_called()
     assert mqtt_client._reconnect_task is existing_task
