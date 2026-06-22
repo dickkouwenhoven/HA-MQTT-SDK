@@ -1,10 +1,9 @@
-import json
-import threading
 from unittest.mock import MagicMock, patch
 
+import json
 import pytest
+import threading
 
-from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.exceptions import MQTTError, ValidationError
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
