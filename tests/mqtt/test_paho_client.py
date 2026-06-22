@@ -7,8 +7,9 @@ import threading
 from ha_mqtt_sdk.exceptions import MQTTError, ValidationError
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
-
-# ── fixtures ──────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Fixtures
+# ------------------------------------------------------------------------------
 
 
 @pytest.fixture
