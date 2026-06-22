@@ -253,10 +253,7 @@ async def test_publish_string(mqtt_client, mock_aiomqtt_client):
 
 
 @pytest.mark.asyncio
-async def test_publish_dict_serializes_to_json(
-    mqtt_client,
-    mock_aiomqtt_client
-):
+async def test_publish_dict_serializes_to_json(mqtt_client, mock_aiomqtt_client):
     mqtt_client._client = mock_aiomqtt_client
 
     payload = {"state": "ON"}
@@ -359,6 +356,7 @@ async def test_listen_routes_message_to_callback(mqtt_client):
 @pytest.mark.asyncio
 async def test_listen_callback_exception_is_logged(mqtt_client):
     """Lines 179-183: callback error must be caught and logged, not propagated."""
+
     async def bad_callback(topic: str, payload: str) -> None:
         raise RuntimeError("callback failure")
 
@@ -473,6 +471,7 @@ async def test_reconnect_loop_backoff(mqtt_client):
 @pytest.mark.asyncio
 async def test_reconnect_loop_cancelled(mqtt_client):
     """Lines 226-227: CancelledError inside reconnect must propagate."""
+
     async def start_connection():
         raise asyncio.CancelledError
 
