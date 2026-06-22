@@ -479,9 +479,9 @@ async def test_reconnect_loop_cancelled(mqtt_client):
     with (
         patch.object(mqtt_client, "_start_connection", side_effect=start_connection),
         patch("ha_mqtt_sdk.mqtt.async_client.asyncio.sleep", AsyncMock()),
+        pytest.raises(asyncio.CancelledError),
     ):
-        with pytest.raises(asyncio.CancelledError):
-            await mqtt_client._reconnect_loop()
+        await mqtt_client._reconnect_loop()
 
 
 # --------------------------------------------------
