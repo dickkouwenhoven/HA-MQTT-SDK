@@ -407,6 +407,33 @@ async def test_listen_no_reconnect_when_disabled(mqtt_client):
     assert mqtt_client._reconnect_task is None
 
 
+@pytest.mark.asyncio
+async def test_listen_no_callback_registered(mqtt_client):
+    """Lines 178-172: message received but no callback set — must not raise."""
+    mqtt_client._message_callback = None
+    mqtt_client._client = MagicMock()
+    mqtt_client._client.messages = SingleMessageIterator("home/sensor", b"ON")
+
+    await mqtt_client._listen()  # must complete without error
+
+
+@pytest.mark.asyncio
+async def test_listen_skips_reconnect_if_task_already_running(mqtt_client):
+    """Line 195->exit: existing reconnect task that is not done must not be replaced."""
+    mqtt_client._shutdown = False
+    mqtt_client._config.reconnect = True
+    mqtt_client._client = MagicMock()
+    mqtt_client._client.messages = FailOnceMessageIterator()
+
+    existing_task = MagicMock()
+    existing_task.done.return_value = False
+    mqtt_client._reconnect_task = existing_task
+
+    await mqtt_client._listen()
+
+    assert mqtt_client._reconnect_task is existing_task
+
+
 # --------------------------------------------------
 # Reconnect
 # --------------------------------------------------
@@ -483,6 +510,17 @@ async def test_reconnect_loop_cancelled(mqtt_client):
         await mqtt_client._reconnect_loop()
 
 
+@pytest.mark.asyncio
+async def test_reconnect_loop_exits_immediately_when_shutdown(mqtt_client):
+    """Line 207->exit: loop must not iterate if shutdown is already True."""
+    mqtt_client._shutdown = True
+
+    with patch("ha_mqtt_sdk.mqtt.async_client.asyncio.sleep", AsyncMock()) as mock_sleep:
+        await mqtt_client._reconnect_loop()
+
+    mock_sleep.assert_not_awaited()
+
+
 # --------------------------------------------------
 # _clear_reconnect_task
 # --------------------------------------------------
@@ -507,3 +545,15 @@ def test_clear_reconnect_task_ignores_other_task(mqtt_client):
     mqtt_client._clear_reconnect_task(task_b)
 
     assert mqtt_client._reconnect_task is task_a
+
+
+def test_ensure_reconnect_task_creates_task(mqtt_client):
+    """Lines 233-234: must create a new task when none exists."""
+    mqtt_client._reconnect_task = None
+
+    with patch(
+        "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task", return_value=MagicMock()
+    ) as mock_create:
+        mqtt_client._ensure_reconnect_task()
+
+    mock_create.assert_called_once()
