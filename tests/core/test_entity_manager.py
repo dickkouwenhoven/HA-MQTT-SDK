@@ -130,7 +130,8 @@ def test_register_calls_set_last_will(mqtt_client_sync):
 
     manager.register(entity)
 
-    assert mqtt_client_sync.last_will_topic is not None
+    assert mqtt_client_sync.last_will is not None
+    assert mqtt_client_sync.last_will[1] == "offline"
 
 
 def test_register_with_command_callback(mqtt_client_sync):
