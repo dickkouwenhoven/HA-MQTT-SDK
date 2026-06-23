@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock
-
 import pytest
 
 from ha_mqtt_sdk.builders.topic_manager import (
