@@ -118,7 +118,7 @@ class MinimalMockMQTTClient(BaseMQTTClient):
 
     def connect(self):
         pass
-    
+
     def disconnect(self):
         pass
 
