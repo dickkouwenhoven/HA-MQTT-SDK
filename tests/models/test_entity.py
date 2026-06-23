@@ -287,6 +287,6 @@ def test_unknown_domain_raises_schema_error():
             "ha_mqtt_sdk.models.entity.ALLOWED_FIELDS_PER_DOMAIN",
             {}
         ),
-        pytest.raises(SchemaError):
-            entity.validate(),
-    )
+        pytest.raises(SchemaError),
+    ):
+        entity.validate()
