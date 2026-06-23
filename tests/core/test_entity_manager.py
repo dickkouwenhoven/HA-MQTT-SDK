@@ -134,6 +134,18 @@ def test_register_calls_set_last_will(mqtt_client_sync):
     assert mqtt_client_sync.last_will[1] == "offline"
 
 
+def test_register_switch_sets_last_will_and_subscribes(mqtt_client_sync):
+    """Lines 148→156: LWT set AND command topic subscribed for a switch entity."""
+    manager = make_manager(mqtt_client_sync)
+    entity = make_switch(manager)
+
+    manager.register(entity)
+
+    assert mqtt_client_sync.last_will is not None
+    expected = build_command_topic(entity.domain, entity.unique_id, "homeassistant")
+    assert expected in mqtt_client_sync.subscribed
+
+
 def test_register_with_command_callback(mqtt_client_sync):
     manager = make_manager(mqtt_client_sync)
     entity = make_switch(manager)
