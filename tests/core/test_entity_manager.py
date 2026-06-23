@@ -148,13 +148,9 @@ def test_register_switch_sets_last_will_and_subscribes(mqtt_client_sync):
 
 def test_register_without_lwt_support_still_subscribes(mqtt_client_minimal):
     """Line 148->156: client without set_last_will skips LWT but still subscribes."""
-    manager = EntityManager(
-        mqtt_client_minimal, MQTTSettings(discovery_prefix="homeassistant")
-    )
+    manager = EntityManager(mqtt_client_minimal, MQTTSettings(discovery_prefix="homeassistant"))
 
-    entity = manager.create_entity(
-        domain=HADomain.SWITCH, name="Switch", unique_id="switch_1"
-    )
+    entity = manager.create_entity(domain=HADomain.SWITCH, name="Switch", unique_id="switch_1")
 
     manager.register(entity)
 
