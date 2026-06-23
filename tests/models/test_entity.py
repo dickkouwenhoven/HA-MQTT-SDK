@@ -107,9 +107,7 @@ def test_valid_device_info_with_identifiers():
 
 
 def test_valid_device_info_with_connections():
-    make_entity(
-        device_info={"connections": [("mac", "AA:BB:CC:DD:EE:FF")]}
-    ).validate()
+    make_entity(device_info={"connections": [("mac", "AA:BB:CC:DD:EE:FF")]}).validate()
 
 
 # ── _validate_tuple_collection ────────────────────────────────────────────────
@@ -118,9 +116,7 @@ def test_valid_device_info_with_connections():
 def test_identifiers_not_a_list_raises():
     """Line 79: identifiers is not a list."""
     with pytest.raises(EntityError):
-        make_entity(
-            device_info={"identifiers": ("ha_mqtt_sdk", "device_1")}
-        ).validate()
+        make_entity(device_info={"identifiers": ("ha_mqtt_sdk", "device_1")}).validate()
 
 
 def test_identifiers_empty_list_raises():
@@ -138,25 +134,19 @@ def test_identifiers_item_not_tuple_raises():
 def test_identifiers_tuple_wrong_length_raises():
     """Line 86: tuple has wrong length."""
     with pytest.raises(EntityError):
-        make_entity(
-            device_info={"identifiers": [("only_one",)]}
-        ).validate()
+        make_entity(device_info={"identifiers": [("only_one",)]}).validate()
 
 
 def test_identifiers_key_empty_raises():
     """Line 91: tuple key is empty string."""
     with pytest.raises(EntityError):
-        make_entity(
-            device_info={"identifiers": [("", "device_1")]}
-        ).validate()
+        make_entity(device_info={"identifiers": [("", "device_1")]}).validate()
 
 
 def test_identifiers_key_not_string_raises():
     """Line 91: tuple key is not a string."""
     with pytest.raises(EntityError):
-        make_entity(
-            device_info={"identifiers": [(123, "device_1")]}  # type: ignore[list-item]
-        ).validate()
+        make_entity(device_info={"identifiers": [(123, "device_1")]}).validate()
 
 
 def test_identifiers_value_empty_raises():
@@ -170,9 +160,7 @@ def test_identifiers_value_empty_raises():
 def test_identifiers_value_not_string_raises():
     """Line 94: tuple value is not a string."""
     with pytest.raises(EntityError):
-        make_entity(
-            device_info={"identifiers": [("ha_mqtt_sdk", 123)]}  # type: ignore[list-item]
-        ).validate()
+        make_entity(device_info={"identifiers": [("ha_mqtt_sdk", 123)]}).validate()
 
 
 def test_connections_empty_list_raises():
