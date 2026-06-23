@@ -20,15 +20,11 @@ def make_manager(mqtt_client_sync, prefix: str = "homeassistant") -> EntityManag
 
 
 def make_switch(manager: EntityManager, unique_id: str = "switch_1") -> object:
-    return manager.create_entity(
-        domain=HADomain.SWITCH, name="Switch", unique_id=unique_id
-    )
+    return manager.create_entity(domain=HADomain.SWITCH, name="Switch", unique_id=unique_id)
 
 
 def make_sensor(manager: EntityManager, unique_id: str = "temp_1") -> object:
-    return manager.create_entity(
-        domain=HADomain.SENSOR, name="Temp", unique_id=unique_id
-    )
+    return manager.create_entity(domain=HADomain.SENSOR, name="Temp", unique_id=unique_id)
 
 
 # ------------------------------------------------------
