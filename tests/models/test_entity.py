@@ -5,8 +5,9 @@ from ha_mqtt_sdk.core.entity_factory import create_entity
 from ha_mqtt_sdk.exceptions import EntityError, SchemaError
 from ha_mqtt_sdk.models.entity import Entity
 
-
-# ── helpers ───────────────────────────────────────────────────────────────────
+# ------------------------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------------------------
 
 
 def make_entity(**kwargs) -> Entity:
@@ -281,9 +282,11 @@ def test_unknown_domain_raises_schema_error():
     # Patch the schema lookup to return nothing
     from unittest.mock import patch
 
-    with patch(
-        "ha_mqtt_sdk.models.entity.ALLOWED_FIELDS_PER_DOMAIN",
-        {},
-    ):
-        with pytest.raises(SchemaError):
-            entity.validate()
+    with (
+        patch(
+            "ha_mqtt_sdk.models.entity.ALLOWED_FIELDS_PER_DOMAIN",
+            {}
+        ),
+        pytest.raises(SchemaError):
+            entity.validate(),
+    )
