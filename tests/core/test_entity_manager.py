@@ -146,6 +146,21 @@ def test_register_switch_sets_last_will_and_subscribes(mqtt_client_sync):
     assert expected in mqtt_client_sync.subscribed
 
 
+def test_register_without_lwt_support_still_subscribes(mqtt_client_sync):
+    """Line 148->156: client without set_last_will skips LWT but still subscribes."""
+    manager = make_manager(mqtt_client_sync)
+    entity = make_switch(manager)
+
+    # Temporarily remove set_last_will to simulate a client that doesn't support LWT
+    del mqtt_client_sync.set_last_will
+
+    manager.register(entity)
+
+    assert mqtt_client_sync.last_will is None
+    expected = build_command_topic(entity.domain, entity.unique_id, "homeassistant")
+    assert expected in mqtt_client_sync.subscribed
+
+
 def test_register_with_command_callback(mqtt_client_sync):
     manager = make_manager(mqtt_client_sync)
     entity = make_switch(manager)
