@@ -101,6 +101,7 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
 
 class MinimalMockMQTTClient(BaseMQTTClient):
     """Mock client without LWT support — for testing the no-set_last_will branch."""
+
     def __init__(self):
         self.published: list[tuple[str, Any, bool]] = []
         self.subscribed: list[str] = []
@@ -115,8 +116,11 @@ class MinimalMockMQTTClient(BaseMQTTClient):
     def set_message_callback(self, callback):
         self.callback = callback
 
-    def connect(self): pass
-    def disconnect(self): pass
+    def connect(self):
+        pass
+    
+    def disconnect(self):
+        pass
 
 
 @pytest.fixture
