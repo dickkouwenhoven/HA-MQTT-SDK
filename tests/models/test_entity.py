@@ -152,9 +152,7 @@ def test_identifiers_key_not_string_raises():
 def test_identifiers_value_empty_raises():
     """Line 94: tuple value is empty string."""
     with pytest.raises(EntityError):
-        make_entity(
-            device_info={"identifiers": [("ha_mqtt_sdk", "")]}
-        ).validate()
+        make_entity(device_info={"identifiers": [("ha_mqtt_sdk", "")]}).validate()
 
 
 def test_identifiers_value_not_string_raises():
@@ -271,10 +269,7 @@ def test_unknown_domain_raises_schema_error():
     from unittest.mock import patch
 
     with (
-        patch(
-            "ha_mqtt_sdk.models.entity.ALLOWED_FIELDS_PER_DOMAIN",
-            {}
-        ),
+        patch("ha_mqtt_sdk.models.entity.ALLOWED_FIELDS_PER_DOMAIN", {}),
         pytest.raises(SchemaError),
     ):
         entity.validate()
