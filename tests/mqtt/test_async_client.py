@@ -551,9 +551,13 @@ def test_ensure_reconnect_task_creates_task(mqtt_client):
     """Lines 233-234: must create a new task when none exists."""
     mqtt_client._reconnect_task = None
 
-    with patch(
-        "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task", return_value=MagicMock()
-    ) as mock_create:
+    with (
+        patch.object(mqtt_client, "_reconnect_loop", MagicMock()),
+        patch(
+            "ha_mqtt_sdk.mqtt.async_client.asyncio.create_task",
+            return_value=MagicMock(),
+        ) as mock_create,
+    ):
         mqtt_client._ensure_reconnect_task()
 
     mock_create.assert_called_once()
