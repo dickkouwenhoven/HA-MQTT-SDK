@@ -27,6 +27,8 @@ from ..mqtt import AsyncMQTTClient
 from ..types import StateValue
 from ..utils.logger import get_logger
 from .async_entity_manager import AsyncEntityManager
+from .async_plugin_interface import AsyncIntegrationPlugin
+from .async_plugin_manager import AsyncPluginManager
 
 
 class AsyncHASDK:
@@ -150,3 +152,26 @@ class AsyncHASDK:
         entity: Entity,
     ) -> bool:
         return self._async_entity_manager.is_registered(entity)
+
+    def use_plugin(self, name: str, plugin: AsyncIntegrationPlugin) -> None:
+        """Register an async integration plugin."""
+
+        if not hasattr(self, "_plugin_manager"):
+            self._plugin_manager = AsyncPluginManager(self)
+        self._plugin_manager.register(name, plugin)
+
+    async def run(self) -> None:
+        """Full lifecycle entry point for plugin-based applications."""
+
+        await self.start()
+        if hasattr(self, "_plugin_manager"):
+            await self._plugin_manager.setup_all()
+            await self._plugin_manager.start_all()
+
+    async def shutdown(self) -> None:
+        # extend existing shutdown:
+
+        if hasattr(self, "_plugin_manager"):
+            await self._plugin_manager.stop_all()
+        self._logger.info("Shutting down AsyncHASDK")
+        await self._mqtt.disconnect()
