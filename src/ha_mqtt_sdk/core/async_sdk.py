@@ -162,8 +162,6 @@ class AsyncHASDK:
             await self._plugin_manager.start_all()
 
     async def shutdown(self) -> None:
-        # extend existing shutdown:
-
         if hasattr(self, "_plugin_manager"):
             await self._plugin_manager.stop_all()
         self._logger.info("Shutting down AsyncHASDK")
