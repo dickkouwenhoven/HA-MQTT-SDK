@@ -126,6 +126,7 @@ class MinimalMockMQTTClient(BaseMQTTClient):
 
 class MinimalAsyncMockMQTTClient(BaseAsyncMQTTClient):
     """Async mock client without LWT support."""
+
     def __init__(self):
         self.published: list[tuple[str, Any, bool]] = []
         self.subscribed: list[str] = []
@@ -140,8 +141,11 @@ class MinimalAsyncMockMQTTClient(BaseAsyncMQTTClient):
     def set_message_callback(self, callback):
         self.callback = callback
 
-    async def connect(self): pass
-    async def disconnect(self): pass
+    async def connect(self): 
+        pass
+
+    async def disconnect(self): 
+        pass
 
 
 @pytest.fixture
@@ -162,6 +166,7 @@ def mqtt_client_minimal():
 @pytest.fixture
 def mqtt_client_async_minimal():
     return MinimalAsyncMockMQTTClient()
+
 
 @pytest.fixture
 def mqtt_settings():
