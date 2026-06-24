@@ -11,7 +11,6 @@ import pytest
 
 from ha_mqtt_sdk.core.plugin_interface import IntegrationPlugin
 
-
 # ── helpers ───────────────────────────────────────────────────────────────────
 
 
