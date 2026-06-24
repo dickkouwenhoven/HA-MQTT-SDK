@@ -20,6 +20,17 @@ def test_init_requires_either_settings_or_client():
         AsyncHASDK(async_mqtt_client=None, mqtt_settings=None)
 
 
+def test_init_both_provided_uses_client_and_warns():
+    """Line 51: warning logged when both async_mqtt_client and mqtt_settings provided."""
+    mqtt_config = MQTTSettings(host="localhost", port=1883)
+    client = AsyncMQTTClient(config=mqtt_config)
+
+    with patch("ha_mqtt_sdk.core.async_sdk.AsyncEntityManager"):
+        sdk = AsyncHASDK(async_mqtt_client=client, mqtt_settings=mqtt_config)
+
+    assert sdk._mqtt is client
+
+
 @pytest.mark.asyncio
 async def test_register_with_invalid_entity():
     mqtt_config = MQTTSettings(host="localhost", port=1883)
