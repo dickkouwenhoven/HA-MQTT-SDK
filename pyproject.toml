@@ -56,6 +56,9 @@ Issues = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/issues"
 # Packaging config
 # -------------------------
 
+[tool.setuptools.package-data]
+ha_mqtt_sdk = ["py.typed"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
