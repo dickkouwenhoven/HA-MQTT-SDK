@@ -9,13 +9,12 @@ Verifies that PluginManager:
 - Catches and logs errors in stop_all without propagating
 """
 
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from ha_mqtt_sdk.core.plugin_interface import IntegrationPlugin
 from ha_mqtt_sdk.core.plugin_manager import PluginManager
-
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
