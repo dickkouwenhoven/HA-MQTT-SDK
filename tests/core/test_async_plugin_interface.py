@@ -11,7 +11,6 @@ import pytest
 
 from ha_mqtt_sdk.core.async_plugin_interface import AsyncIntegrationPlugin
 
-
 # ── helpers ───────────────────────────────────────────────────────────────────
 
 
