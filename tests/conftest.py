@@ -141,10 +141,10 @@ class MinimalAsyncMockMQTTClient(BaseAsyncMQTTClient):
     def set_message_callback(self, callback):
         self.callback = callback
 
-    async def connect(self): 
+    async def connect(self):
         pass
 
-    async def disconnect(self): 
+    async def disconnect(self):
         pass
 
 
