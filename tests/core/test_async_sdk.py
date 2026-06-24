@@ -4,6 +4,7 @@ import pytest
 
 from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
+from ha_mqtt_sdk.core.async_plugin_interface import AsyncIntegrationPlugin
 from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 from ha_mqtt_sdk.core.entity_factory import create_entity
 from ha_mqtt_sdk.exceptions import SDKError
@@ -91,6 +92,11 @@ def make_sdk(mock_manager: MagicMock) -> AsyncHASDK:
 
 def make_entity() -> Entity:
     return create_entity(domain=HADomain.SWITCH, name="Relay", unique_id="relay_1")
+
+
+def make_plugin() -> MagicMock:
+    """Return a MagicMock that passes isinstance check for AsyncIntegrationPlugin."""
+    return MagicMock(spec=AsyncIntegrationPlugin)
 
 
 # ── line 50: init from mqtt_settings only (no injected client) ───────────────
@@ -264,3 +270,92 @@ def test_is_registered_false():
     entity = make_entity()
 
     assert sdk.is_registered(entity) is False
+
+
+# ── use_plugin ────────────────────────────────────────────────────────────────
+
+
+def test_use_plugin_registers_plugin():
+    """Plugin manager created and plugin registered."""
+    manager = MagicMock()
+    sdk = make_sdk(manager)
+    plugin = make_plugin()
+
+    with patch("ha_mqtt_sdk.core.async_sdk.AsyncPluginManager") as mock_pm_cls:
+        mock_pm = MagicMock()
+        mock_pm_cls.return_value = mock_pm
+
+        sdk.use_plugin("dirigera", plugin)
+
+        mock_pm_cls.assert_called_once_with(sdk)
+        mock_pm.register.assert_called_once_with("dirigera", plugin)
+
+
+def test_use_plugin_reuses_existing_plugin_manager():
+    """Second call must reuse the existing AsyncPluginManager, not create a new one."""
+    manager = MagicMock()
+    sdk = make_sdk(manager)
+
+    with patch("ha_mqtt_sdk.core.async_sdk.AsyncPluginManager") as mock_pm_cls:
+        mock_pm = MagicMock()
+        mock_pm_cls.return_value = mock_pm
+
+        sdk.use_plugin("dirigera", make_plugin())
+        sdk.use_plugin("hue", make_plugin())
+
+        mock_pm_cls.assert_called_once()
+        assert mock_pm.register.call_count == 2
+
+
+# ── run ───────────────────────────────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_run_starts_mqtt_and_drives_plugin_lifecycle():
+    """start + setup_all + start_all all called."""
+    manager = MagicMock()
+    sdk = make_sdk(manager)
+    sdk._mqtt = AsyncMock()
+
+    mock_pm = MagicMock()
+    mock_pm.setup_all = AsyncMock()
+    mock_pm.start_all = AsyncMock()
+    sdk._plugin_manager = mock_pm
+
+    await sdk.run()
+
+    sdk._mqtt.connect.assert_awaited_once()
+    mock_pm.setup_all.assert_awaited_once()
+    mock_pm.start_all.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_run_without_plugins_only_starts_mqtt():
+    """run() with no plugins registered must still connect MQTT."""
+    manager = MagicMock()
+    sdk = make_sdk(manager)
+    sdk._mqtt = AsyncMock()
+
+    await sdk.run()
+
+    sdk._mqtt.connect.assert_awaited_once()
+
+
+# ── shutdown ──────────────────────────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_shutdown_calls_stop_all_before_disconnect():
+    """stop_all must be called before mqtt disconnect."""
+    manager = MagicMock()
+    sdk = make_sdk(manager)
+    sdk._mqtt = AsyncMock()
+
+    mock_pm = MagicMock()
+    mock_pm.stop_all = AsyncMock()
+    sdk._plugin_manager = mock_pm
+
+    await sdk.shutdown()
+
+    mock_pm.stop_all.assert_awaited_once()
+    sdk._mqtt.disconnect.assert_awaited_once()
