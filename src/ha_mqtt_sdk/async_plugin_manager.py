@@ -15,8 +15,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..utils.logger import get_logger
 from .async_plugin_interface import AsyncIntegrationPlugin
+from .utils.logger import get_logger
 
 if TYPE_CHECKING:
     from .async_sdk import AsyncHASDK
