@@ -122,8 +122,9 @@ def test_build_registration_calls_dependencies_with_command_topic():
 def test_build_registration_unknown_domain_raises():
     """Line 125: missing schema entry must raise SchemaError."""
 
-    from ha_mqtt_sdk.exceptions import SchemaError
     from unittest.mock import patch
+
+    from ha_mqtt_sdk.exceptions import SchemaError
 
     entity = create_entity(
         domain=HADomain.SENSOR,
