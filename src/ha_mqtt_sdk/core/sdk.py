@@ -152,7 +152,7 @@ class HASDK:
 
     def run(self) -> None:
         """Full lifecycle entry point for plugin-based applications."""
-    
+
         self.start()
         if hasattr(self, "_plugin_manager"):
             self._plugin_manager.setup_all()
