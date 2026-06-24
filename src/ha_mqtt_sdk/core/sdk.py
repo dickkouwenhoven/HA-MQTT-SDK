@@ -28,6 +28,8 @@ from ..types import StateValue
 from ..utils.logger import get_logger
 from .entity_factory import create_entity as _create_entity
 from .entity_manager import EntityManager
+from .plugin_interface import IntegrationPlugin
+from .plugin_manager import PluginManager
 
 
 class HASDK:
@@ -147,3 +149,26 @@ class HASDK:
         entity: Entity,
     ) -> bool:
         return self._entity_manager.is_registered(entity)
+
+    def use_plugin(self, name: str, plugin: IntegrationPlugin) -> None:
+        """Register an integration plugin."""
+
+        if not hasattr(self, "_plugin_manager"):
+            self._plugin_manager = PluginManager(self)
+        self._plugin_manager.register(name, plugin)
+
+    def run(self) -> None:
+        """Full lifecycle entry point for plugin-based applications."""
+    
+        self.start()
+        if hasattr(self, "_plugin_manager"):
+            self._plugin_manager.setup_all()
+            self._plugin_manager.start_all()
+
+    def shutdown(self) -> None:
+        # extend existing shutdown:
+        
+        if hasattr(self, "_plugin_manager"):
+            self._plugin_manager.stop_all()
+        self._logger.info("Shutting down HASDK")
+        self._mqtt.disconnect()
