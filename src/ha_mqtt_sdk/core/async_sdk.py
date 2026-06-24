@@ -74,13 +74,6 @@ class AsyncHASDK:
         self._logger.info("Starting AsyncHASDK")
         await self._mqtt.connect()
 
-    async def shutdown(self) -> None:
-        """
-        Gracefully shutdown SDK.
-        """
-        self._logger.info("Shutting down AsyncHASDK")
-        await self._mqtt.disconnect()
-
     async def register(
         self, entity: Entity, command_callback: Callable[[str, str], Awaitable[None]] | None = None
     ) -> None:
