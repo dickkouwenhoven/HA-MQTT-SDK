@@ -160,6 +160,23 @@ async def test_register_with_callback_executes_on_message(mqtt_client_async):
     assert called["value"] is True
 
 
+@pytest.mark.asyncio
+async def test_register_without_lwt_support_still_subscribes(mqtt_client_async_minimal):
+    """Line 129->137: client without set_last_will skips LWT but still subscribes."""
+    manager = AsyncEntityManager(
+        mqtt_client_async_minimal, MQTTSettings(discovery_prefix="homeassistant")
+    )
+    entity = manager.create_entity(
+        domain=HADomain.SWITCH, name="Switch", unique_id="switch_1"
+    )
+
+    await manager.register(entity)
+
+    assert not hasattr(mqtt_client_async_minimal, "set_last_will")
+    expected = build_command_topic(entity.domain, entity.unique_id, "homeassistant")
+    assert expected in mqtt_client_async_minimal.subscribed
+
+
 # ------------------------------------------------
 # Update_state
 # ------------------------------------------------
