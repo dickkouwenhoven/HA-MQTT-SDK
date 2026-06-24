@@ -73,13 +73,6 @@ class HASDK:
         self._logger.info("Starting HASDK")
         self._mqtt.connect()
 
-    def shutdown(self) -> None:
-        """
-        Gracefully shutdown SDK.
-        """
-        self._logger.info("Shutting down HASDK")
-        self._mqtt.disconnect()
-
     def register(
         self, entity: Entity, command_callback: Callable[[str, str], None] | None = None
     ) -> None:
@@ -166,8 +159,6 @@ class HASDK:
             self._plugin_manager.start_all()
 
     def shutdown(self) -> None:
-        # extend existing shutdown:
-        
         if hasattr(self, "_plugin_manager"):
             self._plugin_manager.stop_all()
         self._logger.info("Shutting down HASDK")
