@@ -6,6 +6,7 @@ import pytest
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 from ha_mqtt_sdk.mqtt.base import BaseMQTTClient
+from ha_mqtt_sdk.mqtt.base_async_mqtt_client import BaseAsyncMQTTClient
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
 
@@ -123,6 +124,26 @@ class MinimalMockMQTTClient(BaseMQTTClient):
         pass
 
 
+class MinimalAsyncMockMQTTClient(BaseAsyncMQTTClient):
+    """Async mock client without LWT support."""
+    def __init__(self):
+        self.published: list[tuple[str, Any, bool]] = []
+        self.subscribed: list[str] = []
+        self.callback: Callable[[str, str], Awaitable[None]] | None = None
+
+    async def publish(self, topic, payload, retain=False):
+        self.published.append((topic, payload, retain))
+
+    async def subscribe(self, topic):
+        self.subscribed.append(topic)
+
+    def set_message_callback(self, callback):
+        self.callback = callback
+
+    async def connect(self): pass
+    async def disconnect(self): pass
+
+
 @pytest.fixture
 def mqtt_client_sync():
     return MockMQTTClient()
@@ -137,6 +158,10 @@ def mqtt_client_async():
 def mqtt_client_minimal():
     return MinimalMockMQTTClient()
 
+
+@pytest.fixture
+def mqtt_client_async_minimal():
+    return MinimalAsyncMockMQTTClient()
 
 @pytest.fixture
 def mqtt_settings():
