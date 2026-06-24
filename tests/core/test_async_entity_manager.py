@@ -166,9 +166,7 @@ async def test_register_without_lwt_support_still_subscribes(mqtt_client_async_m
     manager = AsyncEntityManager(
         mqtt_client_async_minimal, MQTTSettings(discovery_prefix="homeassistant")
     )
-    entity = manager.create_entity(
-        domain=HADomain.SWITCH, name="Switch", unique_id="switch_1"
-    )
+    entity = manager.create_entity(domain=HADomain.SWITCH, name="Switch", unique_id="switch_1")
 
     await manager.register(entity)
 
