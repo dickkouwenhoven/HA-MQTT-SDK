@@ -128,23 +128,19 @@ def build_registration(
         "command_topic" in schema["required"] or "command_topic" in schema["optional"]
     )
 
-    _logger.debug("DOMAIN name and type are:", entity.domain, type(entity.domain))
-    _logger.debug("SCHEMA KEYS are:", ALLOWED_FIELDS_PER_DOMAIN.keys())
+    _logger.debug("Domain: %s (%s)", entity.domain, type(entity.domain))
+    _logger.debug("Schema keys: %s", list(ALLOWED_FIELDS_PER_DOMAIN.keys()))
 
     if supports_command:
-        _logger.debug("Supports_command value is: TRUE")
-
-    if not supports_command:
-        _logger.debug("Supports_command value is: FALSE")
-
-    command_topic = None
-    if supports_command:
+        _logger.debug("Domain %s supports commands", entity.domain)
         command_topic = build_command_topic(
             entity.domain,
             entity.unique_id,
             discovery_prefix,
         )
-        print("COMMAND TOPIC RAW RESULT:", command_topic)
+    else:
+        _logger.debug("Domain %s does not support commands", entity.domain)
+        command_topic = None
 
     availability_topic = build_availability_topic(
         entity.domain,
