@@ -15,8 +15,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..utils.logger import get_logger
 from .plugin_interface import IntegrationPlugin
+from .utils.logger import get_logger
 
 if TYPE_CHECKING:
     from .sdk import HASDK
