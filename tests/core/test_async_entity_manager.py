@@ -406,6 +406,7 @@ def test_get_entity_invalid_unique_id_raises(mqtt_client_async, unique_id):
 # Unregister
 # ------------------------------------------------
 
+
 @pytest.mark.asyncio
 async def test_unregister_removes_entity(mqtt_client_async):
     manager = make_manager(mqtt_client_async)
