@@ -1,8 +1,11 @@
-install:
-	pip install -r requirements-dev.txt
+.PHONY: install test lint format format-check type clean check ci
 
-test:
-	pytest --cov=ha_mqtt_sdk
+# ── Setup ─────────────────────────────────────────────────────────────────────
+
+install:
+	pip install -e ".[dev]"
+
+# ── Quality ───────────────────────────────────────────────────────────────────
 
 lint:
 	ruff check .
@@ -10,8 +13,27 @@ lint:
 format:
 	ruff format .
 
-type:
-	mypy ha_mqtt_sdk
+format-check:
+	ruff format . --check --diff
 
-ci:
-	ruff check . && mypy ha_mqtt_sdk && pytest
+type:
+	mypy src/ha_mqtt_sdk
+
+# ── Tests ─────────────────────────────────────────────────────────────────────
+
+test:
+	pytest --cov=ha_mqtt_sdk --cov-report=term-missing --cov-fail-under=100
+
+# ── Cleanup ───────────────────────────────────────────────────────────────────
+
+clean:
+	find . -type d -name "__pycache__" -exec rm -rf {} +
+	find . -type d -name ".pytest_cache" -exec rm -rf {} +
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	find . -type f -name ".coverage" -delete
+	find . -type f -name "coverage.xml" -delete
+
+# ── CI pipeline (read-only — no file changes) ─────────────────────────────────
+
+ci: lint format-check type test
