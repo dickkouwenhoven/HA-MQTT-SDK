@@ -10,7 +10,7 @@ Used by:
 
 import os
 
-from ..exceptions import MQTTError
+from ..exceptions import ConfigurationError
 
 
 class MQTTSettings:
@@ -71,19 +71,19 @@ class MQTTSettings:
     def _validate(self) -> None:
 
         if not self.host:
-            raise MQTTError("MQTT host must not be empty")
+            raise ConfigurationError("MQTT host must not be empty")
 
         if not isinstance(self.port, int) or self.port <= 0:
-            raise MQTTError("MQTT port must be a positive integer")
+            raise ConfigurationError("MQTT port must be a positive integer")
 
         if self.keepalive <= 0:
-            raise MQTTError("Keepalive must be > 0")
+            raise ConfigurationError("Keepalive must be > 0")
 
         if not isinstance(self.discovery_prefix, str) or not self.discovery_prefix.strip():
-            raise MQTTError("discovery_prefix must be a non-empty string")
+            raise ConfigurationError("discovery_prefix must be a non-empty string")
 
         if self.reconnect_delay_min <= 0:
-            raise MQTTError("Reconnect delay min must be > 0")
+            raise ConfigurationError("Reconnect delay min must be > 0")
 
         if self.reconnect_delay_max < self.reconnect_delay_min:
-            raise MQTTError("Reconnect delay max must be >= reconnect delay min")
+            raise ConfigurationError("Reconnect delay max must be >= reconnect delay min")
