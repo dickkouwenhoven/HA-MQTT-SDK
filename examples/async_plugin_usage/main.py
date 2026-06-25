@@ -15,7 +15,7 @@ For the sync equivalent, see examples/plugin_usage/.
 
 import asyncio
 
-from ha_mqtt_sdk import HADomain, MQTTSettings
+from ha_mqtt_sdk import MQTTSettings
 from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
