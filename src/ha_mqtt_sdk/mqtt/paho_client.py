@@ -19,6 +19,9 @@ from collections.abc import Callable
 from typing import Any
 
 import paho.mqtt.client as mqtt
+from paho.mqtt.client import CallbackAPIVersion, Client, ConnectFlags
+from paho.mqtt.properties import Properties
+from paho.mqtt.reasoncodes import ReasonCode
 
 from ..config.mqtt import MQTTSettings
 from ..exceptions import MQTTConnectionError, MQTTError, MQTTPublishError, ValidationError
@@ -33,11 +36,11 @@ class PahoMQTTClient(BaseMQTTClient):
         self._logger = get_logger(__name__)
 
         self._client = mqtt.Client(
-            mqtt.CallbackAPIVersion.VERSION2,
+            CallbackAPIVersion.VERSION2,
             client_id=config.client_id,
         )
         self._subscriptions: set[str] = set()
-        self._message_callback: Callable | None = None
+        self._message_callback: Callable[[str, str], None] | None = None
 
         self._reconnect_delay = config.reconnect_delay_min
         self._connected = False
@@ -158,11 +161,11 @@ class PahoMQTTClient(BaseMQTTClient):
 
     def _on_connect(
         self,
-        client: mqtt.Client,
+        client: Client,
         userdata: object,
-        flags: mqtt.ConnectFlags,
-        reason_code: mqtt.ReasonCode,
-        properties: mqtt.Properties | None = None,
+        flags: ConnectFlags,
+        reason_code: ReasonCode,
+        properties: Properties | None = None,
     ) -> None:
         if reason_code == 0:
             self._connected = True
@@ -181,10 +184,10 @@ class PahoMQTTClient(BaseMQTTClient):
 
     def _on_disconnect(
         self,
-        client: mqtt.Client,
+        client: Client,
         userdata: Any,
-        reason_code: mqtt.ReasonCode | int | None = None,
-        properties: mqtt.Properties | None = None,
+        reason_code: ReasonCode | int | None = None,
+        properties: Properties | None = None,
     ) -> None:
         self._connected = False
 
