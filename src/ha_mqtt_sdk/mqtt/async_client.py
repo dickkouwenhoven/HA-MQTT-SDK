@@ -16,7 +16,7 @@ from collections.abc import Awaitable, Callable
 import aiomqtt
 
 from ..config.mqtt import MQTTSettings
-from ..exceptions import MQTTError
+from ..exceptions import MQTTConnectionError, MQTTError
 from ..types import PublishPayload
 from ..utils.logger import get_logger
 from .base_async_mqtt_client import BaseAsyncMQTTClient
@@ -68,8 +68,12 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
         self._logger.info("Connecting (async) to MQTT broker")
 
         self._shutdown = False
-        await self._start_connection()
+        try:
+            await self._start_connection()
 
+        except Exception as e:
+            raise MQTTConnectionError(f"Failed to connect: {e}") from e
+    
     async def _start_connection(self) -> None:
         """
         Build the aiomqtt client and start the listener task.
