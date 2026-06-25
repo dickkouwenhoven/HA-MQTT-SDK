@@ -16,7 +16,7 @@ from collections.abc import Awaitable, Callable
 import aiomqtt
 
 from ..config.mqtt import MQTTSettings
-from ..exceptions import MQTTConnectionError, MQTTError
+from ..exceptions import MQTTConnectionError, MQTTError, MQTTPublishError
 from ..types import PublishPayload
 from ..utils.logger import get_logger
 from .base_async_mqtt_client import BaseAsyncMQTTClient
@@ -146,7 +146,7 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
         try:
             await self._client.publish(topic, message, retain=retain)
         except Exception as e:
-            raise MQTTError(str(e)) from e
+            raise MQTTPublishError(str(e)) from e
 
     async def subscribe(self, topic: str) -> None:
         if not self._client:
