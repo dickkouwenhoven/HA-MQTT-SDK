@@ -15,6 +15,7 @@ import pytest
 
 from ha_mqtt_sdk.core.plugin_interface import IntegrationPlugin
 from ha_mqtt_sdk.core.plugin_manager import PluginManager
+from ha_mqtt_sdk.exceptions import PluginError
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -48,14 +49,14 @@ def test_register_duplicate_name_raises():
 
     manager.register("hue", plugin)
 
-    with pytest.raises(ValueError, match="already registered"):
+    with pytest.raises(PluginError, match="already registered"):
         manager.register("hue", make_plugin())
 
 
 def test_register_invalid_type_raises():
     manager, _ = make_manager()
 
-    with pytest.raises(TypeError):
+    with pytest.raises(PluginError):
         manager.register("hue", "not_a_plugin")  # type: ignore[arg-type]
 
 
