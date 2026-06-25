@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from ..exceptions import PluginError
 from ..utils.logger import get_logger
 from .async_plugin_interface import AsyncIntegrationPlugin
 
@@ -49,14 +50,14 @@ class AsyncPluginManager:
             plugin: AsyncIntegrationPlugin instance
 
         Raises:
-            ValueError: If a plugin with this name is already registered
-            TypeError:  If plugin is not an AsyncIntegrationPlugin
+            PluginError: If a plugin with this name is already registered
+            PluginError:  If plugin is not an AsyncIntegrationPlugin
         """
         if name in self._plugins:
-            raise ValueError(f"Plugin '{name}' is already registered")
+            raise PluginError(f"Plugin '{name}' is already registered")
 
         if not isinstance(plugin, AsyncIntegrationPlugin):
-            raise TypeError(f"Plugin must be an AsyncIntegrationPlugin, got {type(plugin)}")
+            raise PluginError(f"Plugin must be an AsyncIntegrationPlugin, got {type(plugin)}")
 
         self._plugins[name] = plugin
         _logger.debug("Plugin registered: %s", name)
