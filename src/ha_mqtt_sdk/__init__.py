@@ -22,6 +22,18 @@ from .core.device_factory import create_device_info
 from .core.entity_factory import create_entity
 from .core.plugin_interface import IntegrationPlugin
 from .core.sdk import HASDK
+from .exceptions import (
+    SDKError,
+    ValidationError,
+    BuilderError,
+    EntityError,
+    SchemaError,
+    MQTTError,
+    MQTTConnectionError,
+    MQTTPublishError,
+    PluginError,
+    ConfigurationError,
+)
 from .models.device_info import DeviceInfo
 from .models.entity import Entity
 from .mqtt.async_client import AsyncMQTTClient
@@ -49,4 +61,15 @@ __all__ = [
     # Plugin base classes - needed to build integrations
     "IntegrationPlugin",
     "AsyncIntegrationPlugin",
+    # Exceptions
+    "SDKError",
+    "ValidationError",
+    "BuilderError",
+    "EntityError",
+    "SchemaError",
+    "MQTTError",
+    "MQTTConnectionError",
+    "MQTTPublishError",
+    "PluginError",
+    "ConfigurationError",
 ]
