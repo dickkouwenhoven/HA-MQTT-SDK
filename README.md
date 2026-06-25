@@ -32,7 +32,7 @@ The SDK simplifies Home Assistant MQTT integration by automatically handling:
 
 # Requirements
 
-* Python 3.13+
+* Python 3.12+
 * MQTT Broker (Mosquitto recommended)
 * Home Assistant with MQTT integration enabled
 
