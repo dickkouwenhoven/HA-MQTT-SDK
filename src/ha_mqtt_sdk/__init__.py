@@ -10,9 +10,9 @@ Public API - everything a user needs is importable from this package:
     from ha_mqtt_sdk import PahoMQTTClient, AsyncMQTTClient
     from ha_mqtt_sdk import DeviceInfo, create_device_info
     from ha_mqtt_sdk import IntegrationPlugin, AsyncIntegrationPlugin
-"""
 
-from importlib.metadata import version
+    from importlib.metadata import version
+"""
 
 from .config.domains import HADomain
 from .config.mqtt import MQTTSettings
@@ -41,7 +41,7 @@ from .mqtt.paho_client import PahoMQTTClient
 from .types import PublishPayload, StateValue
 
 # Version
-__version__ = version("ha_mqtt_sdk")
+# __version__ = version("ha_mqtt_sdk")
 
 __all__ = [
     # Sync entry point
