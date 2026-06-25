@@ -1,7 +1,7 @@
 import pytest
 
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
-from ha_mqtt_sdk.exceptions import MQTTError
+from ha_mqtt_sdk.exceptions import ConfigurationError
 
 
 @pytest.mark.parametrize(
@@ -41,5 +41,5 @@ from ha_mqtt_sdk.exceptions import MQTTError
     ],
 )
 def test_mqtt_settings_validation_errors(kwargs, message):
-    with pytest.raises(MQTTError, match=message):
+    with pytest.raises(ConfigurationError, match=message):
         MQTTSettings(**kwargs)
