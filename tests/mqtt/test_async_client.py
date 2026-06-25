@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from ha_mqtt_sdk.exceptions import MQTTError
+from ha_mqtt_sdk.exceptions import MQTTConnectionError, MQTTError
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
 # ------------------------------------------------------------------
@@ -150,6 +150,21 @@ async def test_start_connection(mqtt_client, mock_aiomqtt_client):
     mock_aiomqtt_client.__aenter__.assert_awaited_once()
 
     assert mqtt_client._listen_task is not None
+
+
+@pytest.mark.asyncio
+async def test_connect_wraps_connection_exception():
+    client = AsyncMQTTClient(MQTTSettings())
+
+    client._start_connection = AsyncMock(
+        side_effect=RuntimeError("Broker unavailable")
+    )
+
+    with pytest.raises(
+        MQTTConnectionError,
+        match="Failed to connect: Broker unavailable",
+    ):
+        await client.connect()    
 
 
 @pytest.mark.asyncio
