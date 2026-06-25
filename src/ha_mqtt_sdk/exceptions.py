@@ -61,3 +61,9 @@ class BuilderError(SDKError):
     """Raised for Builders-related issues occur."""
 
     pass
+
+
+class PluginError(SDKError):
+    """Raised for plugin registration and lifecycle issues."""
+
+    pass
