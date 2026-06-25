@@ -38,6 +38,7 @@ from .models.device_info import DeviceInfo
 from .models.entity import Entity
 from .mqtt.async_client import AsyncMQTTClient
 from .mqtt.paho_client import PahoMQTTClient
+from .types import PublishPayload, StateValue
 
 # Version
 __version__ = version("ha_mqtt_sdk")
@@ -72,4 +73,7 @@ __all__ = [
     "MQTTPublishError",
     "PluginError",
     "ConfigurationError",
+    # Type aliases
+    "PublishedPayload",
+    "StateValue",
 ]
