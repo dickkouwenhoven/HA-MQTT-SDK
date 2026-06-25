@@ -107,7 +107,7 @@ class MyAsyncHub:
                     timeout=1.0,
                 )
                 yield event
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 continue
 
     async def simulate_event(self, device_id: str, state: str) -> None:
