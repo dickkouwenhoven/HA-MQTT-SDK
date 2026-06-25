@@ -1,55 +1,82 @@
 """
-Basic example showing how to use the HASDK.
+Basic example showing how to use the HASDK (sync path).
+
+This example demonstrates the simple synchronous API — the recommended
+starting point for new integrations.
+
+For production integrations, see examples/plugin_usage/ which shows
+how to structure a full integration using IntegrationPlugin.
 """
 
 from ha_mqtt_sdk import (
     HASDK,
-    Entity,
     HADomain,
     MQTTSettings,
     PahoMQTTClient,
 )
 
 
-class SimpleMQTT:
-    def __init__(self):
-        self.callback = None
+def on_light_command(topic: str, payload: str) -> None:
+    """
+    Called when Home Assistant sends a command to the light.
 
-    @staticmethod
-    def publish(self, topic, payload, retain=False):
-        print(f"[MQTT PUBLISH] {topic} -> {payload} -> {retain}")
+    For example: when the user toggles the light in the HA dashboard.
+    """
+    print(f"[COMMAND] {topic} -> {payload}")
 
-    @staticmethod
-    def subscribe(self, topic):
-        print(f"[MQTT SUBSCRIBE] {topic}")
-
-    def set_message_callback(self, cb):
-        self.callback = cb
+    # Here you would forward the command to your actual device
+    # e.g. hue_bridge.set_light("demo_lamp", payload)
 
 
-def main():
+def main() -> None:
+    # ── 1. Configure MQTT connection ──────────────────────────────────────────
+
     mqtt_config = MQTTSettings(
         host="localhost",
         port=1883,
     )
-
     client = PahoMQTTClient(config=mqtt_config)
 
-    manager = HASDK(
-        mqtt_client=client,
+    # ── 2. Initialize the SDK ─────────────────────────────────────────────────
+
+    sdk = HASDK(mqtt_client=client)
+
+    # ── 3. Create entities ────────────────────────────────────────────────────
+
+    # Use sdk.create_entity() — this validates the entity against the HA schema
+    light = sdk.create_entity(
+        domain=HADomain.LIGHT,
+        name="Demo Lamp",
+        unique_id="demo_lamp_1",
     )
 
-    # Create entity
-    light = Entity(domain=HADomain.LIGHT, name="Demo Lamp", unique_id="demo_lamp")
+    sensor = sdk.create_entity(
+        domain=HADomain.SENSOR,
+        name="Demo Temperature",
+        unique_id="demo_temp_1",
+        extra={"unit_of_measurement": "°C", "device_class": "temperature"},
+    )
 
-    # Register in HA
-    manager.register(light)
+    # ── 4. Connect to MQTT broker ─────────────────────────────────────────────
 
-    # Set availability
-    manager.update_availability(light, True)
+    sdk.start()
 
-    # Send state
-    manager.update_state(light, "ON")
+    # ── 5. Register entities in Home Assistant ────────────────────────────────
+
+    # Light supports commands (on/off) — provide a callback
+    sdk.register(light, command_callback=on_light_command)
+
+    # Sensor is read-only — no command callback needed
+    sdk.register(sensor)
+
+    # ── 6. Publish state and availability ─────────────────────────────────────
+
+    sdk.update_state(light, "ON")
+    sdk.update_state(sensor, 21.5)
+
+    # ── 7. Shutdown ───────────────────────────────────────────────────────────
+
+    sdk.shutdown()
 
 
 if __name__ == "__main__":
