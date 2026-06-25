@@ -15,6 +15,7 @@ import pytest
 
 from ha_mqtt_sdk.core.async_plugin_interface import AsyncIntegrationPlugin
 from ha_mqtt_sdk.core.async_plugin_manager import AsyncPluginManager
+from ha_mqtt_sdk.exceptions import PluginError
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -51,14 +52,14 @@ def test_register_duplicate_name_raises():
 
     manager.register("dirigera", make_plugin())
 
-    with pytest.raises(ValueError, match="already registered"):
+    with pytest.raises(PluginError, match="already registered"):
         manager.register("dirigera", make_plugin())
 
 
 def test_register_invalid_type_raises():
     manager, _ = make_manager()
 
-    with pytest.raises(TypeError):
+    with pytest.raises(PluginError):
         manager.register("dirigera", "not_a_plugin")  # type: ignore[arg-type]
 
 
