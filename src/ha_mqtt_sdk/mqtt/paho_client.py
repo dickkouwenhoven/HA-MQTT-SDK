@@ -19,7 +19,7 @@ from collections.abc import Callable
 from typing import Any
 
 import paho.mqtt.client as mqtt
-from paho.mqtt.client import CallbackAPIVersion, Client, ConnectFlags
+from paho.mqtt.client import CallbackAPIVersion, Client, ConnectFlags  # type: ignore[attr-defined]
 from paho.mqtt.properties import Properties
 from paho.mqtt.reasoncodes import ReasonCode
 
