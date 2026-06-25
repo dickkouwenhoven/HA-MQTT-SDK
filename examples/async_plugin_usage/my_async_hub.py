@@ -16,7 +16,7 @@ This stub simulates:
 """
 
 import asyncio
-from collections.abc import AsyncIterator, Callable
+from collections.abc import AsyncIterator
 
 
 class MyAsyncHubDevice:
