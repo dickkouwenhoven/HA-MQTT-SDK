@@ -50,7 +50,7 @@ class PluginManager:
             plugin: IntegrationPlugin instance
 
         Raises:
-            ValueError: If a plugin with this name is already registered
+            PluginError: If a plugin with this name is already registered
         """
         if name in self._plugins:
             raise PluginError(f"Plugin '{name}' is already registered")
