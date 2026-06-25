@@ -35,6 +35,8 @@ Usage:
     from ha_mqtt_sdk import get_logger
 """
 
+from importlib.metadata import version
+
 from .config.domains import HADomain
 from .core.async_sdk import AsyncHASDK
 from .core.device_factory import create_device_info
@@ -45,6 +47,9 @@ from .models.entity import Entity
 from .mqtt.async_client import AsyncMQTTClient
 from .mqtt.paho_client import PahoMQTTClient
 from .utils.logger import get_logger
+
+# Version
+__version__ = version("ha_mqtt_sdk")
 
 # Central SDK logger
 LOGGER = get_logger(__name__)
