@@ -19,7 +19,6 @@ from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.core.async_plugin_interface import AsyncIntegrationPlugin
 from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 from ha_mqtt_sdk.models.entity import Entity
-
 from .my_async_hub import MyAsyncHub, MyAsyncHubDevice
 
 
