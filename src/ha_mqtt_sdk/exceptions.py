@@ -22,13 +22,13 @@ class ValidationError(SDKError):
 
 
 class EntityError(ValidationError):
-    """Raised for entity-related issues."""
+    """Raised when entity-related issues."""
 
     pass
 
 
 class SchemaError(ValidationError):
-    """Raised for schema-related issues."""
+    """Raised when schema-related issues."""
 
     pass
 
@@ -52,18 +52,18 @@ class MQTTPublishError(MQTTError):
 
 
 class ConfigurationError(SDKError):
-    """Raised for Config-related issues occur."""
+    """Raised when Config-related issues occur."""
 
     pass
 
 
 class BuilderError(SDKError):
-    """Raised for Builders-related issues occur."""
+    """Raised when Builders-related issues occur."""
 
     pass
 
 
 class PluginError(SDKError):
-    """Raised for plugin registration and lifecycle issues."""
+    """Raised when plugin registration and lifecycle issues."""
 
     pass
