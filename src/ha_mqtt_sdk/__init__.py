@@ -29,8 +29,8 @@ from .exceptions import (
     MQTTConnectionError,
     MQTTError,
     MQTTPublishError,
-    SchemaError,
     SDKError,
+    SchemaError,
     PluginError,
     ValidationError,
 )
