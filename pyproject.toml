@@ -1,3 +1,120 @@
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "ha_mqtt_sdk"
+version = "0.3.0"
+description = "Home Assistant MQTT SDK for discovery, topics, and device management"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+
+authors = [
+	{ name = "Dick Kouwenhoven", email = "dick.kouwenhoven@planet.nl" }
+]
+
+keywords = [
+	"homeassistant",
+	"mqtt",
+	"iot",
+	"sdk",
+	"automation",
+	"python",
+	"smarthome",
+]
+
+classifiers = [
+	"Development Status :: 4 - Beta",
+	"License :: OSI Approved :: MIT License",
+	"Intended Audience :: Developers",
+	"Topic :: Home Automation",
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+	"Programming Language :: Python :: 3.14",
+]
+
+dependencies = [
+	"paho-mqtt>=2.1.0",
+	"aiomqtt>=2.5.1",	
+]
+
+[project.optional-dependencies]
+dev = [
+	"pytest>=9.0.0",
+	"pytest-cov>=7.0.0",
+	"pytest-asyncio>=1.0.0",
+	"ruff>=0.15.0",
+	"mypy>=2.0.0",
+	"pre-commit>=4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/dickkouwenhoven/HA-MQTT-SDK"
+Repository = "https://github.com/dickkouwenhoven/HA-MQTT-SDK"
+Issues = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/issues"
+Changelog = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/releases"
+
+# -------------------------
+# Packaging config
+# -------------------------
+
+[tool.setuptools.package-data]
+ha_mqtt_sdk = ["py.typed"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+# -------------------------
+# Optional dev tools
+# -------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+# -------------------------
+# Ruff Settings
+#
+# E = pycodestyle
+# F = pyflakes
+# I = imports
+# B = bugbear
+# UP = pyupgrade
+# SIM = simplifications
+# -------------------------
+[tool.ruff.lint]
+select = [
+	"E",
+	"F",
+	"I",
+	"UP",
+	"B",
+	"SIM",
+]
+
+ignore = []
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.coverage.run]
+source = ["ha_mqtt_sdk"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+[tool.mypy]
+python_version = "3.13"
+warn_unused_ignores = true
+mypy_path = "src"
+no_implicit_optional = true
+check_untyped_defs = true
+strict = true
+mypy_path = "src"
