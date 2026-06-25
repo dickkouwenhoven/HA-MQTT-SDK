@@ -21,7 +21,7 @@ from typing import Any
 import paho.mqtt.client as mqtt
 
 from ..config.mqtt import MQTTSettings
-from ..exceptions import MQTTError, ValidationError
+from ..exceptions import MQTTConnectionError, MQTTError, ValidationError
 from ..types import PublishPayload
 from ..utils.logger import get_logger
 from .base import BaseMQTTClient
@@ -102,7 +102,7 @@ class PahoMQTTClient(BaseMQTTClient):
             self._client.loop_start()
 
         except Exception as e:
-            raise MQTTError(f"Failed to connect: {e}") from e
+            raise MQTTConnectionError(f"Failed to connect: {e}") from e
 
     def disconnect(self) -> None:
         if self._shutdown:
