@@ -25,7 +25,8 @@ keywords = [
 ]
 
 classifiers = [
-	"Development Status :: 3 - Alpha",
+	"Development Status :: 4 - Beta",
+	"License :: OSI Approved :: MIT License",
 	"Intended Audience :: Developers",
 	"Topic :: Home Automation",
 	"Programming Language :: Python :: 3.12",
@@ -40,18 +41,19 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-	"pytest",
-	"pytest-cov",
-	"pytest-asyncio",
-	"ruff",
-	"mypy",
-	"pre-commit",
+	"pytest>=9.0.0",
+	"pytest-cov>=7.0.0",
+	"pytest-asyncio>=1.0.0",
+	"ruff>=0.15.0",
+	"mypy>=2.0.0",
+	"pre-commit>=4.0.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/dickkouwenhoven/HA-MQTT-SDK"
 Repository = "https://github.com/dickkouwenhoven/HA-MQTT-SDK"
 Issues = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/issues"
+Changelog = "https://github.com/dickkouwenhoven/HA-MQTT-SDK/releases"
 
 # -------------------------
 # Packaging config
@@ -107,13 +109,12 @@ branch = true
 [tool.coverage.report]
 show_missing = true
 skip_covered = false
-omit = ["*/pligin_interface.py"]
 
 [tool.mypy]
 python_version = "3.13"
-warn_return_any = true
 warn_unused_ignores = true
-disallow_untyped_defs = true
 mypy_path = "src"
 no_implicit_optional = true
 check_untyped_defs = true
+strict = true
+mypy_path = "src"
