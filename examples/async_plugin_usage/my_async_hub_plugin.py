@@ -67,9 +67,7 @@ class MyAsyncHubPlugin(AsyncIntegrationPlugin):
             entity = self._map_device(device, sdk)
 
             if entity is None:
-                print(
-                    f"[MyAsyncHubPlugin] Skipping unsupported device type: {device.device_type}"
-                )
+                print(f"[MyAsyncHubPlugin] Skipping unsupported device type: {device.device_type}")
                 continue
 
             self._entities[device.device_id] = entity
