@@ -22,7 +22,6 @@ from ha_mqtt_sdk.models.entity import Entity
 
 from .my_async_hub import MyAsyncHub, MyAsyncHubDevice
 
-
 # Map hub device types to Home Assistant domains
 _DOMAIN_MAP: dict[str, HADomain] = {
     "light": HADomain.LIGHT,
