@@ -1,27 +1,8 @@
 """
 Home Assistant MQTT SDK
 
-This is the main package initializer for the SDK.
-It exposes the top-level API for external SDK users.
+Public API - everything a user needs is importable from this package:
 
-Responsibilities:
-- Ensure logger is initialized
-- Import key modules for convenient external use
-- Maintain SDK-level metadata
-
-Exports:
-- HASDK
-- AsyncHASDK
-- Entity
-- HADomain
-- MQTTSettings
-- DeviceInfo
-- create_device_info
-- create_entity
-- AsyncMQTTClient
-- PahoMQTTClient
-
-Usage:
     from ha_mqtt_sdk import HASDK, AsyncHASDK
     from ha_mqtt_sdk import Entity, create_entity
     from ha_mqtt_sdk import HADomain
@@ -50,20 +31,22 @@ from .mqtt.paho_client import PahoMQTTClient
 __version__ = version("ha_mqtt_sdk")
 
 __all__ = [
-    # Primary entry point
+    # Sync entry point
     "HASDK",
     # Async entry point
     "AsyncHASDK",
-    # Domain types users must construct
+    # Configuration
+    "MQTTSettings",
+    # Domain types
+    "HADomain",
     "Entity",
     "create_entity",
-    "HADomain",
     "DeviceInfo",
     "create_device_info",
-    "MQTTSettings",
     # MQTT Clients - needed for dependeny injection
     "PahoMQTTClient",
     "AsyncMQTTClient",
+    # Plugin base classes - needed to build integrations
     "IntegrationPlugin",
     "AsyncIntegrationPlugin",
 ]
