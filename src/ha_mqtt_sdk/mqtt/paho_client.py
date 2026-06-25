@@ -21,7 +21,7 @@ from typing import Any
 import paho.mqtt.client as mqtt
 
 from ..config.mqtt import MQTTSettings
-from ..exceptions import MQTTConnectionError, MQTTError, ValidationError
+from ..exceptions import MQTTConnectionError, MQTTError, MQTTPublishError, ValidationError
 from ..types import PublishPayload
 from ..utils.logger import get_logger
 from .base import BaseMQTTClient
@@ -136,7 +136,7 @@ class PahoMQTTClient(BaseMQTTClient):
         try:
             self._client.publish(topic, message, retain=retain)
         except Exception as e:
-            raise MQTTError(str(e)) from e
+            raise MQTTPublishError(str(e)) from e
 
     def subscribe(self, topic: str) -> None:
         if not topic:
