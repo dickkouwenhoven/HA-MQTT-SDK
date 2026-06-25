@@ -27,12 +27,6 @@ class EntityError(ValidationError):
     pass
 
 
-class DeviceError(ValidationError):
-    """Raised for device_info-related issues."""
-
-    pass
-
-
 class SchemaError(ValidationError):
     """Raised for schema-related issues."""
 
@@ -53,18 +47,6 @@ class MQTTConnectionError(MQTTError):
 
 class MQTTPublishError(MQTTError):
     """Raised when MQTT-publish issues occur."""
-
-    pass
-
-
-class MQTTSubscribeError(MQTTError):
-    """Raised when MQTT-subscribe issues occur."""
-
-    pass
-
-
-class CoreError(SDKError):
-    """Raised when Core-related issues occur."""
 
     pass
 
