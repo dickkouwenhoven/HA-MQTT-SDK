@@ -29,13 +29,13 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
         self._config = config
         self._logger = get_logger(__name__)
         self._subscriptions: set[str] = set()
-        self._message_callback: Callable | None = None
+        self._message_callback: MessageCallback | None = None
         self._client: aiomqtt.Client | None = None
-        self._listen_task: asyncio.Task | None = None
+        self._listen_task: asyncio.Task[None] | None = None
         self._shutdown = False
         self._lwt_topic: str | None = None
         self._lwt_payload: str = "offline"
-        self._reconnect_task: asyncio.Task | None = None
+        self._reconnect_task: asyncio.Task[None] | None = None
         self._reconnect_lock = asyncio.Lock()
 
     # -------------------------
@@ -237,6 +237,6 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
         if self._reconnect_task is None or self._reconnect_task.done():
             self._reconnect_task = asyncio.create_task(self._reconnect_loop())
 
-    def _clear_reconnect_task(self, task: asyncio.Task) -> None:
+    def _clear_reconnect_task(self, task: asyncio.Task[None]) -> None:
         if self._reconnect_task is task:
             self._reconnect_task = None
