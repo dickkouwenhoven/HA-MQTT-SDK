@@ -73,7 +73,7 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
 
         except Exception as e:
             raise MQTTConnectionError(f"Failed to connect: {e}") from e
-    
+
     async def _start_connection(self) -> None:
         """
         Build the aiomqtt client and start the listener task.
