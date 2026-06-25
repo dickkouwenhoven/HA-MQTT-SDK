@@ -1,31 +1,59 @@
-version: "3.9"
+# docker-compose.yml
+#
+# Development environment for HA-MQTT-SDK.
+#
+# Usage:
+#   docker compose up --build       # start broker + run tests
+#   docker compose up mqtt          # start broker only
+#   docker compose run sdk pytest   # run tests manually
 
 services:
+
+  # ── MQTT Broker ─────────────────────────────────────────────────────────────
 
   mqtt:
     image: eclipse-mosquitto:2.0
     container_name: mqtt_broker
+    restart: "no"
     ports:
       - "1883:1883"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
-
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
     healthcheck:
-      test: ["CMD", "mosquitto_sub", "-h", "localhost", "-t", "$SYS/#", "-C", "1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "nc -z localhost 1883 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks:
+      - ha_mqtt_net
+
+  # ── SDK / Test Runner ────────────────────────────────────────────────────────
 
   sdk:
     build: .
     container_name: ha_mqtt_sdk
+    restart: "no"
     depends_on:
-      - mqtt
+      mqtt:
+        condition: service_healthy
     environment:
       - MQTT_HOST=mqtt
       - MQTT_PORT=1883
     volumes:
       - .:/app
-    command: python -m unittest discover -s tests
+      - /app/.venv          # exclude virtualenv from mount
+    command: >
+      pytest
+        --cov=ha_mqtt_sdk
+        --cov-report=term-missing
+        --cov-fail-under=100
+        -v
+    networks:
+      - ha_mqtt_net
 
+# ── Networks ───────────────────────────────────────────────────────────────────
 
+networks:
+  ha_mqtt_net:
+    driver: bridge
