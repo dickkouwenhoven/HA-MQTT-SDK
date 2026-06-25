@@ -7,7 +7,7 @@ name = "ha_mqtt_sdk"
 version = "0.3.0"
 description = "Home Assistant MQTT SDK for discovery, topics, and device management"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 license = "MIT"
 
 authors = [
@@ -28,6 +28,7 @@ classifiers = [
 	"Development Status :: 3 - Alpha",
 	"Intended Audience :: Developers",
 	"Topic :: Home Automation",
+	"Programming Language :: Python :: 3.12",
 	"Programming Language :: Python :: 3.13",
 	"Programming Language :: Python :: 3.14",
 ]
