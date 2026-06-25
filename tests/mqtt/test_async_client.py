@@ -156,15 +156,13 @@ async def test_start_connection(mqtt_client, mock_aiomqtt_client):
 async def test_connect_wraps_connection_exception(mqtt_settings):
     client = AsyncMQTTClient(mqtt_settings)
 
-    client._start_connection = AsyncMock(
-        side_effect=RuntimeError("Broker unavailable")
-    )
+    client._start_connection = AsyncMock(side_effect=RuntimeError("Broker unavailable"))
 
     with pytest.raises(
         MQTTConnectionError,
         match="Failed to connect: Broker unavailable",
     ):
-        await client.connect()    
+        await client.connect()
 
 
 @pytest.mark.asyncio
