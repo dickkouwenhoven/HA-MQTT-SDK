@@ -8,7 +8,7 @@ version = "0.3.0"
 description = "Home Assistant MQTT SDK for discovery, topics, and device management"
 readme = "README.md"
 requires-python = ">=3.12"
-license = "MIT"
+license = { text = "MIT" }
 
 authors = [
 	{ name = "Dick Kouwenhoven", email = "dick.kouwenhoven@planet.nl" }
@@ -117,4 +117,3 @@ mypy_path = "src"
 no_implicit_optional = true
 check_untyped_defs = true
 strict = true
-mypy_path = "src"
