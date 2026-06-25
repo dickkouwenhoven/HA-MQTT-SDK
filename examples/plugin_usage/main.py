@@ -13,7 +13,7 @@ the full plugin lifecycle:
 For the async equivalent, see examples/async_plugin_usage/.
 """
 
-from ha_mqtt_sdk import HADomain, MQTTSettings, PahoMQTTClient
+from ha_mqtt_sdk import MQTTSettings, PahoMQTTClient
 from ha_mqtt_sdk.core.sdk import HASDK
 
 from .my_hub import MyHub
