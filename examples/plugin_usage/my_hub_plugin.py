@@ -18,7 +18,6 @@ from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.core.plugin_interface import IntegrationPlugin
 from ha_mqtt_sdk.core.sdk import HASDK
 from ha_mqtt_sdk.models.entity import Entity
-
 from .my_hub import MyHub, MyHubDevice
 
 
