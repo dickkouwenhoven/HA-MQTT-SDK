@@ -74,6 +74,6 @@ __all__ = [
     "PluginError",
     "ConfigurationError",
     # Type aliases
-    "PublishedPayload",
+    "PublishPayload",
     "StateValue",
 ]
