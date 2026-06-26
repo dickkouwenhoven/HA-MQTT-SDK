@@ -1,38 +1,89 @@
 # .github/workflows/release.yml
 #
-# Triggered when a version tag is pushed (e.g. v0.4.0).
+# Triggered when a version tag is pushed.
+#
+# Tag convention:
+#   v0.4.0a1   → alpha pre-release    → Test PyPI
+#   v0.4.0b1   → beta pre-release     → Test PyPI
+#   v0.4.0rc1  → release candidate    → Test PyPI
+#   v0.4.0     → final release        → production PyPI
 #
 # Pipeline:
 #   1. Run full CI (lint, type check, tests) to verify the tag is clean
 #   2. Extract the release notes for this version from CHANGELOG.md
 #   3. Build the Python distribution (sdist + wheel)
 #   4. Create a GitHub Release with the extracted notes and built artifacts
-#   5. Publish the package to PyPI
+#   5. Publish to Test PyPI (pre-release) or production PyPI (final)
 #
 # Required repository secrets:
-#   PYPI_API_TOKEN  — API token from https://pypi.org/manage/account/token/
+#   PYPI_API_TOKEN       — https://pypi.org/manage/account/token/
+#   TEST_PYPI_API_TOKEN  — https://test.pypi.org/manage/account/token/
+#
+# Required GitHub environments:
+#   pypi       — for production releases
+#   test-pypi  — for pre-releases
 #
 # How to trigger:
-#   git tag v0.4.0
-#   git push origin v0.4.0
+#   Pre-release:  git tag v0.4.0a1  && git push origin v0.4.0a1
+#   Final:        git tag v0.4.0    && git push origin v0.4.0
 
 name: Release
 
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"   # matches v0.4.0, v1.0.0, etc.
+      - "v[0-9]+.[0-9]+.[0-9]+"          # final:             v0.4.0, v1.0.0
+      - "v[0-9]+.[0-9]+.[0-9]+a[0-9]+"   # alpha:             v0.4.0a1
+      - "v[0-9]+.[0-9]+.[0-9]+b[0-9]+"   # beta:              v0.4.0b1
+      - "v[0-9]+.[0-9]+.[0-9]+rc[0-9]+"  # release candidate: v0.4.0rc1
 
 permissions:
   contents: write   # needed to create GitHub Release
 
 jobs:
 
+  # ── Determine release type ─────────────────────────────────────────────────
+
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.parse.outputs.version }}
+      is_prerelease: ${{ steps.parse.outputs.is_prerelease }}
+      pypi_env: ${{ steps.parse.outputs.pypi_env }}
+
+    steps:
+      - name: Parse tag
+        id: parse
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+
+          # Detect pre-release suffix: a, b, or rc
+          if [[ "$VERSION" =~ (a|b|rc)[0-9]+$ ]]; then
+            IS_PRERELEASE="true"
+            PYPI_ENV="test-pypi"
+          else
+            IS_PRERELEASE="false"
+            PYPI_ENV="pypi"
+          fi
+
+          echo "version=$VERSION"             >> $GITHUB_OUTPUT
+          echo "is_prerelease=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+          echo "pypi_env=$PYPI_ENV"           >> $GITHUB_OUTPUT
+
+          echo "Tag:           $TAG"
+          echo "Version:       $VERSION"
+          echo "Pre-release:   $IS_PRERELEASE"
+          echo "Target:        $PYPI_ENV"
+
   # ── 1. Verify the tag is clean ─────────────────────────────────────────────
 
   verify:
     name: Verify
     runs-on: ubuntu-latest
+    needs: prepare
 
     steps:
       - name: Checkout code
@@ -48,6 +99,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+
+      - name: Verify version matches tag
+        run: |
+          TAG_VERSION="${{ needs.prepare.outputs.version }}"
+          TOML_VERSION=$(python -c "
+          import tomllib
+          with open('pyproject.toml', 'rb') as f:
+              d = tomllib.load(f)
+          print(d['project']['version'])
+          ")
+          if [ "$TAG_VERSION" != "$TOML_VERSION" ]; then
+            echo "ERROR: Tag $TAG_VERSION does not match pyproject.toml version $TOML_VERSION"
+            exit 1
+          fi
+          echo "Version check passed: $TAG_VERSION"
 
       - name: Lint
         run: ruff check .
@@ -65,58 +131,45 @@ jobs:
             --cov-report=term-missing \
             --cov-fail-under=100 \
             -v
-      - name: Verify version matches tag
-        run: |
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          TOML_VERSION=$(python -c "import tomllib; f=open('pyproject.toml','rb'); d=tomllib.load(f); print(d['project']['version'])")
-          if [ "$TAG_VERSION" != "$TOML_VERSION" ]; then
-            echo "ERROR: Tag $TAG_VERSION does not match pyproject.toml version $TOML_VERSION"
-            exit 1
-          fi
 
   # ── 2. Extract release notes from CHANGELOG.md ────────────────────────────
 
   changelog:
     name: Extract changelog
     runs-on: ubuntu-latest
-    needs: verify
+    needs: [prepare, verify]
 
     outputs:
       release_notes: ${{ steps.extract.outputs.release_notes }}
-      version: ${{ steps.extract.outputs.version }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Extract version from tag
-        id: tag
-        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
-
-      - name: Extract release notes from CHANGELOG.md
+      - name: Extract release notes
         id: extract
         run: |
-          VERSION="${{ steps.tag.outputs.version }}"
+          VERSION="${{ needs.prepare.outputs.version }}"
 
           # Extract the block between ## [VERSION] and the next ## [
           NOTES=$(awk "/^## \[$VERSION\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md)
 
           if [ -z "$NOTES" ]; then
             echo "ERROR: No changelog entry found for version $VERSION"
+            echo "Make sure CHANGELOG.md contains a ## [$VERSION] section"
             exit 1
           fi
 
           # Write to file to preserve multiline content
           echo "$NOTES" > release_notes.txt
+          echo "Release notes extracted for version $VERSION"
 
-          # Pass to output using GitHub's multiline delimiter
+          # Pass to output using GitHub multiline delimiter
           {
             echo "release_notes<<RELEASE_NOTES_EOF"
             cat release_notes.txt
             echo "RELEASE_NOTES_EOF"
           } >> $GITHUB_OUTPUT
-
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload release notes artifact
         uses: actions/upload-artifact@v4
@@ -144,15 +197,13 @@ jobs:
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          pip install build
+          pip install build twine
 
       - name: Build sdist and wheel
         run: python -m build
 
       - name: Verify distribution contents
-        run: |
-          pip install twine
-          twine check dist/*
+        run: twine check dist/*
 
       - name: Upload distribution artifacts
         uses: actions/upload-artifact@v4
@@ -165,7 +216,7 @@ jobs:
   release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [changelog, build]
+    needs: [prepare, changelog, build]
 
     steps:
       - name: Download distribution artifacts
@@ -178,22 +229,22 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          name: "v${{ needs.changelog.outputs.version }}"
+          name: "v${{ needs.prepare.outputs.version }}"
           body: ${{ needs.changelog.outputs.release_notes }}
           files: dist/*
           draft: false
-          prerelease: false
+          prerelease: ${{ needs.prepare.outputs.is_prerelease == 'true' }}
 
   # ── 5. Publish to PyPI ────────────────────────────────────────────────────
 
   publish:
-    name: Publish to PyPI
+    name: Publish to ${{ needs.prepare.outputs.pypi_env }}
     runs-on: ubuntu-latest
-    needs: release
+    needs: [prepare, release]
 
     environment:
-      name: pypi
-      url: https://pypi.org/project/ha_mqtt_sdk/
+      name: ${{ needs.prepare.outputs.pypi_env }}
+      url: ${{ needs.prepare.outputs.pypi_env == 'test-pypi' && 'https://test.pypi.org/project/ha_mqtt_sdk/' || 'https://pypi.org/project/ha_mqtt_sdk/' }}
 
     steps:
       - name: Download distribution artifacts
@@ -202,7 +253,15 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Publish to PyPI
+      - name: Publish to Test PyPI
+        if: needs.prepare.outputs.is_prerelease == 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+
+      - name: Publish to production PyPI
+        if: needs.prepare.outputs.is_prerelease == 'false'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
