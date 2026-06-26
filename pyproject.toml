@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ha_mqtt_sdk"
-version = "0.3.0"
+version = "0.4.0"
 description = "Home Assistant MQTT SDK for discovery, topics, and device management"
 readme = "README.md"
 requires-python = ">=3.12"
