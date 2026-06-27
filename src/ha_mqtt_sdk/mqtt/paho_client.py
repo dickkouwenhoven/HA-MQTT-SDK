@@ -161,11 +161,11 @@ class PahoMQTTClient(BaseMQTTClient):
 
     def _on_connect(
         self,
-        client: Client,
-        userdata: object,
-        flags: ConnectFlags,
+        _client: Client,
+        _userdata: object,
+        _flags: ConnectFlags,
         reason_code: ReasonCode,
-        properties: Properties | None = None,
+        _properties: Properties | None = None,
     ) -> None:
         if reason_code == 0:
             self._connected = True
@@ -184,10 +184,10 @@ class PahoMQTTClient(BaseMQTTClient):
 
     def _on_disconnect(
         self,
-        client: Client,
-        userdata: Any,
+        _client: Client,
+        _userdata: Any,
         reason_code: ReasonCode | int | None = None,
-        properties: Properties | None = None,
+        _properties: Properties | None = None,
     ) -> None:
         self._connected = False
 
@@ -237,7 +237,7 @@ class PahoMQTTClient(BaseMQTTClient):
                     self._config.reconnect_delay_max,
                 )
 
-    def _on_message(self, client: mqtt.Client, userdata: Any, msg: Any) -> None:
+    def _on_message(self, _client: mqtt.Client, _userdata: Any, msg: Any) -> None:
         topic = msg.topic
         payload = msg.payload.decode()
 
