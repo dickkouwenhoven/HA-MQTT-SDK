@@ -47,7 +47,7 @@ Install from PyPI:
 pip install ha_mqtt_sdk
 ```
 
-Or install from source:
+Install from source:
 
 ```bash
 git clone https://github.com/dickkouwenhoven/HA-MQTT-SDK.git
