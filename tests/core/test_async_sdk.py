@@ -159,7 +159,7 @@ async def test_register_with_callback():
     sdk = make_sdk(manager)
     entity = make_entity()
 
-    async def cb(topic: str, payload: str) -> None:
+    async def cb(_topic: str, _payload: str) -> None:
         pass
 
     await sdk.register(entity, cb)
@@ -192,7 +192,7 @@ async def test_on_command_valid():
     sdk = make_sdk(manager)
     entity = make_entity()
 
-    async def cb(topic: str, payload: str) -> None:
+    async def cb(_topic: str, _payload: str) -> None:
         pass
 
     await sdk.on_command(entity, cb)
