@@ -92,7 +92,7 @@ class AsyncEntityManager:
 
         Args:
                 entity: Entity instance
-                command_callback: Optional handler for commands
+                command_callback: Optional async handler for commands
         """
 
         if not isinstance(entity, Entity):
