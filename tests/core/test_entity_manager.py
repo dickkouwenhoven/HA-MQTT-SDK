@@ -164,7 +164,7 @@ def test_register_with_command_callback(mqtt_client_sync):
     entity = make_switch(manager)
     called = {"value": False}
 
-    def callback(topic, payload):
+    def callback(_topic, _payload):
         called["value"] = True
 
     manager.register(entity, command_callback=callback)
@@ -266,10 +266,10 @@ def test_set_command_callback_replaces_existing(mqtt_client_sync):
     first_called = {"value": False}
     second_called = {"value": False}
 
-    def callback_1(topic, payload):
+    def callback_1(_topic, _payload):
         first_called["value"] = True
 
-    def callback_2(topic, payload):
+    def callback_2(_topic, _payload):
         second_called["value"] = True
 
     manager.register(entity, command_callback=callback_1)
