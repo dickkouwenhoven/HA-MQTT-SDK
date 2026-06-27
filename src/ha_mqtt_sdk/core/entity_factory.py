@@ -1,7 +1,7 @@
 """
 entity_factory.py
 
-Share entity creation and registration preperation
+Share entity creation and registration preparation
 for both EntityManager and AsyncEntityManager.
 
 Responsibilities:
