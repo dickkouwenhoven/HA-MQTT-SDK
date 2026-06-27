@@ -86,7 +86,7 @@ def _validate_json_value(
 
 def validate_discovery_payload(
     payload: Mapping[str, Any],
-    domain: HADomain,
+    _domain: HADomain,
 ) -> None:
     """
     Validate Home Assistant discovery payload.
