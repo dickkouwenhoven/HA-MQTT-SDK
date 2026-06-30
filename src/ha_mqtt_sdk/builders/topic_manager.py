@@ -64,7 +64,7 @@ def build_discovery_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
     return f"{prefix}/{domain.value}/{unique_id}/config"
 
 
-def build_state_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
+def build_state_topic(domain: HADomain, unique_id: str, prefix: str) -> str | None:
     """
     Build state topic.
 
@@ -82,7 +82,7 @@ def build_state_topic(domain: HADomain, unique_id: str, prefix: str) -> str:
     optional = schema["optional"]
 
     if "state_topic" not in required and "state_topic" not in optional:
-        return ""
+        return None
 
     return f"{prefix}/{domain.value}/{unique_id}/state"
 
@@ -91,7 +91,7 @@ def build_command_topic(
     domain: HADomain,
     unique_id: str,
     prefix: str,
-) -> str:
+) -> str | None:
     """
     Build command topic.
 
@@ -109,7 +109,7 @@ def build_command_topic(
     optional = schema["optional"]
 
     if "command_topic" not in required and "command_topic" not in optional:
-        return ""
+        return None
 
     return f"{prefix}/{domain.value}/{unique_id}/set"
 
@@ -118,7 +118,7 @@ def build_availability_topic(
     domain: HADomain,
     unique_id: str,
     prefix: str,
-) -> str:
+) -> str | None:
     _validate_domain(domain)
     _validate_unique_id(unique_id)
     prefix = _normalize_prefix(prefix)
@@ -129,6 +129,6 @@ def build_availability_topic(
     optional = schema["optional"]
 
     if "availability_topic" not in required and "availability_topic" not in optional:
-        return ""
+        return None
 
     return f"{prefix}/{domain.value}/{unique_id}/availability"
