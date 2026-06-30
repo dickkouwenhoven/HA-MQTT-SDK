@@ -256,6 +256,115 @@ See `examples/plugin_usage/` for a fully worked sync example and
 
 ---
 
+## Updating or Removing Entities (Discovery Changes)
+
+Home Assistant MQTT Discovery is driven entirely by what gets published to
+the discovery topic. The SDK reflects this directly — there is no separate
+"update" operation. Changing a device means re-publishing its discovery
+payload; removing a device means publishing an empty payload.
+
+### Adding a new device after startup
+
+Simply call `create_entity()` and `register()` at any point — not just at
+startup. This is exactly what happens when a plugin's `setup()` discovers
+a newly-added device:
+
+```python
+new_entity = sdk.create_entity(
+    domain=HADomain.SENSOR,
+    name="New Sensor",
+    unique_id="sensor_new_1",
+)
+sdk.register(new_entity)
+```
+
+Home Assistant picks up the new discovery payload automatically — no
+restart needed on either side.
+
+### Changing an existing entity's configuration
+
+Calling `register()` twice with the same `unique_id` raises `EntityError`:
+
+```python
+sdk.register(entity)
+sdk.register(entity)  # raises EntityError: already registered
+```
+
+This is intentional — it prevents accidental duplicate registration. To
+change an entity's configuration (for example, renaming it or changing its
+`device_info`), unregister first, then register the updated version:
+
+```python
+sdk.unregister(entity)
+
+updated_entity = sdk.create_entity(
+    domain=HADomain.SENSOR,
+    name="Renamed Sensor",       # ← new name
+    unique_id="sensor_new_1",    # ← same unique_id
+)
+sdk.register(updated_entity)
+```
+
+`unregister()` publishes an empty payload to the discovery topic, which
+tells Home Assistant to remove the entity. The subsequent `register()`
+call publishes the new configuration, and HA re-creates the entity.
+
+### Removing a device permanently
+
+Call `unregister()` and do not re-register:
+
+```python
+sdk.unregister(entity)
+```
+
+This publishes an empty retained message to the discovery topic. Home
+Assistant removes the entity from its registry. Because the message is
+retained, the removal persists even if the MQTT broker restarts.
+
+### Handling this in a plugin
+
+If your hub reports that a device was removed or its configuration
+changed, handle it inside your plugin's event loop:
+
+```python
+async def _on_hub_event(self, event: HubEvent) -> None:
+    if event.type == "device_removed":
+        entity = self._entities.pop(event.device_id, None)
+        if entity:
+            await self._sdk.unregister(entity)
+
+    elif event.type == "device_renamed":
+        old_entity = self._entities.get(event.device_id)
+        if old_entity:
+            await self._sdk.unregister(old_entity)
+
+        new_entity = self._sdk.create_entity(
+            domain=old_entity.domain,
+            name=event.new_name,
+            unique_id=event.device_id,
+        )
+        await self._sdk.register(new_entity, command_callback=self.handle_command)
+        self._entities[event.device_id] = new_entity
+```
+
+### Summary
+
+| Scenario | Action |
+|---|---|
+| New device discovered | `create_entity()` + `register()` |
+| Device configuration changed | `unregister()` then `register()` with new config |
+| Device removed from hub | `unregister()` only |
+| Hub goes offline | `update_availability(entity, False)` — keeps entity registered, marks unavailable |
+| Hub comes back online | `update_availability(entity, True)` |
+
+Note the distinction between **availability** and **registration**: a
+temporarily offline device should use `update_availability()`, not
+`unregister()`. Unregistering removes the entity from HA entirely;
+marking it unavailable just greys it out while keeping its history and
+configuration intact.
+
+---
+
 ## Supported Entity Domains
 
 ```python
@@ -270,6 +379,137 @@ HADomain.CLIMATE
 ```
 
 The complete list is in `ha_mqtt_sdk/config/domains.py`.
+
+---
+
+## Adding a New Entity Domain to the SDK
+
+This section is for SDK contributors who want to add support for a Home
+Assistant domain not yet covered by `HADomain` — not for end users adding
+device instances (see "Updating or Removing Entities" above for that).
+
+The SDK currently supports these domains out of the box:
+
+```python
+from ha_mqtt_sdk import HADomain
+
+HADomain.SENSOR
+HADomain.SWITCH
+HADomain.LIGHT
+HADomain.BINARY_SENSOR
+HADomain.CLIMATE
+HADomain.COVER
+HADomain.LOCK
+HADomain.FAN
+# ... and more — see ha_mqtt_sdk/config/domains.py for the full list
+```
+
+If Home Assistant adds a new MQTT integration domain, or you need one that
+is not yet in this list, follow these three steps. All domain knowledge
+lives in exactly two files — there is no need to touch the managers,
+builders, or SDK entry points.
+
+### Step 1 — Add the domain to `HADomain`
+
+Edit `ha_mqtt_sdk/config/domains.py`:
+
+```python
+class HADomain(StrEnum):
+    ...
+    SIREN = "siren"
+    YOUR_NEW_DOMAIN = "your_new_domain"  # ← add here, alphabetically
+    SWITCH = "switch"
+    ...
+```
+
+The string value must match exactly what Home Assistant expects in the
+MQTT discovery topic, e.g. `homeassistant/<domain>/<unique_id>/config`.
+Check the [Home Assistant MQTT integration docs](https://www.home-assistant.io/integrations/#search/mqtt)
+for the correct domain string.
+
+### Step 2 — Define its field schema
+
+Edit `ha_mqtt_sdk/config/device_fields.py` and add an entry to
+`ALLOWED_FIELDS_PER_DOMAIN`:
+
+```python
+ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
+    ...
+    HADomain.YOUR_NEW_DOMAIN: {
+        "required": {"name", "unique_id"},
+        "optional": _optional(
+            COMMON_FIELDS,
+            STATE_FIELDS,      # include if the domain reports state
+            COMMAND_FIELDS,    # include if the domain accepts commands
+            {
+                # domain-specific fields go here, e.g.:
+                "min_value",
+                "max_value",
+            },
+        ),
+    },
+    ...
+}
+```
+
+Three building blocks are available:
+- `COMMON_FIELDS` — availability, device info, icon, etc. (almost always include)
+- `STATE_FIELDS` — `state_topic`, `value_template`, etc. (include if the domain has a state)
+- `COMMAND_FIELDS` — `command_topic`, `payload_on`/`payload_off`, etc. (include if the domain accepts commands)
+
+Check the [Home Assistant MQTT discovery schema](https://www.home-assistant.io/integrations/mqtt/)
+for the exact field names supported by your new domain.
+
+### Step 3 — Verify topic generation works automatically
+
+No changes are needed in `ha_mqtt_sdk/builders/topic_manager.py` — topic
+building (`build_discovery_topic`, `build_state_topic`,
+`build_command_topic`, `build_availability_topic`) is fully generic and
+works for any `HADomain` value, since `command_topic` support is derived
+automatically from whether `"command_topic"` appears in your domain's
+`required` or `optional` set in Step 2.
+
+### Step 4 — Write tests
+
+Add coverage in `tests/models/test_entity.py` and
+`tests/core/test_entity_factory.py` following the existing pattern:
+
+```python
+def test_create_your_new_domain_entity():
+    entity = create_entity(
+        domain=HADomain.YOUR_NEW_DOMAIN,
+        name="Test Device",
+        unique_id="test_1",
+    )
+    assert entity.domain == HADomain.YOUR_NEW_DOMAIN
+
+
+def test_your_new_domain_registration(mqtt_client_sync):
+    manager = EntityManager(mqtt_client_sync, MQTTSettings(discovery_prefix="homeassistant"))
+    entity = manager.create_entity(
+        domain=HADomain.YOUR_NEW_DOMAIN,
+        name="Test Device",
+        unique_id="test_1",
+    )
+    manager.register(entity)
+
+    topic, payload, retain = mqtt_client_sync.published[0]
+    assert topic.endswith("/config")
+    assert payload["name"] == "Test Device"
+```
+
+### Summary
+
+| Step | File | What changes |
+|---|---|---|
+| 1 | `config/domains.py` | Add enum member |
+| 2 | `config/device_fields.py` | Add field schema entry |
+| 3 | `builders/topic_manager.py` | Nothing — works automatically |
+| 4 | `tests/` | Add coverage for the new domain |
+
+No changes are ever needed in `EntityManager`, `AsyncEntityManager`,
+`HASDK`, or `AsyncHASDK` — the schema-driven design means domain support
+is entirely data, not code.
 
 ---
 
