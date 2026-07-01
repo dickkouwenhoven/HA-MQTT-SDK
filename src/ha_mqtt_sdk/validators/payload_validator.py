@@ -110,10 +110,23 @@ def validate_discovery_payload(
     if not name:
         raise ValidationError("Discovery payload requires name")
 
-    state_topic = payload.get("state_topic")
+    # Only validate state_topic if this domain supports it.
+    # Command-only domains (e.g. BUTTON, SCENE) have no state_topic - that is valid.
+    # Import here to avoid circular import
+    from ..config.device_fields import ALLOWED_FIELDS_PER_DOMAIN
 
-    if not state_topic:
-        raise ValidationError("Discovery payload requires state_topic")
-
-    if not isinstance(state_topic, str):
-        raise ValidationError("state_topic must be a string")
+    schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
+    if schema:
+        domain_supports_state = (
+            "state_topic" in schema["required"]
+            or "state_topic" in schema["optional"]
+        )
+        if domain_supports_state:
+            state_topic = payload.get("state_topic")
+            if not state_topic:
+                raise ValidationError(
+                    f"Discovery payload for domain '{domain.value}' requires state_topic"
+                )
+            if not isinstance(state_topic, str):
+                raise ValidationError("state_topic must be as string")
+    
