@@ -53,7 +53,7 @@ def test_sensor_has_no_command_topic():
         "id1",
         "homeassistant",
     )
-    assert topic == ""
+    assert topic == None
 
 
 def test_invalid_domain():
@@ -108,7 +108,7 @@ def test_build_state_topic_with_a_domain_without_state_topic():
         "id1",
         "homeassistant",
     )
-    assert topic == ""
+    assert topic == None
 
 
 def test_build_availability_topic_with_a_domain_without_availability_topic():
@@ -117,7 +117,7 @@ def test_build_availability_topic_with_a_domain_without_availability_topic():
         "id1",
         "homeassistant",
     )
-    assert topic == ""
+    assert topic == None
 
 
 def test_none_prefix_uses_default():
