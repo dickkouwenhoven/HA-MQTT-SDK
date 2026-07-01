@@ -118,8 +118,7 @@ def validate_discovery_payload(
     schema = ALLOWED_FIELDS_PER_DOMAIN.get(domain)
     if schema:
         domain_supports_state = (
-            "state_topic" in schema["required"]
-            or "state_topic" in schema["optional"]
+            "state_topic" in schema["required"] or "state_topic" in schema["optional"]
         )
         if domain_supports_state:
             state_topic = payload.get("state_topic")
@@ -129,4 +128,3 @@ def validate_discovery_payload(
                 )
             if not isinstance(state_topic, str):
                 raise ValidationError("state_topic must be as string")
-    
