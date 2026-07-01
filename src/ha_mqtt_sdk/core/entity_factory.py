@@ -132,7 +132,7 @@ def build_registration(
         entity.unique_id,
         discovery_prefix,
     )
-    
+
     availability_topic = build_availability_topic(
         entity.domain,
         entity.unique_id,
