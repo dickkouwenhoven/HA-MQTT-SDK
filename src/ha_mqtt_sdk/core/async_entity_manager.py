@@ -166,6 +166,11 @@ class AsyncEntityManager:
             self._settings.discovery_prefix,
         )
 
+        if registration.state_topic is None:
+            raise EntityError(
+                f"Entity domain '{entity.domain.value}' does not support state updates"
+            )
+
         await self._mqtt.publish(
             topic=registration.state_topic,
             payload=state,
@@ -199,6 +204,11 @@ class AsyncEntityManager:
             entity,
             self._settings.discovery_prefix,
         )
+
+        if registration.availability_topic is None:
+            raise EntityError(
+                f"Entity domain '{entity.domain.value}' does not support availability updates"
+            )
 
         payload = "online" if online else "offline"
 
