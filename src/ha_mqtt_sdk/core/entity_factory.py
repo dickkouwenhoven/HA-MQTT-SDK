@@ -46,9 +46,9 @@ class EntityRegistration:
     discovery_topic: str
     discovery_payload: dict[str, Any]
 
-    state_topic: str
+    state_topic: str | None
     command_topic: str | None
-    availability_topic: str
+    availability_topic: str | None
 
 
 def create_entity(
@@ -124,24 +124,15 @@ def build_registration(
     if not schema:
         raise SchemaError(f"No field definition found for domain {entity.domain}.")
 
-    supports_command = (
-        "command_topic" in schema["required"] or "command_topic" in schema["optional"]
-    )
-
     _logger.debug("Domain: %s (%s)", entity.domain, type(entity.domain))
     _logger.debug("Schema keys: %s", list(ALLOWED_FIELDS_PER_DOMAIN.keys()))
 
-    if supports_command:
-        _logger.debug("Domain %s supports commands", entity.domain)
-        command_topic = build_command_topic(
-            entity.domain,
-            entity.unique_id,
-            discovery_prefix,
-        )
-    else:
-        _logger.debug("Domain %s does not support commands", entity.domain)
-        command_topic = None
-
+    command_topic = build_command_topic(
+        entity.domain,
+        entity.unique_id,
+        discovery_prefix,
+    )
+    
     availability_topic = build_availability_topic(
         entity.domain,
         entity.unique_id,
