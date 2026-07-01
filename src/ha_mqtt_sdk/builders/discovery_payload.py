@@ -78,7 +78,7 @@ def build_discovery_payload(
         "name": entity.name,
         "unique_id": entity.unique_id,
     }
-    
+
     state_topic = build_state_topic(
         entity.domain,
         entity.unique_id,
