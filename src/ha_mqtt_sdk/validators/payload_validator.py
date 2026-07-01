@@ -127,4 +127,4 @@ def validate_discovery_payload(
                     f"Discovery payload for domain '{domain.value}' requires state_topic"
                 )
             if not isinstance(state_topic, str):
-                raise ValidationError("state_topic must be as string")
+                raise ValidationError("state_topic must be a string")
