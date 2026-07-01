@@ -77,12 +77,16 @@ def build_discovery_payload(
     payload: dict[str, Any] = {
         "name": entity.name,
         "unique_id": entity.unique_id,
-        "state_topic": build_state_topic(
-            entity.domain,
-            entity.unique_id,
-            prefix,
-        ),
     }
+    
+    state_topic = build_state_topic(
+        entity.domain,
+        entity.unique_id,
+        prefix,
+    )
+
+    if state_topic:
+        payload["state_topic"] = state_topic
 
     # ------------------------------------------------------
     # Optional command topic
