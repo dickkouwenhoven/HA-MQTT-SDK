@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from ha_mqtt_sdk.builders.discovery_payload import _validate_entity, build_discovery_payload
@@ -149,3 +151,24 @@ def test_payload_keeps_state_topic_after_build(
 def test_validate_entity_invalid_type_raises():
     with pytest.raises(EntityError):
         _validate_entity("not_an_entity")
+
+
+def test_payload_without_state_topic(
+    mqtt_settings: MQTTSettings,
+):
+    entity = Entity(
+        domain=HADomain.SENSOR,
+        name="Temp",
+        unique_id="temp_1",
+    )
+
+    with patch(
+        "ha_mqtt_sdk.builders.discovery_payload.build_state_topic",
+        return_value=None,
+    ):
+        payload = build_discovery_payload(
+            entity,
+            mqtt_settings.discovery_prefix,
+        )
+
+    assert "state_topic" not in payload
