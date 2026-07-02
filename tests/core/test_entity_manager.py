@@ -219,7 +219,7 @@ def test_update_state_state_topic_not_supported(mqtt_client_sync):
     entity = make_switch(manager)
 
     with pytest.raises(EntityError):
-        await manager.update_state(entity, 25)
+        manager.update_state(entity, 25)
 
 
 # -----------------------------------------------------------
@@ -273,7 +273,7 @@ def test_update_availability_availability_topic_not_supported(mqtt_client_sync):
     entity = make_device_trigger(manager)
 
     with pytest.raises(EntityError):
-        await manager.update_availability(entity, True)
+        manager.update_availability(entity, True)
 
 
 # -----------------------------------------------------------
