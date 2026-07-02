@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from ha_mqtt_sdk.builders.topic_manager import (
@@ -223,8 +225,17 @@ async def test_update_state_state_topic_not_supported(mqtt_client_async):
     manager = make_manager(mqtt_client_async)
     entity = make_switch(manager)
 
-    with pytest.raises(EntityError):
-        await manager.update_state(entity, 25)
+    await manager.register(entity)
+
+    registration = build_registration(entity, manager._settings.discovery_prefix)
+    registration.state_topic = None
+
+    with patch(
+        "ha_mqtt_sdk.core.async_entity_manager.build_registration",
+        return_value=registration,
+    ):
+        with pytest.raises(EntityError, match="does not support state updates"):
+            await manager.update_state(entity, 25)
 
 
 # ------------------------------------------------
@@ -282,8 +293,17 @@ async def test_update_availability_availability_topic_not_supported(mqtt_client_
     manager = make_manager(mqtt_client_async)
     entity = make_device_trigger(manager)
 
-    with pytest.raises(EntityError):
-        await manager.update_availability(entity, True)
+    await manager.register(entity)
+
+    registration = build_registration(entity, manager._settings.discovery_prefix)
+    registration.availability_topic = None
+
+    with patch(
+        "ha_mqtt_sdk.core.async_entity_manager.build_registration",
+        return_value=registration,
+    ):
+        with pytest.raises(EntityError, match="does not support availability updates"):
+            await manager.update_availability(entity, True)
 
 
 # ------------------------------------------------
