@@ -109,7 +109,7 @@ def test_validate_discovery_payload_state_topic_wrong_type():
 
 def test_validate_discovery_payload_unknown_schema_is_allowed():
     payload = {
-        "uniqu_id": "id",
+        "unique_id": "id",
         "name": "name",
     }
 
