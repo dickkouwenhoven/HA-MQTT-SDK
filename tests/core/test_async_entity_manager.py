@@ -28,6 +28,10 @@ def make_switch(manager: AsyncEntityManager, unique_id: str = "switch_1"):
     return manager.create_entity(domain=HADomain.SWITCH, name="Switch", unique_id=unique_id)
 
 
+def make_device_trigger(manager: AsyncEntityManager, unique_id: str = "trigger_1"):
+    return manager.create_entity(domain=HADomain.DEVICE_TRIGGER, name="Trigger", unique_id=unique_id)
+
+
 # ------------------------------------------------
 # Init
 # ------------------------------------------------
@@ -207,9 +211,18 @@ async def test_update_state_unregistered_entity_raises(mqtt_client_async):
     manager = make_manager(mqtt_client_async)
     entity = make_sensor(manager)
 
+    await manager.register(entity)
     with pytest.raises(EntityError):
         await manager.update_state(entity, 25)
 
+
+@pytest.mark.asyncio
+async def test_update_state_state_topic_not_supported(mqtt_client_async):
+    manager = make_manager)mqtt_client_async)
+    entity = make_switch(manager)
+
+    with pytest.raises(EntityError):
+        await manager.update_state(entity, 25)
 
 # ------------------------------------------------
 # Update_availability
@@ -256,6 +269,15 @@ async def test_update_availability_unregistered_entity_raises(mqtt_client_async)
     """Line 196: unregistered entity must raise."""
     manager = make_manager(mqtt_client_async)
     entity = make_sensor(manager)
+
+    with pytest.raises(EntityError):
+        await manager.update_availability(entity, True)
+
+
+@pytest.mark.asyncio
+async def test_update_availability_availability_topic_not_supported(mqtt_client_async):
+    manager = make_manager(mqtt_client_async)
+    entity = make_device_trigger(manager)
 
     with pytest.raises(EntityError):
         await manager.update_availability(entity, True)
