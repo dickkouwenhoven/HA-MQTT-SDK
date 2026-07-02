@@ -157,9 +157,9 @@ def test_payload_without_state_topic(
     mqtt_settings: MQTTSettings,
 ):
     entity = Entity(
-        domain=HADomain.SENSOR,
-        name="Temp",
-        unique_id="temp_1",
+        domain=HADomain.BUTTON,
+        name="Button",
+        unique_id="button_1",
     )
 
     with patch(
