@@ -294,7 +294,7 @@ def test_update_availability_availability_topic_not_supported(mqtt_client_sync):
     with (
         patch(
             "ha_mqtt_sdk.core.entity_manager.build_registration",
-            return_value = registration,
+            return_value=registration,
         ),
         pytest.raises(EntityError, match="does not support availability updates"),
     ):
