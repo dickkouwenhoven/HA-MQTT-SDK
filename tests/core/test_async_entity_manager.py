@@ -215,8 +215,7 @@ async def test_update_state_unregistered_entity_raises(mqtt_client_async):
     manager = make_manager(mqtt_client_async)
     entity = make_sensor(manager)
 
-    await manager.register(entity)
-    with pytest.raises(EntityError):
+    with pytest.raises(EntityError, match="is not registered"):
         await manager.update_state(entity, 25)
 
 
