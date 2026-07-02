@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from ha_mqtt_sdk.config.domains import HADomain
@@ -103,6 +105,31 @@ def test_validate_discovery_payload_state_topic_wrong_type():
         validate_discovery_payload(payload, HADomain.SENSOR)
 
     assert "state_topic must be a string" in str(exc.value)
+
+
+def test_validate_discovery_payload_unknown_schema_is_allowed():
+    payload = {
+        "uniqu_id": "id",
+        "name": "name",
+    }
+
+    with patch(
+        "ha_mqtt_sdk.config.device_fields.ALLOWED_FIELDS_PER_DOMAIN",
+        {},
+    ):
+        validate_discovery_payload(payload, HADomain.SENSOR)
+
+
+def test_validate_discovery_payload_command_only_domain():
+    payload = {
+        "unique_id": "id",
+        "name": "Button",
+    }
+
+    validate_discovery_payload(
+        payload,
+        HADomain.BUTTON,
+    )
 
 
 def test_tuple_all_items_are_checked():
