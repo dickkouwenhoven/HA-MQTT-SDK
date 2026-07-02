@@ -9,6 +9,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.5.0] - 2026-07-02
+
+### Changed
+- `topic_manager` - some functions returned "" instead of None
+- `discovery_payload` - can now handles with receive of a return None from topic_manager
+- `entity_factory` - can now handles with receive of a return None from topic_manager
+- `test_async_entity_manager` - adjusted to also check on None value returns
+- `test_topic_manager` - adjusted to also check on None value returns
+- `test_entity_manager` - adjusted to also check on None value returns
+
+---
+
 ## [0.4.0] - 2026-06-26
 
 ### Added
