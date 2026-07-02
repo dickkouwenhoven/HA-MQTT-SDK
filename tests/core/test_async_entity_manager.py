@@ -30,9 +30,7 @@ def make_switch(manager: AsyncEntityManager, unique_id: str = "switch_1"):
 
 def make_device_trigger(manager: AsyncEntityManager, unique_id: str = "trigger_1"):
     return manager.create_entity(
-        domain=HADomain.DEVICE_TRIGGER,
-        name="Trigger",
-        unique_id=unique_id
+        domain=HADomain.DEVICE_TRIGGER, name="Trigger", unique_id=unique_id
     )
 
 
@@ -227,6 +225,7 @@ async def test_update_state_state_topic_not_supported(mqtt_client_async):
 
     with pytest.raises(EntityError):
         await manager.update_state(entity, 25)
+
 
 # ------------------------------------------------
 # Update_availability
