@@ -29,9 +29,7 @@ def make_sensor(manager: EntityManager, unique_id: str = "temp_1") -> object:
 
 def make_device_trigger(manager: EntityManager, unique_id: str = "trigger_1") -> object:
     return manager.create_entity(
-        domain=HADomain.DEVICE_TRIGGER,
-        name="Trigger",
-        unique_id=unique_id
+        domain=HADomain.DEVICE_TRIGGER, name="Trigger", unique_id=unique_id
     )
 
 
