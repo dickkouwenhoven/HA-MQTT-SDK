@@ -27,6 +27,10 @@ def make_sensor(manager: EntityManager, unique_id: str = "temp_1") -> object:
     return manager.create_entity(domain=HADomain.SENSOR, name="Temp", unique_id=unique_id)
 
 
+def make_device_trigger(manager: EntityManager, unique_id: str = "trigger_1") -> object:
+    return manager.create_entity(domain=HADomain.DEVICE_TRIGGER, name="Trigger", unique_id=unique_id)
+
+
 # ------------------------------------------------------
 # Init
 # ------------------------------------------------------
@@ -208,6 +212,14 @@ def test_update_state_unregistered_entity_raises(mqtt_client_sync):
         manager.update_state(entity, 25)
 
 
+def test_update_state_state_topic_not_supported(mqtt_client_sync):
+    manager = make_manager)mqtt_client_sync)
+    entity = make_switch(manager)
+
+    with pytest.raises(EntityError):
+        await manager.update_state(entity, 25)
+
+
 # -----------------------------------------------------------
 # Update_availability
 # -----------------------------------------------------------
@@ -252,6 +264,14 @@ def test_update_availability_unregistered_entity_raises(mqtt_client_sync):
 
     with pytest.raises(EntityError):
         manager.update_availability(entity, True)
+
+
+def test_update_availability_availability_topic_not_supported(mqtt_client_sync):
+    manager = make_manager(mqtt_client_sync)
+    entity = make_device_trigger(manager)
+
+    with pytest.raises(EntityError):
+        await manager.update_availability(entity, True)
 
 
 # -----------------------------------------------------------
