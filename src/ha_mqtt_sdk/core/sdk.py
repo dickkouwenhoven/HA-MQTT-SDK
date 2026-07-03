@@ -99,6 +99,21 @@ class HASDK:
 
         self._entity_manager.update_state(entity, state)
 
+    def update_availability(self, entity: Entity, online: bool) -> None:
+        """
+        Publish availability (online/offline) for a registered entity.
+
+        Publishes a retained "online"/"offline" payload to the entity's
+        availability_topic. The entity must already be registered.
+
+        Used by:
+        - user code
+        """
+        if not isinstance(entity, Entity):
+            raise SDKError("Invalid entity")
+
+        await self._entity_manager.update_availability(entity, online)
+
     def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
         """
         Register global command handler.
