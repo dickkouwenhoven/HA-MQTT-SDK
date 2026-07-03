@@ -168,7 +168,7 @@ def test_update_availability_unregistered_entity_raises():
     client.subscribe = MagicMock()
     client.set_message_callback = MagicMock()
 
-    sdk = HASDK(async_mqtt_client=client)
+    sdk = HASDK(mqtt_client=client)
     entity = make_entity()  # never registered
 
     with pytest.raises(EntityError):
