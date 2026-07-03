@@ -171,7 +171,7 @@ def test_update_availability_with_invalid_entity():
     sdk = HASDK(mqtt_client=client)
 
     with pytest.raises(SDKError):
-        sdk.update_availability("not_an_entity", True)    
+        sdk.update_availability("not_an_entity", True)
 
 
 def test_update_availability_unregistered_entity_raises():
