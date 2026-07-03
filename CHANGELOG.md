@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-3
+
+### Changed
+- `async_sdk` - Added a forgotten wrapper for update_availability
+- `test_async_sdk` - Added additional tests related to the changes in async_sdk
+- `sdk` - Added a forgotten wrapper for update_availability
+- `test_sdk` - Added additional tests realted to the changes in sdk
+
 ---
 
 ## [0.5.0] - 2026-07-02
