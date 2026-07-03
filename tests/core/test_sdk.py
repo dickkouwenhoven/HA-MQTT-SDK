@@ -161,6 +161,19 @@ def test_on_command_with_invalid_entity():
         sdk.on_command("not_an_entity", lambda t, p: None)  # type: ignore[arg-type]
 
 
+def test_update_availability_with_invalid_entity():
+    mqtt_config = MQTTSettings(host="localhost", port=1883)
+    client = PahoMQTTClient(config=mqtt_config)
+    client.publish = MagicMock()
+    client.subscribe = MagicMock()
+    client.set_message_callback = MagicMock()
+
+    sdk = HASDK(mqtt_client=client)
+
+    with pytest.raises(SDKError):
+        sdk.update_availability("not_an_entity", True)    
+
+
 def test_update_availability_unregistered_entity_raises():
     mqtt_config = MQTTSettings(host="localhost", port=1883)
     client = PahoMQTTClient(config=mqtt_config)
