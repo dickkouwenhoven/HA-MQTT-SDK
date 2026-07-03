@@ -7,7 +7,7 @@ from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.core.async_plugin_interface import AsyncIntegrationPlugin
 from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 from ha_mqtt_sdk.core.entity_factory import create_entity
-from ha_mqtt_sdk.exceptions import SDKError
+from ha_mqtt_sdk.exceptions import EntityError, SDKError
 from ha_mqtt_sdk.models.entity import Entity
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 
@@ -180,6 +180,85 @@ async def test_update_state_valid_entity():
     await sdk.update_state(entity, "ON")
 
     manager.update_state.assert_awaited_once_with(entity, "ON")
+
+
+# ── update_availability() ─────────────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_update_availability_with_invalid_entity():
+    mqtt_config = MQTTSettings(host="localhost", port=1883)
+    client = AsyncMQTTClient(config=mqtt_config)
+    sdk = AsyncHASDK(async_mqtt_client=client)
+
+    with pytest.raises(SDKError):
+        await sdk.update_availability("Invalid Entity", True)
+
+
+@pytest.mark.asyncio
+async def test_update_availability_online():
+    manager = MagicMock()
+    manager.update_availability = AsyncMock()
+    sdk = make_sdk(manager)
+    entity = make_entity()
+
+    await sdk.update_availability(entity, True)
+
+    manager.update_availability.assert_awaited_once_with(entity, True)
+
+
+@pytest.mark.asyncio
+async def test_update_availability_offline():
+    manager = MagicMock()
+    manager.update_availability = AsyncMock()
+    sdk = make_sdk(manager)
+    entity = make_entity()
+
+    await sdk.update_availability(entity, False)
+
+    manager.update_availability.assert_awaited_once_with(entity, False)
+
+
+@pytest.mark.asyncio
+async def test_update_availability_publishes_retained_string_payload():
+    """
+    End-to-end (no mocked manager): confirms update_availability()
+    publishes "online"/"offline" strings, retained, to the
+    availability_topic — not the state_topic, and not a raw bool.
+    """
+    mqtt_config = MQTTSettings(host="localhost", port=1883)
+    client = AsyncMQTTClient(config=mqtt_config)
+    client.publish = AsyncMock()
+    client.subscribe = AsyncMock()
+    client.set_message_callback = MagicMock()
+
+    sdk = AsyncHASDK(async_mqtt_client=client)
+    entity = make_entity()
+    await sdk.register(entity)
+    client.publish.reset_mock()
+
+    await sdk.update_availability(entity, True)
+
+    client.publish.assert_awaited_once_with(
+        topic="homeassistant/switch/relay_1/availability",
+        payload="online",
+        retain=True,
+    )
+
+
+@pytest.mark.asyncio
+async def test_update_availability_unregistered_entity_raises():
+    mqtt_config = MQTTSettings(host="localhost", port=1883)
+    client = AsyncMQTTClient(config=mqtt_config)
+    client.publish = AsyncMock()
+    client.subscribe = AsyncMock()
+    client.set_message_callback = MagicMock()
+
+    sdk = AsyncHASDK(async_mqtt_client=client)
+    entity = make_entity()  # never registered
+
+    with pytest.raises(EntityError):
+        await sdk.update_availability(entity, True)
 
 
 # ── lines 105 + 119-122: on_command() ────────────────────────────────────────
