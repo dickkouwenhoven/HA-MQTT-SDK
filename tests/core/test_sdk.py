@@ -172,7 +172,7 @@ def test_update_availability_unregistered_entity_raises():
     entity = make_entity()  # never registered
 
     with pytest.raises(EntityError):
-        await sdk.update_availability(entity, True)
+        sdk.update_availability(entity, True)
 
 
 def test_on_command_valid():
