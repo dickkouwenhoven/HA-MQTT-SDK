@@ -7,7 +7,7 @@ from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.core.entity_factory import create_entity
 from ha_mqtt_sdk.core.plugin_interface import IntegrationPlugin
 from ha_mqtt_sdk.core.sdk import HASDK
-from ha_mqtt_sdk.exceptions import SDKError
+from ha_mqtt_sdk.exceptions import EntityError, SDKError
 from ha_mqtt_sdk.models.entity import Entity
 from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 
@@ -159,6 +159,20 @@ def test_on_command_with_invalid_entity():
 
     with pytest.raises(SDKError):
         sdk.on_command("not_an_entity", lambda t, p: None)  # type: ignore[arg-type]
+
+
+def test_update_availability_unregistered_entity_raises():
+    mqtt_config = MQTTSettings(host="localhost", port=1883)
+    client = PahoMQTTClient(config=mqtt_config)
+    client.publish = MagicMock()
+    client.subscribe = MagicMock()
+    client.set_message_callback = MagicMock()
+
+    sdk = HASDK(async_mqtt_client=client)
+    entity = make_entity()  # never registered
+
+    with pytest.raises(EntityError):
+        await sdk.update_availability(entity, True)
 
 
 def test_on_command_valid():
