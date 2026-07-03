@@ -112,7 +112,7 @@ class HASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        await self._entity_manager.update_availability(entity, online)
+        self._entity_manager.update_availability(entity, online)
 
     def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
         """
