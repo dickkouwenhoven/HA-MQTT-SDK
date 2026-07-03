@@ -100,6 +100,21 @@ class AsyncHASDK:
 
         await self._async_entity_manager.update_state(entity, state)
 
+    async def update_availability(self, entity: Entity, online: bool) -> None:
+        """
+        Publish availability (online/offline) for a registered entity.
+
+        Publishes a retained "online"/"offline" payload to the entity's
+        availability_topic. The entity must already be registered.
+
+        Used by:
+        - user code
+        """
+        if not isinstance(entity, Entity):
+            raise SDKError("Invalid entity")
+
+        await self._async_entity_manager.update_availability(entity, online)
+
     async def on_command(
         self, entity: Entity, callback: Callable[[str, str], Awaitable[None]]
     ) -> None:
