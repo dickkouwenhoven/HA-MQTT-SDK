@@ -83,3 +83,37 @@ def test_command_fields_contains_expected_fields():
     assert "command_topic" in COMMAND_FIELDS
     assert "payload_on" in COMMAND_FIELDS
     assert "payload_off" in COMMAND_FIELDS
+
+
+def test_light_accepts_modern_ha_schema_fields():
+    """
+    HA's MQTT light integration has two schemas: the legacy one (one
+    dedicated command/state topic per capability) and the modern one
+    introduced in HA 2021.x (a single topic, capabilities declared via
+    supported_color_modes). Both must be accepted, since real
+    integrations (e.g. DirigeraApi) use the modern schema.
+    """
+    optional = ALLOWED_FIELDS_PER_DOMAIN[HADomain.LIGHT]["optional"]
+
+    for field in ("schema", "supported_color_modes", "min_mireds", "max_mireds"):
+        assert field in optional, f"LIGHT is missing modern schema field {field!r}"
+
+
+def test_light_still_accepts_legacy_schema_fields():
+    """The legacy per-capability topic fields must still be accepted —
+    this is an additive fix, not a replacement."""
+    optional = ALLOWED_FIELDS_PER_DOMAIN[HADomain.LIGHT]["optional"]
+
+    for field in (
+        "brightness_command_topic",
+        "brightness_state_topic",
+        "color_temp_command_topic",
+        "color_temp_state_topic",
+        "hs_command_topic",
+        "hs_state_topic",
+        "rgb_command_topic",
+        "rgb_state_topic",
+        "xy_command_topic",
+        "xy_state_topic",
+    ):
+    assert field in optional, f"LIGHT lost legacy schema field {field!r}"
