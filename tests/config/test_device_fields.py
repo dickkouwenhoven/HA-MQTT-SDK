@@ -116,4 +116,4 @@ def test_light_still_accepts_legacy_schema_fields():
         "xy_command_topic",
         "xy_state_topic",
     ):
-    assert field in optional, f"LIGHT lost legacy schema field {field!r}"
+        assert field in optional, f"LIGHT lost legacy schema field {field!r}"
