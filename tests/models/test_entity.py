@@ -260,6 +260,66 @@ def test_valid_extra_field():
     make_entity(extra={"device_class": "temperature"}).validate()
 
 
+# ── LIGHT domain — modern HA MQTT light schema ─────────────────────────────
+#
+# HA's MQTT light integration has a legacy schema (one dedicated
+# command/state topic per capability) and a modern schema, introduced
+# in HA 2021.x, that declares capabilities via supported_color_modes
+# instead. Real integrations (e.g. DirigeraApi) use the modern schema
+# — these tests cover the three capability tiers it actually produces.
+
+
+def make_light(**kwargs) -> Entity:
+    defaults = dict(domain=HADomain.LIGHT, name="Light", unique_id="light_1")
+    defaults.update(kwargs)
+    return Entity(**defaults)
+
+
+def test_light_onoff_only_validates():
+    make_light(extra={"supported_color_modes": ["onoff"]}).validate()
+
+
+def test_light_dimmable_validates():
+    make_light(
+        extra={"brightness_scale": 100, "supported_color_modes": ["brightness"]}
+    ).validate()
+
+
+def test_light_colour_temperature_validates():
+    make_light(
+        extra={
+            "brightness_scale": 100,
+            "supported_color_modes": ["color_temp"],
+            "min_mireds": 250,
+            "max_mireds": 454,
+        }
+    ).validate()
+
+
+def test_light_full_colour_json_schema_validates():
+    make_light(
+        extra={
+            "schema": "json",
+            "supported_color_modes": ["hs", "color_temp"],
+            "min_mireds": 250,
+            "max_mireds": 454,
+        }
+    ).validate()
+
+
+def test_light_legacy_schema_still_validates():
+    """The old per-capability-topic schema must still work — this was
+    an additive fix, not a replacement."""
+    make_light(
+        extra={
+            "brightness_command_topic": "light/brightness/set",
+            "brightness_state_topic": "light/brightness/state",
+            "color_temp_command_topic": "light/color_temp/set",
+            "color_temp_state_topic": "light/color_temp/state",
+        }
+    ).validate()
+
+
 def test_unknown_domain_raises_schema_error():
     """Line 197: domain with no schema definition raises SchemaError."""
     entity = make_entity()
