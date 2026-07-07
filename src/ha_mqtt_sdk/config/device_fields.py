@@ -242,7 +242,7 @@ ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
                 # with capabilities declared via supported_color_modes
                 # rather than one topic per feature.
                 "schema",
-                "supported_color_mode",
+                "supported_color_modes",
                 "min_mireds",
                 "max_mireds",
             },
