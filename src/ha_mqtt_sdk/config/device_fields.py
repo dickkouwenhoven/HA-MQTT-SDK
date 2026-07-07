@@ -221,6 +221,8 @@ ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
             COMMAND_FIELDS,
             {
                 "state_topic",
+                # Legacy HA MQTT light schema (pre-2021.x) - one
+                # dedicated command/state topic pair per capability.
                 "brightness_command_topic",
                 "brightness_state_topic",
                 "brightness_scale",
@@ -234,6 +236,15 @@ ALLOWED_FIELDS_PER_DOMAIN: dict[HADomain, dict[str, set[str]]] = {
                 "rgb_state_topic",
                 "xy_command_topic",
                 "xy_state_topic",
+                # Modern HA MQTT light schema (HA 2021.x+) - a single
+                # command/state topic carrying either a plain string
+                # (default schema) or a JSON payload (schema="json"),
+                # with capabilities declared via supported_color_modes
+                # rather than one topic per feature.
+                "schema",
+                "supported_color_mode",
+                "min_mireds",
+                "max_mireds",
             },
             required={"name", "command_topic", "unique_id"},
         ),
