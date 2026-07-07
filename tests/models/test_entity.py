@@ -280,9 +280,7 @@ def test_light_onoff_only_validates():
 
 
 def test_light_dimmable_validates():
-    make_light(
-        extra={"brightness_scale": 100, "supported_color_modes": ["brightness"]}
-    ).validate()
+    make_light(extra={"brightness_scale": 100, "supported_color_modes": ["brightness"]}).validate()
 
 
 def test_light_colour_temperature_validates():
