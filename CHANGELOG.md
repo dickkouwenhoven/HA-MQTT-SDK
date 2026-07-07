@@ -7,6 +7,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-07
+
+### Fixed
+- `device_fields`- The light schema only reconized HA's old, deprecated
+  per-feature-topic light schema (brightness_command_topic, color_temp_command_topic,
+  ha_command_topic, etc - one dedicated topic pair per capability). Modern HA
+  MQTT light schema (supported_color_modes, min_mireds, max_mireds, plus schema: "json"
+  for RGB lights) - introduced in HA 20221.x - replaces that old approach. Except that
+  replacement isn´t correct, because HA supports both the old and new light schemas.
+  The change here is the add (not replace) of the new modern light schema.
+
+### Changed
+- `test_device_fields` - Needed changes to be able to test as well the new modern
+  light schema.
+
+### Added
+- `test_entity`- Adding tests for the new modern light schema. 
+
+---
+
 ## [0.6.0] - 2026-07-3
 
 ### Changed
