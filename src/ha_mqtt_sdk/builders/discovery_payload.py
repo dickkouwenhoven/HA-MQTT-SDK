@@ -112,7 +112,7 @@ def build_discovery_payload(
         # payload["device"] = device_block
         # changed to
         payload["device"] = _serialize_device_block(device_block)
-    
+
     # ------------------------------------------------------
     # Extra user-defined attributes
     # ------------------------------------------------------
@@ -150,8 +150,7 @@ def _serialize_device_block(device_info: DeviceInfo) -> dict[str, Any]:
 
     if "identifiers" in device:
         device["identifiers"] = [
-            f"{domain}_{identifier}"
-            for domain, identifier in device["identifiers"]
+            f"{domain}_{identifier}" for domain, identifier in device["identifiers"]
         ]
 
     if "connections" in device:
@@ -161,8 +160,6 @@ def _serialize_device_block(device_info: DeviceInfo) -> dict[str, Any]:
         ]
 
     if "via_device" in device:
-        device["via_device"] = (
-            f"{device['via_device'][0]}_{device['via_device'][1]}"
-        )
+        device["via_device"] = f"{device['via_device'][0]}_{device['via_device'][1]}"
 
     return device
