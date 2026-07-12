@@ -107,9 +107,7 @@ def test_payload_flattens_device_identifiers(
 
     payload = build_discovery_payload(entity, mqtt_settings.discovery_prefix)
 
-    assert payload["device"]["identifiers"] == [
-        "dirigera_9d3b17d8-73c0-4f33-9637-e8ee2437acd3"
-    ]
+    assert payload["device"]["identifiers"] == ["dirigera_9d3b17d8-73c0-4f33-9637-e8ee2437acd3"]
     assert all(isinstance(i, str) for i in payload["device"]["identifiers"])
 
 
