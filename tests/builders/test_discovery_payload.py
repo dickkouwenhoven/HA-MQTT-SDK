@@ -283,3 +283,24 @@ def test_payload_empty_device_identifiers(
     )
 
     assert payload["device"]["identifiers"] == []
+
+
+def test_payload_device_without_identifiers(
+    mqtt_settings: MQTTSettings,
+):
+    entity = Entity(
+        domain=HADomain.SENSOR,
+        name="Device",
+        unique_id="device_1",
+        device_info={
+            "manufacturer": "Example",
+        },
+    )
+
+    payload = build_discovery_payload(
+        entity,
+        mqtt_settings.discovery_prefix,
+    )
+
+    assert payload["device"]["manufacturer"] == "Example"
+    assert "identifiers" not in payload["device"]
