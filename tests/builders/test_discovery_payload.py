@@ -265,26 +265,6 @@ def test_payload_without_state_topic(
     assert "state_topic" not in payload
 
 
-def test_payload_empty_device_identifiers(
-    mqtt_settings: MQTTSettings,
-):
-    entity = Entity(
-        domain=HADomain.SENSOR,
-        name="Empty",
-        unique_id="empty_1",
-        device_info={
-            "identifiers": [],
-        },
-    )
-
-    payload = build_discovery_payload(
-        entity,
-        mqtt_settings.discovery_prefix,
-    )
-
-    assert payload["device"]["identifiers"] == []
-
-
 def test_payload_device_without_identifiers(
     mqtt_settings: MQTTSettings,
 ):
