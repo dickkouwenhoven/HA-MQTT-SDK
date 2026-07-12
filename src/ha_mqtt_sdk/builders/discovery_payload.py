@@ -163,8 +163,7 @@ def _serialize_device_block(device_info: DeviceInfo) -> dict[str, Any]:
     device: dict[str, Any] = dict(device_info)
 
     identifiers = device_info.get("identifiers")
-    if identifiers is not None:
-        device["identifiers"] = [f"{domain}_{identifier}" for domain, identifier in identifiers]
+    device["identifiers"] = [f"{domain}_{identifier}" for domain, identifier in identifiers]
 
     connections = device_info.get("connections")
     if connections:
