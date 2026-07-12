@@ -108,9 +108,6 @@ def build_discovery_payload(
     device_block = _build_device_block(entity)
 
     if device_block:
-        # original is:
-        # payload["device"] = device_block
-        # changed to
         payload["device"] = _serialize_device_block(device_block)
 
     # ------------------------------------------------------
@@ -144,22 +141,42 @@ def build_discovery_payload(
 def _serialize_device_block(device_info: DeviceInfo) -> dict[str, Any]:
     """
     Convert SDK DeviceInfo representation into HA MQTT discovery format.
+
+    HA's MQTT discovery schema requires device.identifiers to be a list
+    of plain strings (or a single string) — not the SDK's internal
+    list[tuple[str, str]] representation. Sending the tuple form as-is
+    causes HA to reject the entire discovery payload with
+    "value should be a string @ data['device']['identifiers'][0]".
+    Same reasoning applies to via_device. connections keeps its
+    [[type, value], ...] shape, since that IS the shape HA expects.
+
+    Note: the three special fields are read from device_info (the
+    original TypedDict) rather than from the `dict(device_info)` copy
+    below. dict(TypedDict_instance) erases the precise per-key typing
+    (mypy can only see it as dict[str, object], since a TypedDict's
+    values aren't guaranteed homogeneous), which is what caused the
+    "object has no attribute '__iter__'" / "not indexable" mypy
+    errors. Reading from device_info.get(...) preserves DeviceInfo's
+    real per-field types (list[tuple[str, str]], tuple[str, str]).
     """
 
-    device = dict(device_info)
+    device: dict[str, Any] = dict(device_info)
 
-    if "identifiers" in device:
+    identifiers = device_info.get("identifiers")
+    if identifiers:
         device["identifiers"] = [
-            f"{domain}_{identifier}" for domain, identifier in device["identifiers"]
+            f"{domain}_{identifier}" for domain, identifier in identifiers
         ]
 
-    if "connections" in device:
+    connections = device_info.get("connections")
+    if connections:
         device["connections"] = [
             [connection_type, connection_value]
-            for connection_type, connection_value in device["connections"]
+            for connection_type, connection_value in connections
         ]
 
-    if "via_device" in device:
-        device["via_device"] = f"{device['via_device'][0]}_{device['via_device'][1]}"
+    via_device = device_info.get("via_device")
+    if via_device:
+        device["via_device"] = f"{via_device[0]}_{via_device[1]}"
 
     return device
