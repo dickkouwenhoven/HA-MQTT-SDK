@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+--
+
+## [0.8.0] - 2026-07-12
+
+### Fixed
+- `discovery_payload` - Home Assistant's MQTT discovery schema expects
+  device.identifiers as a plain string of list of strings and not a list of
+  2-elements. Added a function which takes care of this (flattening).
+- `test_discovery_payload` - Added tests which covers the additional added
+  function.
+
+---
+
 ## [0.7.0] - 2026-07-07
 
 ### Fixed
