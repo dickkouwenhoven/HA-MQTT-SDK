@@ -303,7 +303,5 @@ def test_payload_device_with_connections_only(
         mqtt_settings.discovery_prefix,
     )
 
-    assert payload["device"]["connections"] == [
-        ["mac", "aa:bb:cc:dd:ee:ff"]
-    ]
+    assert payload["device"]["connections"] == [["mac", "aa:bb:cc:dd:ee:ff"]]
     assert "identifiers" not in payload["device"]
