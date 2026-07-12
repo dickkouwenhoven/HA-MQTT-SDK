@@ -80,6 +80,99 @@ def test_payload_contains_device_block(
     assert "device" in payload
 
 
+# ── device.identifiers / connections / via_device serialization ──────────────
+#
+# HA's MQTT discovery schema requires device.identifiers and
+# device.via_device to be plain strings, not the SDK's internal
+# list[tuple[str, str]] / tuple[str, str] representation. Sending the
+# tuple form as-is makes HA reject the whole discovery payload with
+# "value should be a string @ data['device']['identifiers'][0]" —
+# a real failure this project hit against a live Home Assistant
+# instance, which is why this needs direct coverage rather than just
+# the "device" in payload check above.
+
+
+def test_payload_flattens_device_identifiers(
+    mqtt_settings: MQTTSettings,
+):
+    entity = Entity(
+        domain=HADomain.SENSOR,
+        name="Hub Firmware",
+        unique_id="hub_1_firmware",
+        device_info={
+            "identifiers": [("dirigera", "9d3b17d8-73c0-4f33-9637-e8ee2437acd3")],
+            "name": "Ikea Hub",
+        },
+    )
+
+    payload = build_discovery_payload(entity, mqtt_settings.discovery_prefix)
+
+    assert payload["device"]["identifiers"] == [
+        "dirigera_9d3b17d8-73c0-4f33-9637-e8ee2437acd3"
+    ]
+    assert all(isinstance(i, str) for i in payload["device"]["identifiers"])
+
+
+def test_payload_preserves_device_connections_shape(
+    mqtt_settings: MQTTSettings,
+):
+    """connections keeps its [[type, value], ...] pair shape — this is
+    the shape HA actually expects, unlike identifiers/via_device."""
+    entity = Entity(
+        domain=HADomain.SENSOR,
+        name="Hub",
+        unique_id="hub_1",
+        device_info={
+            "identifiers": [("dirigera", "hub-id")],
+            "connections": [("mac", "aa:bb:cc:dd:ee:ff")],
+        },
+    )
+
+    payload = build_discovery_payload(entity, mqtt_settings.discovery_prefix)
+
+    assert payload["device"]["connections"] == [["mac", "aa:bb:cc:dd:ee:ff"]]
+
+
+def test_payload_flattens_via_device(
+    mqtt_settings: MQTTSettings,
+):
+    entity = Entity(
+        domain=HADomain.SENSOR,
+        name="Child",
+        unique_id="child_1",
+        device_info={
+            "identifiers": [("dirigera", "child-id")],
+            "via_device": ("dirigera", "parent-id"),
+        },
+    )
+
+    payload = build_discovery_payload(entity, mqtt_settings.discovery_prefix)
+
+    assert payload["device"]["via_device"] == "dirigera_parent-id"
+    assert isinstance(payload["device"]["via_device"], str)
+
+
+def test_payload_device_block_without_optional_fields(
+    mqtt_settings: MQTTSettings,
+):
+    """connections/via_device are optional (DeviceInfo has total=False)
+    — must not crash when they're absent."""
+    entity = Entity(
+        domain=HADomain.SENSOR,
+        name="Simple",
+        unique_id="simple_1",
+        device_info={
+            "identifiers": [("dirigera", "simple-id")],
+        },
+    )
+
+    payload = build_discovery_payload(entity, mqtt_settings.discovery_prefix)
+
+    assert payload["device"]["identifiers"] == ["dirigera_simple-id"]
+    assert "connections" not in payload["device"]
+    assert "via_device" not in payload["device"]
+
+
 def test_payload_contains_extra_fields(
     mqtt_settings: MQTTSettings,
 ):
