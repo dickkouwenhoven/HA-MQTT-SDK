@@ -118,9 +118,7 @@ class Entity:
         if not isinstance(self.domain, HADomain):
             raise EntityError("domain must be of type HADomain")
 
-        if self.name is not None and (
-            not isinstance(self.name, str) or not self.name.strip()
-        ):
+        if self.name is not None and (not isinstance(self.name, str) or not self.name.strip()):
             raise EntityError("name must be None or a non-empty string")
 
         if not isinstance(self.unique_id, str) or not self.unique_id.strip():
