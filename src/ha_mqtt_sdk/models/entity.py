@@ -27,7 +27,7 @@ class Entity:
     def __init__(
         self,
         domain: HADomain,
-        name: str,
+        name: str | None,
         unique_id: str,
         device_info: DeviceInfo | None = None,
         extra: dict[str, Any] | None = None,
@@ -118,8 +118,10 @@ class Entity:
         if not isinstance(self.domain, HADomain):
             raise EntityError("domain must be of type HADomain")
 
-        if not isinstance(self.name, str) or not self.name.strip():
-            raise EntityError("name must be a non-empty string")
+        if self.name is not None and (
+            not isinstance(self.name, str) or not self.name.strip()
+        ):
+            raise EntityError("name must be None or a non-empty string")
 
         if not isinstance(self.unique_id, str) or not self.unique_id.strip():
             raise EntityError("unique_id must be a non-empty string")
