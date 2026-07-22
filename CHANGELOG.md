@@ -9,6 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 --
 
+## [0.8.1] - 2026-07-22
+- The name within an entity needed a change. It can also be None, which was
+  not implemented. 
+- `entity` - Made a change to the variable name within the init block from
+   type str towards str | None
+- `entity`-  Made a change in the function _validate_basic on the check of
+   name.
+
+--
+
 ## [0.8.0] - 2026-07-12
 
 ### Fixed
