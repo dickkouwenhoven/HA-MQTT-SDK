@@ -117,3 +117,8 @@ def test_light_still_accepts_legacy_schema_fields():
         "xy_state_topic",
     ):
         assert field in optional, f"LIGHT lost legacy schema field {field!r}"
+
+
+def test_light_accepts_has_entity_name():
+    optional = ALLOWED_FIELDS_PER_DOMAIN[HADomain.LIGHT]["optional"]
+    assert "has_entity_name" in optional
