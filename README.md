@@ -99,8 +99,8 @@ light = sdk.create_entity(
 # 3. Connect and register
 sdk.start()
 
-sdk.register(sensor)                                    # read-only, no callback
-sdk.register(light, command_callback=handle_command)    # accepts HA commands
+sdk.register(sensor)  # read-only, no callback
+sdk.register(light, command_callback=handle_command)  # accepts HA commands
 
 # 4. Publish state
 sdk.update_state(sensor, 21.5)
@@ -128,6 +128,7 @@ from ha_mqtt_sdk import HADomain, MQTTSettings
 from ha_mqtt_sdk.mqtt.async_client import AsyncMQTTClient
 from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 
+
 async def main() -> None:
     mqtt_config = MQTTSettings(host="localhost", port=1883)
     client = AsyncMQTTClient(config=mqtt_config)
@@ -143,6 +144,7 @@ async def main() -> None:
     await sdk.register(sensor)
     await sdk.update_state(sensor, 21.5)
     await sdk.shutdown()
+
 
 asyncio.run(main())
 ```
@@ -186,7 +188,6 @@ from ha_mqtt_sdk.core.plugin_interface import IntegrationPlugin
 from ha_mqtt_sdk.core.sdk import HASDK
 
 class MyHubPlugin(IntegrationPlugin):
-
     def setup(self, sdk: HASDK) -> None:
         """Discover devices and register entities."""
         for device in self._hub.get_devices():
@@ -209,10 +210,11 @@ class MyHubPlugin(IntegrationPlugin):
         """Forward HA commands to the hub."""
         ...
 
+
 # Wire up and run
 sdk = HASDK(mqtt_client=client)
 sdk.use_plugin("my_hub", MyHubPlugin(hub))
-sdk.run()       # connect → setup → start
+sdk.run()  # connect → setup → start
 sdk.shutdown()  # stop → disconnect
 ```
 
@@ -223,7 +225,6 @@ from ha_mqtt_sdk.core.async_plugin_interface import AsyncIntegrationPlugin
 from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
 
 class DirigeraPlugin(AsyncIntegrationPlugin):
-
     async def setup(self, sdk: AsyncHASDK) -> None:
         devices = await self._hub.get_devices()
         for device in devices:
@@ -244,10 +245,11 @@ class DirigeraPlugin(AsyncIntegrationPlugin):
     async def handle_command(self, topic: str, payload: str) -> None:
         await self._hub.send_command(topic, payload)
 
+
 # Wire up and run
 sdk = AsyncHASDK(async_mqtt_client=client)
 sdk.use_plugin("dirigera", DirigeraPlugin(hub))
-await sdk.run()       # connect → setup → start
+await sdk.run()  # connect → setup → start
 await sdk.shutdown()  # stop → disconnect
 ```
 
@@ -299,8 +301,8 @@ sdk.unregister(entity)
 
 updated_entity = sdk.create_entity(
     domain=HADomain.SENSOR,
-    name="Renamed Sensor",       # ← new name
-    unique_id="sensor_new_1",    # ← same unique_id
+    name="Renamed Sensor",  # ← new name
+    unique_id="sensor_new_1",  # ← same unique_id
 )
 sdk.register(updated_entity)
 ```
