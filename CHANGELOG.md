@@ -9,6 +9,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 --
 
+## [0.8.2] - 2026-07-24
+-   HA's shared MQTT entity config field controlling whether the
+    entity's own name is combined with its device's name in the UI.
+    Needed because light.py now sets name=None + has_entity_name=True
+    for the single/primary entity of a device, to avoid HA 2023.8+'s
+    "device name shown twice" bug (e.g. "Woonkamerverlichting
+    Woonkamerverlichting") for an entity whose own name would
+    otherwise equal its device's name.
+- `device_fields` - Added "has_entity_name" in common_fields
+- `test_device_fields` - Added a test for testing "has_entity_name"
+
+--
+
 ## [0.8.1] - 2026-07-22
 - The name within an entity needed a change. It can also be None, which was
   not implemented. 
