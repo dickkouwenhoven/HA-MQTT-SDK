@@ -32,6 +32,14 @@ COMMON_FIELDS: set[str] = {
     "device_class",
     "enabled_by_default",
     "entity_category",
+    # HA's shared MQTT entity config field controlling whether the
+    # entity's own name is combined with its device's name in the UI.
+    # Needed because light.py now sets name=None + has_entity_name=True
+    # for the single/primary entity of a device, to avoid HA 2023.8+'s
+    # "device name shown twice" bug (e.g. "Woonkamerverlichting
+    # Woonkamerverlichting") for an entity whose own name would
+    # otherwise equal its device's name.
+    "has_entity_name",
     "icon",
     "json_attributes_topic",
     "json_attributes_template",
