@@ -187,6 +187,7 @@ the full device lifecycle. Use this when building integrations for real hubs
 from ha_mqtt_sdk.core.plugin_interface import IntegrationPlugin
 from ha_mqtt_sdk.core.sdk import HASDK
 
+
 class MyHubPlugin(IntegrationPlugin):
     def setup(self, sdk: HASDK) -> None:
         """Discover devices and register entities."""
@@ -223,6 +224,7 @@ sdk.shutdown()  # stop → disconnect
 ```python
 from ha_mqtt_sdk.core.async_plugin_interface import AsyncIntegrationPlugin
 from ha_mqtt_sdk.core.async_sdk import AsyncHASDK
+
 
 class DirigeraPlugin(AsyncIntegrationPlugin):
     async def setup(self, sdk: AsyncHASDK) -> None:
