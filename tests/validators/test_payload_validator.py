@@ -112,7 +112,7 @@ def test_validate_discovery_payload_invalid_name(name):
 
     with pytest.raises(
         ValidationError,
-        match="Discovery payload must be None or a non-empty string",
+        match="Discovery payload name must be None or a non-empty string",
     ):
         validate_discovery_payload(payload, HADomain.SENSOR)
 
