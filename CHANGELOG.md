@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 --
 
+## [0.8.3] - 2026-07-25
+- `payload_validators` - Changed the name validation as such that it also allows a name with None
+
+--
+
 ## [0.8.2] - 2026-07-24
 -   HA's shared MQTT entity config field controlling whether the
     entity's own name is combined with its device's name in the UI.
