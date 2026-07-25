@@ -117,6 +117,34 @@ def test_validate_discovery_payload_invalid_name(name):
         validate_discovery_payload(payload, HADomain.SENSOR)
 
 
+@pytest.mark.parametrize(
+    "name",
+    [
+        None,
+        "name",
+    ],
+)
+def test_validate_discovery_payload_valid_name(name):
+    payload = {
+        "unique_id": "id",
+        "name": name,
+        "state_topic": "topic",
+    }
+
+    # should not raise
+    validate_discovery_payload(payload, HADomain.SENSOR)
+
+
+def test_validate_discovery_payload_name_missing():
+    payload = {
+        "unique_id": "id",
+        "state_topic": "topic",
+    }
+
+    # should not raise
+    validate_discovery_payload(payload, HADomain.SENSOR)
+
+
 def test_validate_discovery_payload_state_topic_wrong_type():
     payload = {
         "unique_id": "id",
