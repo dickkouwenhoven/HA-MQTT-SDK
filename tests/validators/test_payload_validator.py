@@ -78,7 +78,7 @@ def test_validate_discovery_payload_empty():
 
 @pytest.mark.parametrize(
     "missing_field",
-    ["unique_id", "name", "state_topic"],
+    ["unique_id", "state_topic"],
 )
 def test_validate_discovery_payload_missing_required_fields(missing_field):
     payload = {
@@ -92,6 +92,29 @@ def test_validate_discovery_payload_missing_required_fields(missing_field):
         validate_discovery_payload(payload, HADomain.SENSOR)
 
     assert f"{missing_field}" in str(exc.value)
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "",  # empty string
+        "  ",  # whitespace only
+        123,  # not a string
+        [],  # not a string
+    ],
+)
+def test_validate_discovery_payload_invalid_name(name):
+    payload = {
+        "unique_id": "id",
+        "name": name,
+        "state_topic": "topic",
+    }
+
+    with pytest.raises(
+        ValidationError,
+        match="Discovery payload must be None or a non-empty string",
+    ):
+        validate_discovery_payload(payload, HADomain.SENSOR)
 
 
 def test_validate_discovery_payload_state_topic_wrong_type():
