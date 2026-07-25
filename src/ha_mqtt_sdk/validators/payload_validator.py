@@ -107,8 +107,8 @@ def validate_discovery_payload(
 
     name = payload.get("name")
 
-    if not name:
-        raise ValidationError("Discovery payload requires name")
+    if name is not None and (not isinstance(name, str) or not name.strip()):
+        raise ValidationError("Discovery payload name must be None or a non-empty string")
 
     # Only validate state_topic if this domain supports it.
     # Command-only domains (e.g. BUTTON, SCENE) have no state_topic - that is valid.
