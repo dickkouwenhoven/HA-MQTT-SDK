@@ -11,6 +11,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [0.8.3] - 2026-07-25
 - `payload_validators` - Changed the name validation as such that it also allows a name with None
+- `test_payload_validators` - Changed the function "test_validate_discovery_payload_missing_required_fields"
+  as such that name is excluded from the test.
+- `test_payload_validators` - Added a function which test the new behaviour for name.
+- `test_payload_validators` - Added a function which verifies the newly allowed cases
+- `test_payload_validators` - Added a function which verifies that the name key can be ommitted entirely
 
 --
 
