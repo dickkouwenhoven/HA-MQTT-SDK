@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 --
 
+## [0.8.4] - 2026-08-05
+- `__init__.py` - Add build_availability_topic to exports
+
+--
+
 ## [0.8.3] - 2026-07-25
 - `payload_validators` - Changed the name validation as such that it also allows a name with None
 - `test_payload_validators` - Changed the function "test_validate_discovery_payload_missing_required_fields"
