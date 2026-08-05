@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [0.8.4] - 2026-08-05
 - `__init__.py` - Add build_availability_topic to exports
+- `discovery_payload` - Implementation of availability topic in discovery payload
 
 --
 
