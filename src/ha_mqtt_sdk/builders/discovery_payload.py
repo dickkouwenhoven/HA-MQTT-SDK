@@ -116,7 +116,7 @@ def build_discovery_payload(
         payload["availability_topic"] = availability_topic
         payload["payload_available"] = "online"
         payload["payload_not_available"] = "offline"
-    
+
     # ------------------------------------------------------
     # Optional device block
     # ------------------------------------------------------
