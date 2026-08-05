@@ -18,6 +18,7 @@ from ..models.entity import Entity
 from ..utils.logger import get_logger
 from ..validators.payload_validator import validate_discovery_payload
 from .topic_manager import (
+    build_availability_topic,
     build_command_topic,
     build_state_topic,
 )
@@ -101,6 +102,21 @@ def build_discovery_payload(
     if command_topic:
         payload["command_topic"] = command_topic
 
+    # ------------------------------------------------------
+    # Optional availability topic
+    # ------------------------------------------------------
+
+    availability_topic = build_availability_topic(
+        entity.domain,
+        entity.unique_id,
+        prefix,
+    )
+
+    if availability_topic:
+        payload["availability_topic"] = availability_topic
+        payload["payload_available"] = "online"
+        payload["payload_not_available"] = "offline"
+    
     # ------------------------------------------------------
     # Optional device block
     # ------------------------------------------------------
