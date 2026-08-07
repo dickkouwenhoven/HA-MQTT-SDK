@@ -297,4 +297,4 @@ def test_discovery_payload_includes_availability_topic():
 
     assert "availability_topic" in payload
     assert payload["payload_available"] == "online"
-    assert payload["payload_not_availabled"] == "offline"
+    assert payload["payload_not_available"] == "offline"
