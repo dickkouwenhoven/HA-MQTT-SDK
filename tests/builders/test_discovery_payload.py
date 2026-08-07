@@ -284,3 +284,17 @@ def test_payload_device_with_connections_only(
 
     assert payload["device"]["connections"] == [["mac", "aa:bb:cc:dd:ee:ff"]]
     assert "identifiers" not in payload["device"]
+
+
+def test_discovery_payload_includes_availability_topic():
+    entity = Entity(
+        domain=HADomain.SENSOR,
+        name="Sensor",
+        unqiue_id="sensor_1",
+    )
+
+    payload = build_discovery_payload(entity, prefix="homeassistant")
+
+    assert "availability_topic" in payload
+    assert payload["payload_available"] == "online"
+    assert payload["payload_not_availabled"] == "offline"
