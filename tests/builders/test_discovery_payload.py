@@ -290,7 +290,7 @@ def test_discovery_payload_includes_availability_topic():
     entity = Entity(
         domain=HADomain.SENSOR,
         name="Sensor",
-        unqiue_id="sensor_1",
+        unique_id="sensor_1",
     )
 
     payload = build_discovery_payload(entity, prefix="homeassistant")
