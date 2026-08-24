@@ -73,7 +73,7 @@ package-dir = {"" = "src"}
 # -------------------------
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 
 # -------------------------
 # Ruff Settings
@@ -111,7 +111,7 @@ show_missing = true
 skip_covered = false
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 warn_unused_ignores = true
 mypy_path = "src"
 no_implicit_optional = true
