@@ -57,3 +57,10 @@ jobs:
             --cov-report=html \
             --cov-fail-under=100 \
             -v
+ 
+      - name: Upload coverage report
+        if: matrix.python-version == '3.14'
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage.xml
