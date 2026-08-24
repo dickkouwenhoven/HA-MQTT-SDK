@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 --
+## [1.0.0] - 2026-08-24
+- 'LICENSE'- Changed my name to my github handle
+- 'README.md' -Made some small changes in the chapter licence. 
+
+--
 
 ## [0.8.4] - 2026-08-05
 - `__init__.py` - Add build_availability_topic to exports
