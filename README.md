@@ -640,7 +640,15 @@ pytest --cov=ha_mqtt_sdk
 
 ## License
 
-MIT License — see the LICENSE file for details.
+This project is licensed under the MIT License, which means you are free to use, copy, modify, merge, publish, distribute, sublicense, and sell this software.
+
+See the LICENSE file for the full license text.
+
+Attribution
+
+You're welcome to use and adapt this code for your own projects. If you do, I would appreciate it if you kept the original author attribution and mentioned dickkouwenhoven as the original author.
+
+Attribution is appreciated, but is not a requirement of the MIT License.
 
 ---
 
