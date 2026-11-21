@@ -17,6 +17,7 @@ from ..models.entity import Entity
 from ..mqtt.base_async_mqtt_client import BaseAsyncMQTTClient
 from ..types import StateValue
 from ..utils.logger import get_logger
+from ..validators.payload_validator import validate_qos
 from .entity_factory import build_registration
 from .entity_factory import create_entity as _create_entity
 
@@ -146,14 +147,25 @@ class AsyncEntityManager:
             if command_callback:
                 self._command_callbacks[registration.command_topic] = command_callback
 
-    async def update_state(self, entity: Entity, state: StateValue) -> None:
+    async def update_state(
+        self,
+        entity: Entity,
+        state: StateValue,
+        *,
+        qos: int | None = None,
+        retain: bool = False,
+    ) -> None:
         """
         Publish state update to MQTT
 
         Args:
         entity: Entity instance
         state: State value (string, number, or JSON serializable)
+        qos: Optional MQTT QoS (0, 1 or 2). None = transport default (0).
+        retain: Publish as retained message (default False).
         """
+
+        validate_qos(qos)
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
@@ -171,10 +183,12 @@ class AsyncEntityManager:
                 f"Entity domain '{entity.domain.value}' does not support state updates"
             )
 
+        publish_kwargs: dict[str, Any] = {} if qos is None else {"qos": qos}
         await self._mqtt.publish(
             topic=registration.state_topic,
             payload=state,
-            retain=False,
+            retain=retain,
+            **publish_kwargs,
         )
 
         _logger.debug(
@@ -183,7 +197,13 @@ class AsyncEntityManager:
             state,
         )
 
-    async def update_availability(self, entity: Entity, online: bool) -> None:
+    async def update_availability(
+        self,
+        entity: Entity,
+        online: bool,
+        *,
+        qos: int | None = None,
+    ) -> None:
         """
         Publish availability (online/offline) to MQTT.
 
@@ -192,7 +212,10 @@ class AsyncEntityManager:
         Args:
         entity: Entity instance
         online: True = online, False = offline
+        qos: Optional MQTT QoS (0, 1 or 2). None = transport default (0).
         """
+
+        validate_qos(qos)
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
@@ -212,8 +235,12 @@ class AsyncEntityManager:
 
         payload = "online" if online else "offline"
 
+        publish_kwargs: dict[str, Any] = {} if qos is None else {"qos": qos}
         await self._mqtt.publish(
-            topic=registration.availability_topic, payload=payload, retain=True
+            topic=registration.availability_topic,
+            payload=payload,
+            retain=True,
+            **publish_kwargs,
         )
 
         _logger.debug(

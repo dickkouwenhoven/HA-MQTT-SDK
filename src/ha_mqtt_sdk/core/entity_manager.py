@@ -28,6 +28,7 @@ from ..models.entity import Entity
 from ..mqtt.base import BaseMQTTClient
 from ..types import StateValue
 from ..utils.logger import get_logger
+from ..validators.payload_validator import validate_qos
 from .entity_factory import build_registration
 from .entity_factory import create_entity as _create_entity
 
@@ -165,14 +166,25 @@ class EntityManager:
             if command_callback:
                 self._command_callbacks[registration.command_topic] = command_callback
 
-    def update_state(self, entity: Entity, state: StateValue) -> None:
+    def update_state(
+        self,
+        entity: Entity,
+        state: StateValue,
+        *,
+        qos: int | None = None,
+        retain: bool = False,
+    ) -> None:
         """
         Publish state update to MQTT.
 
         Args:
         entity: Entity instance
         state: State value (string, number, or JSON serializable)
+        qos: Optional MQTT QoS (0, 1 or 2). None = transport default (0).
+        retain: Publish as retained message (default False).
         """
+
+        validate_qos(qos)
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
@@ -190,10 +202,12 @@ class EntityManager:
                 f"Entity domain '{entity.domain.value}' does not support state updates"
             )
 
+        publish_kwargs: dict[str, Any] = {} if qos is None else {"qos": qos}
         self._mqtt.publish(
             topic=registration.state_topic,
             payload=state,
-            retain=False,
+            retain=retain,
+            **publish_kwargs,
         )
 
         _logger.debug(
@@ -206,6 +220,8 @@ class EntityManager:
         self,
         entity: Entity,
         online: bool,
+        *,
+        qos: int | None = None,
     ) -> None:
         """
         Publish availability (online/offline) to MQTT.
@@ -215,7 +231,10 @@ class EntityManager:
         Args:
         entity: Entity instance
         online: True= online, False = offline
+        qos: Optional MQTT QoS (0, 1 or 2). None = transport default (0).
         """
+
+        validate_qos(qos)
 
         if not isinstance(entity, Entity):
             raise EntityError("Invalid entity")
@@ -235,10 +254,12 @@ class EntityManager:
 
         payload = "online" if online else "offline"
 
+        publish_kwargs: dict[str, Any] = {} if qos is None else {"qos": qos}
         self._mqtt.publish(
             topic=registration.availability_topic,
             payload=payload,
             retain=True,  # IMPORTANT for HA
+            **publish_kwargs,
         )
 
         _logger.debug(

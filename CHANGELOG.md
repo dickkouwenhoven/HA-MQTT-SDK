@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ---
 
 ## [Unreleased]
+- `update_state` (HASDK, AsyncHASDK, EntityManager, AsyncEntityManager) - New optional keyword arguments `qos` (0, 1, 2) and `retain`.
+  Defaults are unchanged: `qos=None` keeps the transport default (QoS 0) and `retain=False`.
+- `update_availability` - New optional keyword argument `qos`. Availability stays retained.
+- `BaseMQTTClient.publish` / `BaseAsyncMQTTClient.publish` / `PahoMQTTClient` / `AsyncMQTTClient` - New optional `qos` parameter.
+  When `qos` is None it is not passed to the underlying library, so existing behaviour and custom clients keep working.
+- `validators.validate_qos` - New validator, raises `ValidationError` for anything other than None, 0, 1 or 2.
 
 --
 ## [1.0.0] - 2026-08-24

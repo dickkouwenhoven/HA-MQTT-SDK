@@ -11,7 +11,7 @@ from ha_mqtt_sdk.config.domains import HADomain
 from ha_mqtt_sdk.config.mqtt import MQTTSettings
 from ha_mqtt_sdk.core.async_entity_manager import AsyncEntityManager
 from ha_mqtt_sdk.core.entity_factory import build_registration
-from ha_mqtt_sdk.exceptions import EntityError
+from ha_mqtt_sdk.exceptions import EntityError, ValidationError
 
 # ------------------------------------------------
 # Helpers
@@ -540,3 +540,56 @@ async def test_unregister_twice_raises(mqtt_client_async):
 
     with pytest.raises(EntityError):
         await manager.unregister(entity)
+
+
+# -----------------------------------------------------------
+# QoS / retain on update_state and update_availability
+# -----------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_update_state_default_qos_and_retain(mqtt_client_async):
+    manager = make_manager(mqtt_client_async)
+    entity = make_sensor(manager)
+    await manager.register(entity)
+
+    await manager.update_state(entity, 25)
+
+    assert mqtt_client_async.published_qos[-1] is None
+    assert mqtt_client_async.published[-1][2] is False
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("qos", [0, 1, 2])
+async def test_update_state_with_qos_and_retain(mqtt_client_async, qos):
+    manager = make_manager(mqtt_client_async)
+    entity = make_sensor(manager)
+    await manager.register(entity)
+
+    await manager.update_state(entity, 25, qos=qos, retain=True)
+
+    assert mqtt_client_async.published_qos[-1] == qos
+    assert mqtt_client_async.published[-1][2] is True
+
+
+@pytest.mark.asyncio
+async def test_update_state_invalid_qos_raises(mqtt_client_async):
+    manager = make_manager(mqtt_client_async)
+    entity = make_sensor(manager)
+    await manager.register(entity)
+
+    with pytest.raises(ValidationError):
+        await manager.update_state(entity, 25, qos=-1)
+
+
+@pytest.mark.asyncio
+async def test_update_availability_default_and_explicit_qos(mqtt_client_async):
+    manager = make_manager(mqtt_client_async)
+    entity = make_sensor(manager)
+    await manager.register(entity)
+
+    await manager.update_availability(entity, True)
+    assert mqtt_client_async.published_qos[-1] is None
+
+    await manager.update_availability(entity, False, qos=2)
+    assert mqtt_client_async.published_qos[-1] == 2

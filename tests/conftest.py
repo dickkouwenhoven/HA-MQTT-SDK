@@ -13,6 +13,7 @@ from ha_mqtt_sdk.mqtt.paho_client import PahoMQTTClient
 class MockMQTTClient(PahoMQTTClient):
     def __init__(self):
         self.published: list[tuple[str, Any, bool]] = []
+        self.published_qos: list[int | None] = []
         self.subscribed: list[str] = []
         self.callback: Callable[[str, str], None] | None = None
         self.last_will = None
@@ -22,8 +23,10 @@ class MockMQTTClient(PahoMQTTClient):
         topic,
         payload,
         retain=False,
+        qos=None,
     ):
         self.published.append((topic, payload, retain))
+        self.published_qos.append(qos)
 
     def subscribe(
         self,
@@ -58,6 +61,7 @@ class MockMQTTClient(PahoMQTTClient):
 class AsyncMockMQTTClient(AsyncMQTTClient):
     def __init__(self):
         self.published: list[tuple[str, Any, bool]] = []
+        self.published_qos: list[int | None] = []
         self.subscribed: list[str] = []
         self.callback: Callable[[str, str], Awaitable[None]] | None = None
         self.last_will = None
@@ -67,8 +71,10 @@ class AsyncMockMQTTClient(AsyncMQTTClient):
         topic,
         payload,
         retain=False,
+        qos=None,
     ):
         self.published.append((topic, payload, retain))
+        self.published_qos.append(qos)
 
     async def subscribe(
         self,
@@ -105,11 +111,13 @@ class MinimalMockMQTTClient(BaseMQTTClient):
 
     def __init__(self):
         self.published: list[tuple[str, Any, bool]] = []
+        self.published_qos: list[int | None] = []
         self.subscribed: list[str] = []
         self.callback: Callable[[str, str], None] | None = None
 
-    def publish(self, topic, payload, retain=False):
+    def publish(self, topic, payload, retain=False, qos=None):
         self.published.append((topic, payload, retain))
+        self.published_qos.append(qos)
 
     def subscribe(self, topic):
         self.subscribed.append(topic)
@@ -129,11 +137,13 @@ class MinimalAsyncMockMQTTClient(BaseAsyncMQTTClient):
 
     def __init__(self):
         self.published: list[tuple[str, Any, bool]] = []
+        self.published_qos: list[int | None] = []
         self.subscribed: list[str] = []
         self.callback: Callable[[str, str], Awaitable[None]] | None = None
 
-    async def publish(self, topic, payload, retain=False):
+    async def publish(self, topic, payload, retain=False, qos=None):
         self.published.append((topic, payload, retain))
+        self.published_qos.append(qos)
 
     async def subscribe(self, topic):
         self.subscribed.append(topic)

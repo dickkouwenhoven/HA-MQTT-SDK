@@ -179,7 +179,7 @@ async def test_update_state_valid_entity():
 
     await sdk.update_state(entity, "ON")
 
-    manager.update_state.assert_awaited_once_with(entity, "ON")
+    manager.update_state.assert_awaited_once_with(entity, "ON", qos=None, retain=False)
 
 
 # ── update_availability() ─────────────────────────────────────────────────────
@@ -204,7 +204,7 @@ async def test_update_availability_online():
 
     await sdk.update_availability(entity, True)
 
-    manager.update_availability.assert_awaited_once_with(entity, True)
+    manager.update_availability.assert_awaited_once_with(entity, True, qos=None)
 
 
 @pytest.mark.asyncio
@@ -216,7 +216,7 @@ async def test_update_availability_offline():
 
     await sdk.update_availability(entity, False)
 
-    manager.update_availability.assert_awaited_once_with(entity, False)
+    manager.update_availability.assert_awaited_once_with(entity, False, qos=None)
 
 
 @pytest.mark.asyncio
@@ -438,3 +438,27 @@ async def test_shutdown_calls_stop_all_before_disconnect():
 
     mock_pm.stop_all.assert_awaited_once()
     sdk._mqtt.disconnect.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_update_state_passes_qos_and_retain():
+    manager = MagicMock()
+    manager.update_state = AsyncMock()
+    sdk = make_sdk(manager)
+    entity = make_entity()
+
+    await sdk.update_state(entity, "ON", qos=1, retain=True)
+
+    manager.update_state.assert_awaited_once_with(entity, "ON", qos=1, retain=True)
+
+
+@pytest.mark.asyncio
+async def test_update_availability_passes_qos():
+    manager = MagicMock()
+    manager.update_availability = AsyncMock()
+    sdk = make_sdk(manager)
+    entity = make_entity()
+
+    await sdk.update_availability(entity, True, qos=2)
+
+    manager.update_availability.assert_awaited_once_with(entity, True, qos=2)

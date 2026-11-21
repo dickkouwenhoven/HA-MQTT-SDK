@@ -19,6 +19,7 @@ from ..config.mqtt import MQTTSettings
 from ..exceptions import MQTTConnectionError, MQTTError, MQTTPublishError
 from ..types import PublishPayload
 from ..utils.logger import get_logger
+from ..validators.payload_validator import validate_qos
 from .base_async_mqtt_client import BaseAsyncMQTTClient
 
 MessageCallback = Callable[[str, str], Awaitable[None]]
@@ -138,13 +139,25 @@ class AsyncMQTTClient(BaseAsyncMQTTClient):
     # Publish / Subscribe
     # -------------------------
 
-    async def publish(self, topic: str, payload: PublishPayload, retain: bool = False) -> None:
+    async def publish(
+        self,
+        topic: str,
+        payload: PublishPayload,
+        retain: bool = False,
+        qos: int | None = None,
+    ) -> None:
         if not self._client:
             raise MQTTError("Client is not connected")
 
+        validate_qos(qos)
+
         message = payload if isinstance(payload, str) else json.dumps(payload)
         try:
-            await self._client.publish(topic, message, retain=retain)
+            if qos is None:
+                # Keep the library default (QoS 0)
+                await self._client.publish(topic, message, retain=retain)
+            else:
+                await self._client.publish(topic, message, qos=qos, retain=retain)
         except Exception as e:
             raise MQTTPublishError(str(e)) from e
 

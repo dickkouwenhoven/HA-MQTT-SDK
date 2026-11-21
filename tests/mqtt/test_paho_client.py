@@ -409,3 +409,33 @@ def test_reconnect_loop_exits_when_already_connected(mock_sleep, mqtt_client):
     mqtt_client._reconnect_loop()
 
     mqtt_client._client.reconnect.assert_not_called()
+
+
+# ── publish QoS ───────────────────────────────────────────────────────────────
+
+
+def test_publish_without_qos_keeps_library_default(mqtt_client):
+    mqtt_client._connected = True
+
+    mqtt_client.publish("test/topic", "ON")
+
+    # No qos kwarg at all → paho default (0) is used, exactly as before
+    mqtt_client._client.publish.assert_called_once_with("test/topic", "ON", retain=False)
+
+
+@pytest.mark.parametrize("qos", [0, 1, 2])
+def test_publish_with_explicit_qos(mqtt_client, qos):
+    mqtt_client._connected = True
+
+    mqtt_client.publish("test/topic", "ON", retain=True, qos=qos)
+
+    mqtt_client._client.publish.assert_called_once_with("test/topic", "ON", qos=qos, retain=True)
+
+
+def test_publish_invalid_qos_raises(mqtt_client):
+    mqtt_client._connected = True
+
+    with pytest.raises(ValidationError):
+        mqtt_client.publish("test/topic", "ON", qos=3)
+
+    mqtt_client._client.publish.assert_not_called()

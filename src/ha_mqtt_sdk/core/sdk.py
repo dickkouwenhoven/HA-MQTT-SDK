@@ -87,9 +87,21 @@ class HASDK:
 
         self._entity_manager.register(entity, command_callback)
 
-    def update_state(self, entity: Entity, state: StateValue) -> None:
+    def update_state(
+        self,
+        entity: Entity,
+        state: StateValue,
+        *,
+        qos: int | None = None,
+        retain: bool = False,
+    ) -> None:
         """
         Update entity state.
+
+        Args:
+            qos: Optional MQTT QoS (0, 1 or 2). None keeps the default (0).
+            retain: Publish as retained message so Home Assistant restores the
+                last state after a restart (default False).
 
         Used by:
         - user code
@@ -97,9 +109,15 @@ class HASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        self._entity_manager.update_state(entity, state)
+        self._entity_manager.update_state(entity, state, qos=qos, retain=retain)
 
-    def update_availability(self, entity: Entity, online: bool) -> None:
+    def update_availability(
+        self,
+        entity: Entity,
+        online: bool,
+        *,
+        qos: int | None = None,
+    ) -> None:
         """
         Publish availability (online/offline) for a registered entity.
 
@@ -112,7 +130,7 @@ class HASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        self._entity_manager.update_availability(entity, online)
+        self._entity_manager.update_availability(entity, online, qos=qos)
 
     def on_command(self, entity: Entity, callback: Callable[[str, str], None]) -> None:
         """
