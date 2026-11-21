@@ -592,3 +592,37 @@ def test_ensure_reconnect_task_skips_if_task_running(mqtt_client):
 
     mock_create.assert_not_called()
     assert mqtt_client._reconnect_task is existing_task
+
+
+# ── publish QoS ───────────────────────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_publish_without_qos_keeps_library_default(mqtt_client, mock_aiomqtt_client):
+    mqtt_client._client = mock_aiomqtt_client
+
+    await mqtt_client.publish("test/topic", "ON")
+
+    mock_aiomqtt_client.publish.assert_awaited_once_with("test/topic", "ON", retain=False)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("qos", [0, 1, 2])
+async def test_publish_with_explicit_qos(mqtt_client, mock_aiomqtt_client, qos):
+    mqtt_client._client = mock_aiomqtt_client
+
+    await mqtt_client.publish("test/topic", "ON", retain=True, qos=qos)
+
+    mock_aiomqtt_client.publish.assert_awaited_once_with("test/topic", "ON", qos=qos, retain=True)
+
+
+@pytest.mark.asyncio
+async def test_publish_invalid_qos_raises(mqtt_client, mock_aiomqtt_client):
+    from ha_mqtt_sdk.exceptions import ValidationError
+
+    mqtt_client._client = mock_aiomqtt_client
+
+    with pytest.raises(ValidationError):
+        await mqtt_client.publish("test/topic", "ON", qos=5)
+
+    mock_aiomqtt_client.publish.assert_not_awaited()

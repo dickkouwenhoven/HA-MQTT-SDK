@@ -189,3 +189,23 @@ def test_tuple_all_items_are_checked():
 
     with pytest.raises(ValidationError):
         validate_json_serializable((1, 2, Bad()))
+
+
+# -------------------------
+# validate_qos
+# -------------------------
+
+
+@pytest.mark.parametrize("qos", [None, 0, 1, 2])
+def test_validate_qos_valid(qos):
+    from ha_mqtt_sdk.validators.payload_validator import validate_qos
+
+    validate_qos(qos)
+
+
+@pytest.mark.parametrize("qos", [-1, 3, True, "1", 1.5])
+def test_validate_qos_invalid_raises(qos):
+    from ha_mqtt_sdk.validators.payload_validator import validate_qos
+
+    with pytest.raises(ValidationError):
+        validate_qos(qos)

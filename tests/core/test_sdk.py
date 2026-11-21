@@ -145,7 +145,7 @@ def test_update_state_valid_entity():
 
     sdk.update_state(entity, "ON")
 
-    manager.update_state.assert_called_once_with(entity, "ON")
+    manager.update_state.assert_called_once_with(entity, "ON", qos=None, retain=False)
 
 
 # ---------------------------
@@ -360,3 +360,23 @@ def test_shutdown_calls_stop_all_before_disconnect():
 
     mock_pm.stop_all.assert_called_once()
     sdk._mqtt.disconnect.assert_called_once()
+
+
+def test_update_state_passes_qos_and_retain():
+    manager = MagicMock()
+    sdk = make_sdk(manager)
+    entity = make_entity()
+
+    sdk.update_state(entity, "ON", qos=1, retain=True)
+
+    manager.update_state.assert_called_once_with(entity, "ON", qos=1, retain=True)
+
+
+def test_update_availability_passes_qos():
+    manager = MagicMock()
+    sdk = make_sdk(manager)
+    entity = make_entity()
+
+    sdk.update_availability(entity, True, qos=1)
+
+    manager.update_availability.assert_called_once_with(entity, True, qos=1)

@@ -11,6 +11,18 @@ from typing import Any
 from ..config.domains import HADomain
 from ..exceptions import ValidationError
 
+VALID_QOS_LEVELS = (0, 1, 2)
+
+
+def validate_qos(qos: int | None) -> None:
+    """
+    Ensure ``qos`` is None (use the transport default) or a valid MQTT QoS level.
+    """
+    if qos is None:
+        return
+    if isinstance(qos, bool) or qos not in VALID_QOS_LEVELS:
+        raise ValidationError(f"QoS must be None, 0, 1 or 2, got {qos!r}")
+
 
 def validate_json_serializable(
     payload: Any,

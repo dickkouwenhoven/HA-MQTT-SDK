@@ -34,8 +34,18 @@ class BaseMQTTClient(ABC):
         """Disconnect from the MQTT broker."""
 
     @abstractmethod
-    def publish(self, topic: str, payload: PublishPayload, retain: bool = False) -> None:
-        """Publish a message to a topic."""
+    def publish(
+        self,
+        topic: str,
+        payload: PublishPayload,
+        retain: bool = False,
+        qos: int | None = None,
+    ) -> None:
+        """
+        Publish a message to a topic.
+
+        ``qos=None`` means: use the transport's default QoS (0).
+        """
 
     @abstractmethod
     def subscribe(self, topic: str) -> None:

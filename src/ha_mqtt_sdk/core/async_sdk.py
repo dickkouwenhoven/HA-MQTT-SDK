@@ -88,9 +88,21 @@ class AsyncHASDK:
 
         await self._async_entity_manager.register(entity, command_callback)
 
-    async def update_state(self, entity: Entity, state: StateValue) -> None:
+    async def update_state(
+        self,
+        entity: Entity,
+        state: StateValue,
+        *,
+        qos: int | None = None,
+        retain: bool = False,
+    ) -> None:
         """
         Update entity state.
+
+        Args:
+            qos: Optional MQTT QoS (0, 1 or 2). None keeps the default (0).
+            retain: Publish as retained message so Home Assistant restores the
+                last state after a restart (default False).
 
         Used by:
         - user code
@@ -98,9 +110,15 @@ class AsyncHASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        await self._async_entity_manager.update_state(entity, state)
+        await self._async_entity_manager.update_state(entity, state, qos=qos, retain=retain)
 
-    async def update_availability(self, entity: Entity, online: bool) -> None:
+    async def update_availability(
+        self,
+        entity: Entity,
+        online: bool,
+        *,
+        qos: int | None = None,
+    ) -> None:
         """
         Publish availability (online/offline) for a registered entity.
 
@@ -113,7 +131,7 @@ class AsyncHASDK:
         if not isinstance(entity, Entity):
             raise SDKError("Invalid entity")
 
-        await self._async_entity_manager.update_availability(entity, online)
+        await self._async_entity_manager.update_availability(entity, online, qos=qos)
 
     async def on_command(
         self, entity: Entity, callback: Callable[[str, str], Awaitable[None]]

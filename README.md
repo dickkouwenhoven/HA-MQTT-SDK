@@ -175,6 +175,25 @@ entity = sdk.create_entity(
 
 ---
 
+## QoS and Retain
+
+By default state updates are published with the transport default (QoS 0, not retained),
+and availability is published retained. Both can be overridden per call:
+
+```python
+sdk.update_state(sensor, 21.5)  # default: QoS 0, retain=False
+sdk.update_state(sensor, 21.5, qos=1)  # at-least-once delivery
+sdk.update_state(sensor, 21.5, qos=1, retain=True)  # broker keeps the last state
+sdk.update_availability(sensor, True, qos=1)
+```
+
+- `qos=None` (default) means: use the default (0), exactly as in earlier versions.
+- `retain=True` makes the broker store the last state, so Home Assistant can restore it
+  after a restart instead of showing `unknown`.
+- Invalid values raise `ValidationError`.
+
+---
+
 ## Plugin System
 
 For production integrations the SDK provides a plugin system that manages

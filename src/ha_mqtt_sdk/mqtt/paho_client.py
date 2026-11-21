@@ -27,6 +27,7 @@ from ..config.mqtt import MQTTSettings
 from ..exceptions import MQTTConnectionError, MQTTError, MQTTPublishError, ValidationError
 from ..types import PublishPayload
 from ..utils.logger import get_logger
+from ..validators.payload_validator import validate_qos
 from .base import BaseMQTTClient
 
 
@@ -124,9 +125,17 @@ class PahoMQTTClient(BaseMQTTClient):
     # -----------------------
     # Publish / Subscribe
     # -----------------------
-    def publish(self, topic: str, payload: PublishPayload, retain: bool = False) -> None:
+    def publish(
+        self,
+        topic: str,
+        payload: PublishPayload,
+        retain: bool = False,
+        qos: int | None = None,
+    ) -> None:
         if not topic:
             raise ValidationError("Topic must not be empty")
+
+        validate_qos(qos)
 
         if not self._connected:
             raise MQTTError("Client is not connected")
@@ -137,7 +146,11 @@ class PahoMQTTClient(BaseMQTTClient):
         self._logger.debug("Publishing to %s: %s", topic, message)
 
         try:
-            self._client.publish(topic, message, retain=retain)
+            if qos is None:
+                # Keep the library default (QoS 0)
+                self._client.publish(topic, message, retain=retain)
+            else:
+                self._client.publish(topic, message, qos=qos, retain=retain)
         except Exception as e:
             raise MQTTPublishError(str(e)) from e
 
