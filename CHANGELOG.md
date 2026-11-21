@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
-## [Unreleased]
+## [1.1.0]
 - `update_state` (HASDK, AsyncHASDK, EntityManager, AsyncEntityManager) - New optional keyword arguments `qos` (0, 1, 2) and `retain`.
   Defaults are unchanged: `qos=None` keeps the transport default (QoS 0) and `retain=False`.
 - `update_availability` - New optional keyword argument `qos`. Availability stays retained.
